@@ -1,5 +1,5 @@
 import React from 'react';
-import NavButton from './navButton';
+import NavButton from './navButton'
 
 const elem = [
   {
