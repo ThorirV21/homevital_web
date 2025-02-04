@@ -1,0 +1,4 @@
+// exclude files from prettier formatting
+.next/
+
+package-lock.json
