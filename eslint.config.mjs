@@ -1,7 +1,6 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-import { plugin } from "postcss";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { FlatCompat } from '@eslint/eslintrc';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,16 +10,16 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-  {
-    plugins: {
-      "prettier": {
-        "prettier/prettier": "error",
-    },
+  ...compat.config({
+    extends: ['next/core-web-vitals', 'next/typescript', 'prettier'],
     rules: {
-      "prettier/prettier": "error",
-    },
-  }},
+      semi: ['error'],
+      quotes: ['error', 'single'],
+      'prefer-arrow-callback': ['error'],
+      'prefer-template': ['error']
+      
+    }
+  })
 ];
 
 export default eslintConfig;
