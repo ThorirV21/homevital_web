@@ -1,10 +1,10 @@
-"use client";
-import React, { useRef, useState } from "react";
-import { useServerInsertedHTML } from "next/navigation";
-import { StyleRegistry, createStyleRegistry } from "styled-jsx";
+'use client';
+import React, { useRef, useState } from 'react';
+import { useServerInsertedHTML } from 'next/navigation';
+import { StyleRegistry, createStyleRegistry } from 'styled-jsx';
 // @ts-expect-error - react-native-web is not typed
-import { AppRegistry } from "react-native-web";
-import { flush } from "@gluestack-ui/nativewind-utils/flush";
+import { AppRegistry } from 'react-native-web';
+import { flush } from '@gluestack-ui/nativewind-utils/flush';
 
 export default function StyledJsxRegistry({
   children,
@@ -17,8 +17,8 @@ export default function StyledJsxRegistry({
   const isServerInserted = useRef(false);
 
   useServerInsertedHTML(() => {
-    AppRegistry.registerComponent("Main", () => "main");
-    const { getStyleElement } = AppRegistry.getApplication("Main");
+    AppRegistry.registerComponent('Main', () => 'main');
+    const { getStyleElement } = AppRegistry.getApplication('Main');
     if (!isServerInserted.current) {
       isServerInserted.current = true;
       const styles = [getStyleElement(), jsxStyleRegistry.styles(), flush()];
