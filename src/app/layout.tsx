@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import StyledJsxRegistry from './registry';
-import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
@@ -30,9 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}
       >
-        <StyledJsxRegistry>
-          <GluestackUIProvider mode="light">{children}</GluestackUIProvider>
-        </StyledJsxRegistry>
+        {children}
       </body>
     </html>
   );

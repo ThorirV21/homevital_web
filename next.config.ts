@@ -1,8 +1,7 @@
+import type { NextConfig } from "next";
 
-import { withGluestackUI } from "@gluestack/ui-next-adapter";
-
-const nextConfig = {
-  transpilePackages: ["nativewind", "react-native-css-interop"],
+const nextConfig: NextConfig = {
+  /* config options here */
   async redirects() {
     return [
       {
@@ -14,4 +13,4 @@ const nextConfig = {
   }
 };
 
-export default withGluestackUI(nextConfig);
+export default nextConfig;
