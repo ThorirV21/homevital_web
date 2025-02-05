@@ -17,9 +17,17 @@ const eslintConfig = [
       quotes: ['error', 'single'],
       'prefer-arrow-callback': ['error'],
       'prefer-template': ['error']
-      
     }
-  })
+  }),
+  {
+    files: ['src/**/*.{js,ts,jsx,tsx}'],
+    rules: {
+      // Add any specific rules for the src folder here
+    }
+  }
 ];
 
 export default eslintConfig;
+
+
+
