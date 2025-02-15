@@ -2,6 +2,15 @@
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { fetchClientDetails } from "@/services/api";
+import { Suspense } from "react";
+
+const ClientDetails = () => {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <Details />
+    </Suspense>
+  );
+};
 
 const Details = () => {
   const searchParams = useSearchParams();
@@ -35,4 +44,4 @@ const Details = () => {
   );
 };
 
-export default Details;
+export default ClientDetails;
