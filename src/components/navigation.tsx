@@ -5,22 +5,27 @@ const elem = [
   {
     name: 'Skjólstæðingar',
     logo_path: '/nav_icons/People.svg',
+    dashboard_path: '/dashboard/clients',
   },
   {
     name: 'Viðvaranir',
     logo_path: '/nav_icons/Alarm.svg',
+    dashboard_path: '/dashboard/alerts',
   },
   {
     name: 'Stillingar',
     logo_path: '/nav_icons/Settings.svg',
+    dashboard_path: '/dashboard/settings',
   },
   {
     name: 'Leiðbeiningar',
     logo_path: '/nav_icons/Info.svg',
+    dashboard_path: '/dashboard/guidelines',
   },
   {
     name: 'Útskrá',
     logo_path: '/nav_icons/Shutdown.svg',
+    dashboard_path: '/',
   },
 ];
 
@@ -34,6 +39,7 @@ const Navigation: React.FC = () => {
               key={index}
               title={item.name}
               logo_path={item.logo_path}
+              dashboard_path={item.dashboard_path}
             />
           );
         })}
