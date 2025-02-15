@@ -1,6 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 export default function ClientsLayout({
   children,
@@ -19,11 +20,13 @@ export default function ClientsLayout({
     <div className="flex h-full">
       <div className="w-1/2 border-r">{children}</div>
       <div className="w-1/2">
-        {id ? (
-          <DynamicDetails />
-        ) : (
-          <p className="text-gray-500">Select client</p>
-        )}
+        <Suspense fallback={<p>Loading...</p>}>
+          {id ? (
+            <DynamicDetails />
+          ) : (
+            <p className="text-gray-500">Select client</p>
+          )}
+        </Suspense>
       </div>
     </div>
   );
