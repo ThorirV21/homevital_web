@@ -1,31 +1,31 @@
-import React from 'react';
-import NavButton from './navButton';
+import React from "react";
+import NavButton from "./navButton";
 
 const elem = [
   {
-    name: 'Skjólstæðingar',
-    logo_path: '/nav_icons/People.svg',
-    dashboard_path: '/dashboard/clients',
+    name: "Skjólstæðingar",
+    logo_path: "/nav_icons/People.svg",
+    dashboard_path: "/dashboard/clients",
   },
   {
-    name: 'Viðvaranir',
-    logo_path: '/nav_icons/Alarm.svg',
-    dashboard_path: '/dashboard/alerts',
+    name: "Viðvaranir",
+    logo_path: "/nav_icons/Alarm.svg",
+    dashboard_path: "/dashboard/alerts",
   },
   {
-    name: 'Stillingar',
-    logo_path: '/nav_icons/Settings.svg',
-    dashboard_path: '/dashboard/settings',
+    name: "Stillingar",
+    logo_path: "/nav_icons/Settings.svg",
+    dashboard_path: "/dashboard/settings",
   },
   {
-    name: 'Leiðbeiningar',
-    logo_path: '/nav_icons/Info.svg',
-    dashboard_path: '/dashboard/guidelines',
+    name: "Leiðbeiningar",
+    logo_path: "/nav_icons/Info.svg",
+    dashboard_path: "/dashboard/guidelines",
   },
   {
-    name: 'Útskrá',
-    logo_path: '/nav_icons/Shutdown.svg',
-    dashboard_path: '/',
+    name: "Útskrá",
+    logo_path: "/nav_icons/Shutdown.svg",
+    dashboard_path: "/",
   },
 ];
 

@@ -1,17 +1,17 @@
-import type { Metadata } from 'next';
-import { Open_Sans } from 'next/font/google';
-import './globals.css';
-import Providers from '@/components/providers';
+import type { Metadata } from "next";
+import { Open_Sans } from "next/font/google";
+import "./globals.css";
+import Providers from "@/components/providers";
 
 const openSans = Open_Sans({
-  variable: '--font-open-sans',
-  subsets: ['latin'],
+  variable: "--font-open-sans",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: 'Heimahjúkrun Akureyri',
-  description: 'Home care services in Akureyri',
-  icons: '/homeVital.svg',
+  title: "Heimahjúkrun Akureyri",
+  description: "Home care services in Akureyri",
+  icons: "/homeVital.svg",
 };
 
 export default function RootLayout({

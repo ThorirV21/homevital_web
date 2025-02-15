@@ -1,8 +1,8 @@
-'use client';
-import { clientListProps } from '@/types/types';
-import * as React from 'react';
-import Image from 'next/image';
-import { Input } from '@/components/ui/input';
+"use client";
+import { clientListProps } from "@/types/types";
+import * as React from "react";
+import Image from "next/image";
+import { Input } from "@/components/ui/input";
 import {
   ColumnDef,
   flexRender,
@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
   ColumnFiltersState,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -20,31 +20,31 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { useRouter } from 'next/navigation';
+} from "@/components/ui/table";
+import { useRouter } from "next/navigation";
 
 export const columns: ColumnDef<clientListProps>[] = [
   {
-    accessorKey: 'name',
-    header: 'Nafn',
-    cell: ({ row }) => row.getValue('name'),
+    accessorKey: "name",
+    header: "Nafn",
+    cell: ({ row }) => row.getValue("name"),
   },
   {
-    accessorKey: 'address',
-    header: 'Heimilisfang',
-    cell: ({ row }) => row.getValue('address'),
+    accessorKey: "address",
+    header: "Heimilisfang",
+    cell: ({ row }) => row.getValue("address"),
   },
   {
-    accessorKey: 'team',
-    header: 'Teymi',
-    cell: ({ row }) => row.getValue('team'),
+    accessorKey: "team",
+    header: "Teymi",
+    cell: ({ row }) => row.getValue("team"),
   },
   {
-    accessorKey: 'status_Logo',
-    header: '',
+    accessorKey: "status_Logo",
+    header: "",
     cell: ({ row }) => (
       <Image
-        src={`/status_${row.getValue('status_Logo')}.svg`}
+        src={`/status_${row.getValue("status_Logo")}.svg`}
         alt="Status"
         width={20}
         height={20}
@@ -86,9 +86,9 @@ const ClientList = ({ data }: { data: clientListProps[] }) => {
         <Input
           className="mx-2 rounded-xl bg-input text-foreground w-80"
           placeholder="Search"
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
         />
       </div>

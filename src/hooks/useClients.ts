@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchClients, fetchClientDetails } from '@/services/api';
+import { useQuery } from "@tanstack/react-query";
+import { fetchClients, fetchClientDetails } from "@/services/api";
 
 const useClients = () => {
   const { data: clients } = useQuery({
-    queryKey: ['clients'],
+    queryKey: ["clients"],
     queryFn: fetchClients,
     staleTime: 60000,
   });
@@ -12,7 +12,7 @@ const useClients = () => {
 
 const useClientDetails = (id: string) => {
   const { data: clientDetails } = useQuery({
-    queryKey: ['clientDetails', id],
+    queryKey: ["clientDetails", id],
     queryFn: () => fetchClientDetails(id),
     staleTime: 60000,
   });

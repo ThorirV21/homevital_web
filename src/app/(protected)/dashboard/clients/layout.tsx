@@ -1,5 +1,5 @@
-'use client';
-import dynamic from 'next/dynamic';
+"use client";
+import dynamic from "next/dynamic";
 
 export default function ClientsLayout({
   children,
@@ -7,7 +7,7 @@ export default function ClientsLayout({
   children: React.ReactNode;
 }) {
   const DynamicDetails = dynamic(
-    () => import('@/app/(protected)/dashboard/clients/details/page'),
+    () => import("@/app/(protected)/dashboard/clients/details/page"),
     { ssr: false }
   );
 

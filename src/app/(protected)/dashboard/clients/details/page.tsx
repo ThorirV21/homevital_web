@@ -1,14 +1,14 @@
-'use client';
-import { useSearchParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import { fetchClientDetails } from '@/services/api';
+"use client";
+import { useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { fetchClientDetails } from "@/services/api";
 
 const Details = () => {
   const searchParams = useSearchParams();
-  const id = searchParams.get('id');
+  const id = searchParams.get("id");
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ['clientDetails', id],
+    queryKey: ["clientDetails", id],
     queryFn: () => fetchClientDetails(String(id)),
     staleTime: 60000,
   });

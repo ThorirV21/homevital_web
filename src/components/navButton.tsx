@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 //import React from 'react';
 
 interface navButtonProps {
@@ -20,7 +20,7 @@ const NavButton: React.FC<navButtonProps> = ({
 
   return (
     <li
-      className={`bg-white h-20 hover:bg-gray-100 shadow items-center ${pathname === dashboard_path ? 'shadow-[inset_0px_4px_4px_0px_rgba(0,0,0,0.25),inset_0px_-4px_4px_0px_rgba(0,0,0,0.25)]' : ''} `}
+      className={`bg-white h-20 hover:bg-gray-100 shadow items-center ${pathname === dashboard_path ? "shadow-[inset_0px_4px_4px_0px_rgba(0,0,0,0.25),inset_0px_-4px_4px_0px_rgba(0,0,0,0.25)]" : ""} `}
     >
       <Link
         href={dashboard_path}
