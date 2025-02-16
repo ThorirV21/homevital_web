@@ -9,11 +9,15 @@ const fetchClients = async () => {
 };
 
 const fetchClientDetails = async (id: string) => {
-  const response = await fetch(`${API_URL}/clients/${id}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch client details");
+  try {
+    const response = await fetch(`${API_URL}/clients/${id}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch client details");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching client details: ", error);
   }
-  return response.json();
 };
 
 export { fetchClients, fetchClientDetails };
