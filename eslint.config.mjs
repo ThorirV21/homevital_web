@@ -17,7 +17,7 @@ const eslintConfig = [
     files: ['src/**/*.{js,ts,jsx,tsx}'],
     rules: {
       semi: ['error'],
-      quotes: ['error', 'single'],
+      quotes: ['error', 'double'],
       'prefer-arrow-callback': ['error'],
       'prefer-template': ['error']
     }
