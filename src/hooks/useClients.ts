@@ -16,6 +16,7 @@ const useClientDetails = (id: string) => {
     queryFn: () => fetchClientDetails(id),
     staleTime: 60000,
   });
+  if (!id) return null;
   return clientDetails;
 };
 
