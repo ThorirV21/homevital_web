@@ -11,7 +11,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  ColumnFiltersState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -22,6 +21,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import Filter from "../filter";
+
+export interface filterProps {
+  status: string[];
+  teamId: boolean;
+}
 
 export const columns: ColumnDef<clientListProps>[] = [
   {
@@ -35,16 +46,16 @@ export const columns: ColumnDef<clientListProps>[] = [
     cell: ({ row }) => row.getValue("address"),
   },
   {
-    accessorKey: "team",
+    accessorKey: "teamID",
     header: "Teymi",
-    cell: ({ row }) => row.getValue("team"),
+    cell: ({ row }) => row.getValue("teamID"),
   },
   {
-    accessorKey: "status_Logo",
+    accessorKey: "status",
     header: "",
     cell: ({ row }) => (
       <Image
-        src={`/status_${row.getValue("status_Logo")}.svg`}
+        src={`/status_${row.getValue("status")}.svg`}
         alt="Status"
         width={20}
         height={20}
@@ -55,18 +66,29 @@ export const columns: ColumnDef<clientListProps>[] = [
 
 const ClientList = ({ data }: { data: clientListProps[] }) => {
   const router = useRouter();
-  const [filter, setFilter] = React.useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [filter, setFilter] = React.useState<filterProps>({
+    status: [],
+    teamId: false,
+  });
+  const [popoverOpen, setPopoverOpen] = React.useState(false);
 
   const table = useReactTable({
     data,
     columns,
-    onColumnFiltersChange: setFilter,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
-      columnFilters: filter,
+      globalFilter: globalFilter,
+    },
+    globalFilterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true;
+
+      const rowString = Object.values(row.original).join(" ".toLowerCase());
+
+      return rowString.includes(filterValue.toLowerCase());
     },
   });
 
@@ -78,21 +100,31 @@ const ClientList = ({ data }: { data: clientListProps[] }) => {
     <div className="">
       <div className="flex flex-row items-center gap-5 my-2">
         <p className="text-xl px-2">Skjólstæðingar</p>
-        <div className="inline-flex rounded-2xl ml-auto pr-2">
-          <p className="text-xl pr-5">Sía</p>
-          <Image src="/Tune.svg" alt="Filter" width={30} height={30} />
-        </div>
+        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+          <PopoverTrigger>
+            <div className="inline-flex rounded-2xl ml-auto pr-2">
+              <p className="text-xl pr-5">Sía</p>
+              <Image src="/Tune.svg" alt="Filter" width={30} height={30} />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent>
+            <Filter
+              filters={filter}
+              setFilters={setFilter}
+              setPopoverOpen={setPopoverOpen}
+            />
+          </PopoverContent>
+        </Popover>
 
         <Input
           className="mx-2 rounded-xl bg-input text-foreground w-80"
           placeholder="Search"
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          value={globalFilter}
+          onChange={(event) => setGlobalFilter(event.target.value)}
         />
       </div>
-      <div>
+      <Separator />
+      <div className="pt-2">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

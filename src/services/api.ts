@@ -1,16 +1,16 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://homevital-api-dev.azurewebsites.net/api";
 
 const fetchClients = async () => {
-  const response = await fetch(`${API_URL}/clients`);
+  const response = await fetch(`${API_URL}/patients`);
   if (!response.ok) {
     throw new Error("Failed to fetch clients");
   }
-  return response.json();
+  return await response.json();
 };
 
 const fetchClientDetails = async (id: string) => {
   try {
-    const response = await fetch(`${API_URL}/clients/${id}`);
+    const response = await fetch(`${API_URL}/patients/${id}`);
     if (!response.ok) {
       throw new Error("Failed to fetch client details");
     }

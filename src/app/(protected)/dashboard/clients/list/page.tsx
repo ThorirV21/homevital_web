@@ -1,9 +1,10 @@
 "use client";
 import * as React from "react";
-import { clientListProps } from "@/types/types";
+//import { clientListProps } from "@/types/types";
 import { ClientList } from "@/components/clients/ClientList";
+import { useClients } from "@/hooks/useClients";
 
-const data: clientListProps[] = [
+/* const data: clientListProps[] = [
   {
     id: 1,
     name: "Jón Jónsson",
@@ -25,12 +26,24 @@ const data: clientListProps[] = [
     team: "Hjúkrunarlið 3",
     status_Logo: "red",
   },
-];
+]; */
 
 export default function Clients() {
+  const { patients, error, isLoading } = useClients();
+  console.log(error, isLoading);
+  console.table(patients);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <div className="">
-      <ClientList data={data} />
+      <ClientList data={patients} />
     </div>
   );
 }
