@@ -1,4 +1,4 @@
-const API_URL = "https://homevital-api-dev.azurewebsites.net/api";
+const API_URL = process.env.API_URL;
 
 const fetchClients = async () => {
   const response = await fetch(`${API_URL}/patients`);
