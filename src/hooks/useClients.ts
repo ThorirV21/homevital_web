@@ -1,5 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchClients, fetchClientDetails } from "@/services/api";
+import {
+  fetchClients,
+  fetchClientDetails,
+  fetchClientMeasurements,
+} from "@/services/api";
 
 const useClients = () => {
   const {
@@ -35,4 +39,19 @@ const useClientDetails = (id: string) => {
   return { patientDetails, error, isLoading };
 };
 
-export { useClients, useClientDetails };
+const useClientMeasurements = (id: string) => {
+  const {
+    data: measurements,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["clientMeasurements", id],
+    queryFn: () => (id ? fetchClientMeasurements(id) : Promise.resolve(null)),
+  });
+  if (error) {
+    return { measurements: null, error, isLoading };
+  }
+  return { measurements, error, isLoading };
+};
+
+export { useClients, useClientDetails, useClientMeasurements };
