@@ -11,6 +11,7 @@ import Measurements from "@/components/client_info/measurements";
 import Treatment from "@/components/client_info/treatment";
 import Warnings from "@/components/client_info/warnings";
 import Vitals from "@/components/client_info/vitals";
+import Bell from "@/components/icons/bell";
 
 const ClientDetailsContent: React.FC = () => {
   const searchParams = useSearchParams();
@@ -62,18 +63,19 @@ const ClientDetailsContent: React.FC = () => {
                 height={25}
               />
             </Button>
-            <Image
+            {/*             <Image
               src="/alarm_icons/Bell.svg"
               alt="alarm"
               width={25}
               height={25}
-              className=""
-            />
+              className="fill-current"
+            /> */}
+            <Bell className="w-7 h-7" />
           </div>
         </div>
       </div>
 
-      <div className="flex flex-grow overflow-hidden justify-between bg-background ">
+      <div className="flex overflow-hidden justify-between bg-background ">
         <button
           className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "measurements" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("measurements")}
