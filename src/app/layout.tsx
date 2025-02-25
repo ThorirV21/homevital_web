@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${openSans.className} antialiased flex flex-col h-screen`}
+        className={`${openSans.className} antialiased flex flex-col h-screen min-w-[1440px]`}
       >
         <Providers>{children}</Providers>
       </body>

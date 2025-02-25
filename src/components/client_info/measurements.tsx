@@ -3,9 +3,9 @@ import { useClientMeasurements } from "@/hooks/useClients";
 import { MeasurementTypes, PatientMeasurement } from "@/types/types";
 
 import { Button } from "../ui/button";
-import Image from "next/image";
 import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
+import BloodSugar from "../icons/bloodSugar";
 
 const testMeasurements = [
   {
@@ -143,24 +143,24 @@ const Measurements = ({ id }: { id: string }) => {
               {mm.map((item) => {
                 const date = new Date(item.date);
                 const dateString = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
-                const imgPath =
-                  "temperature" in item
-                    ? "/measurements_icons/BodyTemp.svg"
-                    : "weight" in item
-                      ? "/measurements_icons/Scale.svg"
-                      : "bloodsugarLevel" in item
-                        ? "/measurements_icons/Bloodsugar.svg"
-                        : "systolic" in item &&
-                            "diastolic" in item &&
-                            "pulse" in item
-                          ? "/measurements_icons/Heart.svg"
-                          : "";
+                const icon =
+                  "temperature" in item ? (
+                    <BloodSugar className="h-5 w-5" />
+                  ) : "weight" in item ? (
+                    "/measurements_icons/Scale.svg"
+                  ) : "bloodsugarLevel" in item ? (
+                    "/measurements_icons/Bloodsugar.svg"
+                  ) : "systolic" in item &&
+                    "diastolic" in item &&
+                    "pulse" in item ? (
+                    "/measurements_icons/Heart.svg"
+                  ) : (
+                    ""
+                  );
                 return (
                   <TableRow key={item.id}>
                     <TableCell>{dateString}</TableCell>
-                    <TableCell>
-                      <Image alt="Type" src={imgPath} width={20} height={20} />
-                    </TableCell>
+                    <TableCell>{icon}</TableCell>
                     <TableCell>
                       {"temperature" in item ? (
                         `${item.temperature} °C`
