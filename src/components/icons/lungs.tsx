@@ -4,9 +4,9 @@ const Lungs = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
-    width={800}
-    height={800}
-    fill="#3A7283"
+    width={20}
+    height={20}
+    fill="currentColor"
     viewBox="0 0 206.804 206.804"
     {...props}
   >

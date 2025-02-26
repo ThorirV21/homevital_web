@@ -3,8 +3,8 @@ import { SVGProps } from "react";
 const Bell = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={800}
-    height={800}
+    width={7}
+    height={7}
     viewBox="0 0 1024 1024"
     {...props}
   >

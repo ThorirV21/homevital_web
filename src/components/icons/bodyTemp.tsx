@@ -4,8 +4,8 @@ const BodyTemp = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     id="Layer_1"
-    width={800}
-    height={800}
+    width={20}
+    height={20}
     fill="#3A7283"
     data-name="Layer 1"
     viewBox="0 0 24 24"
@@ -15,7 +15,7 @@ const BodyTemp = (props: SVGProps<SVGSVGElement>) => (
       <defs>
         <style>
           {
-            ".cls-1{fill:none;stroke:#3a7283;stroke-miterlimit:10;stroke-width:1.83px}"
+            ".cls-1{fill:none;stroke:currentColor;stroke-miterlimit:10;stroke-width:1.83px}"
           }
         </style>
       </defs>
