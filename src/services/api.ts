@@ -1,9 +1,7 @@
 const API_URL = process.env.API_URL;
 
 const fetchClients = async () => {
-  const response = await fetch(`${API_URL}/patients`, {
-    cache: "force-cache",
-  });
+  const response = await fetch(`${API_URL}/patients`, {});
   if (!response.ok) {
     throw new Error("Failed to fetch clients");
   }

@@ -6,6 +6,9 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import BloodSugar from "../icons/bloodSugar";
+import Scale from "../icons/scale";
+import Heart from "../icons/heart";
+import BodyTemp from "../icons/bodyTemp";
 
 const testMeasurements = [
   {
@@ -145,15 +148,15 @@ const Measurements = ({ id }: { id: string }) => {
                 const dateString = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
                 const icon =
                   "temperature" in item ? (
-                    <BloodSugar className="h-5 w-5" />
+                    <BodyTemp />
                   ) : "weight" in item ? (
-                    "/measurements_icons/Scale.svg"
+                    <Scale />
                   ) : "bloodsugarLevel" in item ? (
-                    "/measurements_icons/Bloodsugar.svg"
+                    <BloodSugar />
                   ) : "systolic" in item &&
                     "diastolic" in item &&
                     "pulse" in item ? (
-                    "/measurements_icons/Heart.svg"
+                    <Heart />
                   ) : (
                     ""
                   );
