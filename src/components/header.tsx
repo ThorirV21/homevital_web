@@ -6,6 +6,7 @@ export default function Header() {
       <Image
         src="/homeVital.svg"
         alt="HomeVital logo"
+        priority
         width={100}
         height={100}
         className="mr-10"
