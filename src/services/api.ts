@@ -1,4 +1,35 @@
+import { loginSchema } from "@/services/schemas";
+import { z } from "zod";
+
 const API_URL = process.env.API_URL;
+
+const login = async (form: z.infer<typeof loginSchema>) => {
+  const response = await fetch(`${API_URL}user/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(form),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to login");
+  }
+  return await response.json();
+};
+
+const mockLogin = async (form: z.infer<typeof loginSchema>) => {
+  const response = await fetch(`${API_URL}user/MockLogin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(form),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to login");
+  }
+  return await response.json();
+};
 
 const fetchClients = async () => {
   const response = await fetch(`${API_URL}/patients`, {});
@@ -22,8 +53,6 @@ const fetchClientDetails = async (id: string) => {
   }
 };
 
-// How can I add query parameters to this function?
-
 const fetchClientMeasurements = async (id: string) => {
   const url = new URL(`${API_URL}/Measurements/getById`);
   url.searchParams.append("id", id);
@@ -37,4 +66,10 @@ const fetchClientMeasurements = async (id: string) => {
   return await response.json();
 };
 
-export { fetchClients, fetchClientDetails, fetchClientMeasurements };
+export {
+  fetchClients,
+  fetchClientDetails,
+  fetchClientMeasurements,
+  login,
+  mockLogin,
+};
