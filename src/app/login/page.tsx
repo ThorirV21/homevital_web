@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { login, mockLogin } from "@/services/api";
+import { loginSchema } from "@/services/schemas";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,13 +19,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = z.object({
-  kennitala: z.string().length(10, "Sláðu inn gilda kennitölu"),
-});
-
 const Login = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       kennitala: "",
     },
@@ -38,7 +35,7 @@ const Login = () => {
 
   if (!isMounted) return null;
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     console.log(values);
     const mockRet = await mockLogin(values);
     const ret = await login({ kennitala: mockRet.kennitala });
@@ -98,4 +95,3 @@ const Login = () => {
 };
 
 export default Login;
-export { formSchema };

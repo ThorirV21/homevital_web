@@ -1,9 +1,9 @@
-import { formSchema } from "@/app/login/page";
+import { loginSchema } from "@/services/schemas";
 import { z } from "zod";
 
 const API_URL = process.env.API_URL;
 
-const login = async (form: z.infer<typeof formSchema>) => {
+const login = async (form: z.infer<typeof loginSchema>) => {
   const response = await fetch(`${API_URL}user/login`, {
     method: "POST",
     headers: {
@@ -17,7 +17,7 @@ const login = async (form: z.infer<typeof formSchema>) => {
   return await response.json();
 };
 
-const mockLogin = async (form: z.infer<typeof formSchema>) => {
+const mockLogin = async (form: z.infer<typeof loginSchema>) => {
   const response = await fetch(`${API_URL}user/MockLogin`, {
     method: "POST",
     headers: {
