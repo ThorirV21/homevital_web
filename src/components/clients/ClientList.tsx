@@ -86,7 +86,7 @@ const ClientList = ({ data }: { data: clientListProps[] }) => {
     globalFilterFn: (row, columnId, filterValue) => {
       if (!filterValue) return true;
 
-      const rowString = Object.values(row.original).join(" ".toLowerCase());
+      const rowString = Object.values(row.original).join(" ").toLowerCase();
 
       return rowString.includes(filterValue.toLowerCase());
     },
