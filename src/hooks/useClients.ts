@@ -47,10 +47,12 @@ const useClientMeasurements = (id: string) => {
   } = useQuery({
     queryKey: ["clientMeasurements", id],
     queryFn: () => (id ? fetchClientMeasurements(id) : Promise.resolve(null)),
+    staleTime: 1,
   });
   if (error) {
     return { measurements: null, error, isLoading };
   }
+
   return { measurements, error, isLoading };
 };
 
