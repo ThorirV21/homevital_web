@@ -1,11 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import StaffView from "@/components/settings/staff";
 
 const views = [
   { name: "Starfsmenn", value: "staff" },
   { name: "Teymi", value: "team" },
-  { name: "Stillingar", value: "settings" },
+  { name: "Annað", value: "other" },
 ];
 
 export default function Settings() {
@@ -29,19 +30,15 @@ export default function Settings() {
           ))}
         </div>
       </div>
-      {view === "staff" && (
-        <div className="flex flex-col w-3/4">
-          <h2>Starfsmenn</h2>
-        </div>
-      )}
+      {view === "staff" && <StaffView />}
       {view === "team" && (
         <div className="flex flex-col w-3/4">
           <h2>Teymi</h2>
         </div>
       )}
-      {view === "settings" && (
+      {view === "other" && (
         <div className="flex flex-col w-3/4">
-          <h2>Stillingar</h2>
+          <h2>Annað</h2>
         </div>
       )}
     </div>

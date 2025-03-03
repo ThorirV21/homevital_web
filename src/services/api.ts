@@ -66,10 +66,22 @@ const fetchClientMeasurements = async (id: string) => {
   return await response.json();
 };
 
+const fetchHealthcareWorkers = async () => {
+  const response = await fetch(
+    "https://homevital-api-dev.azurewebsites.net/HealthcareWorkers",
+    {}
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch healthcare workers");
+  }
+  return await response.json();
+};
+
 export {
   fetchClients,
   fetchClientDetails,
   fetchClientMeasurements,
   login,
   mockLogin,
+  fetchHealthcareWorkers,
 };
