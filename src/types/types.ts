@@ -55,8 +55,28 @@ export type PatientMeasurement = {
   bodyTemperature: BodyTemperature[];
 };
 
-export type MeasurementTypes =
-  | BloodPressure
-  | BloodSugar
-  | BodyWeight
-  | BodyTemperature;
+export type SingleMeasurement = {
+  systolic: number;
+  diastolic: number;
+  bpm: number;
+  measureHand: string;
+  bodyPosition: string;
+  bloodSugar: number;
+  weight: number;
+  temperature: number;
+  oxygenSaturation: number;
+};
+
+export type AllMeasurements = {
+  id: number;
+  measurementID: number;
+  measurementType: string;
+  measurementValues: [SingleMeasurement];
+  measurementDate: string;
+};
+
+export type MeasurementTypes = {
+  id: number;
+  patientID: number;
+  measurements: [AllMeasurements];
+};

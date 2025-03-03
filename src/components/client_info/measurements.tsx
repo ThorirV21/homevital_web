@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useClientMeasurements } from "@/hooks/useClients";
-import { MeasurementTypes, PatientMeasurement } from "@/types/types";
+import { AllMeasurements } from "@/types/types";
 
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -9,91 +9,9 @@ import BloodSugar from "../icons/bloodSugar";
 import Scale from "../icons/scale";
 import Heart from "../icons/heart";
 import BodyTemp from "../icons/bodyTemp";
-
-const testMeasurements = [
-  {
-    id: 1,
-    patientID: 35,
-    bloodPressure: [
-      {
-        id: 506,
-        patientID: 35,
-        measureHand: "Left",
-        bodyPosition: "Lying Down",
-        systolic: 120,
-        diastolic: 73,
-        pulse: 89,
-        date: "2024-03-07T20:51:51.080934",
-        status: "Normal",
-      },
-    ],
-    bloodSugar: [
-      {
-        id: 155,
-        patientID: 35,
-        bloodsugarLevel: 9.0,
-        date: "2024-10-20T20:51:51.080957",
-      },
-    ],
-    bodyWeight: [
-      {
-        id: 732,
-        patientID: 35,
-        weight: 81.5,
-        date: "2024-09-27T20:51:51.080965",
-      },
-    ],
-    bodyTemperature: [
-      {
-        id: 512,
-        patientID: 35,
-        temperature: 38.6,
-        date: "2024-07-16T20:51:51.080971",
-      },
-    ],
-  },
-  {
-    id: 2,
-    patientID: 35,
-    bloodPressure: [
-      {
-        id: 702,
-        patientID: 35,
-        measureHand: "Right",
-        bodyPosition: "Sitting",
-        systolic: 113,
-        diastolic: 74,
-        pulse: 64,
-        date: "2024-04-23T20:51:51.080980",
-        status: "Normal",
-      },
-    ],
-    bloodSugar: [
-      {
-        id: 353,
-        patientID: 35,
-        bloodsugarLevel: 6.4,
-        date: "2024-09-20T20:51:51.080987",
-      },
-    ],
-    bodyWeight: [
-      {
-        id: 344,
-        patientID: 35,
-        weight: 64.6,
-        date: "2024-08-11T20:51:51.080992",
-      },
-    ],
-    bodyTemperature: [
-      {
-        id: 533,
-        patientID: 35,
-        temperature: 37.8,
-        date: "2024-06-17T20:51:51.080998",
-      },
-    ],
-  },
-];
+import Sitting from "../icons/sitting";
+import InBed from "../icons/inBed";
+import Hand from "../icons/hand";
 
 const Measurements = ({ id }: { id: string }) => {
   const { measurements, error, isLoading } = useClientMeasurements(id);
@@ -111,16 +29,11 @@ const Measurements = ({ id }: { id: string }) => {
     return <div>No measurements found</div>;
   }
 
-  const data: PatientMeasurement[] = testMeasurements;
-  const mm: MeasurementTypes[] = [];
-  data.map((item) => {
-    mm.push(
-      ...item.bloodPressure,
-      ...item.bloodSugar,
-      ...item.bodyTemperature,
-      ...item.bodyWeight
-    );
-  });
+  console.log("client measurements");
+  console.table(measurements[0]);
+
+  const mm: AllMeasurements[] = measurements[0].measurements;
+
   console.table(mm);
 
   return (
@@ -144,43 +57,52 @@ const Measurements = ({ id }: { id: string }) => {
           <Table>
             <TableBody>
               {mm.map((item) => {
-                const date = new Date(item.date);
-                const dateString = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
+                const type = item.measurementType;
+                const values = item.measurementValues[0];
+                const date = new Date(item.measurementDate);
+                const dateString = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
                 const icon =
-                  "temperature" in item ? (
+                  type === "BodyTemperature" ? (
                     <BodyTemp />
-                  ) : "weight" in item ? (
+                  ) : type === "BodyWeight" ? (
                     <Scale />
-                  ) : "bloodsugarLevel" in item ? (
+                  ) : type === "BloodSugar" ? (
                     <BloodSugar />
-                  ) : "systolic" in item &&
-                    "diastolic" in item &&
-                    "pulse" in item ? (
+                  ) : type === "BloodPressure" ? (
                     <Heart />
                   ) : (
                     ""
                   );
                 return (
-                  <TableRow key={item.id}>
+                  <TableRow key={item.id.toString() + type}>
                     <TableCell>{dateString}</TableCell>
                     <TableCell>{icon}</TableCell>
                     <TableCell>
-                      {"temperature" in item ? (
-                        `${item.temperature} °C`
-                      ) : "weight" in item ? (
-                        `${item.weight} Kg`
-                      ) : "bloodsugarLevel" in item ? (
-                        `${item.bloodsugarLevel} mmól/L`
-                      ) : "systolic" in item &&
-                        "diastolic" in item &&
-                        "pulse" in item ? (
+                      {type === "BodyTemperature" ? (
+                        `${values.temperature} °C`
+                      ) : type === "BodyWeight" ? (
+                        `${values.weight} Kg`
+                      ) : type === "BloodSugar" ? (
+                        `${values.bloodSugar} mmól/L`
+                      ) : type === "BloodPressure" ? (
                         <div className="flex gap-6">
-                          <p>SYS {item.systolic}</p>
-                          <p>DIA {item.diastolic}</p>
-                          <p>Púls {item.pulse}</p>
+                          <p>SYS {values.systolic}</p>
+                          <p>DIA {values.diastolic}</p>
+                          <p>Púls {values.bpm}</p>
+                          <div className="ml-auto flex">
+                            {values.bodyPosition === "Sitting" ? (
+                              <Sitting className="" />
+                            ) : values.bodyPosition === "Laying" ? (
+                              <InBed className="" />
+                            ) : null}
+                            <Hand className="mx-2" />
+                          </div>
                         </div>
                       ) : null}
                     </TableCell>
+                    {/* <TableCell className="p-0">
+                      <Circle className="text-good" />
+                    </TableCell> */}
                   </TableRow>
                 );
               })}

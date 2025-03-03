@@ -32,10 +32,7 @@ const ClientDetailsContent: React.FC = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log(patientDetails);
-
   const { name, address, teamID } = patientDetails;
-  console.log(currentView);
 
   return (
     <div className="flex flex-col h-full">
