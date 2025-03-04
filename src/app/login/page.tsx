@@ -37,7 +37,7 @@ const Login = () => {
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     const mockRet: string = await mockLogin(values);
-    const ret = await login({ kennitala: mockRet });
+    const ret = await login({ kennitala: mockRet.toString() });
     if (ret) {
       window.location.href = "/dashboard/clients";
     }
