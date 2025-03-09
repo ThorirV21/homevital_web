@@ -42,7 +42,7 @@ const fetchClients = async () => {
 const fetchClientDetails = async (id: string) => {
   try {
     const response = await fetch(`${API_URL}/patients/${id}`, {
-      cache: "no-cache",
+      cache: "no-store",
     });
     if (!response.ok) {
       throw new Error("Failed to fetch client details");
@@ -50,6 +50,7 @@ const fetchClientDetails = async (id: string) => {
     return await response.json();
   } catch (error) {
     console.error("Error fetching client details: ", error);
+    return null;
   }
 };
 

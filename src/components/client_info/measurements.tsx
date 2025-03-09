@@ -29,12 +29,7 @@ const Measurements = ({ id }: { id: string }) => {
     return <div>No measurements found</div>;
   }
 
-  console.log("client measurements");
-  console.table(measurements[0]);
-
   const mm: AllMeasurements[] = measurements[0].measurements;
-
-  console.table(mm);
 
   return (
     <div className="flex flex-col h-full">

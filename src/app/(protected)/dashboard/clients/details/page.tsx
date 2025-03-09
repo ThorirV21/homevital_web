@@ -12,6 +12,7 @@ import Treatment from "@/components/client_info/treatment";
 import Warnings from "@/components/client_info/warnings";
 import Vitals from "@/components/client_info/vitals";
 import Bell from "@/components/icons/bell";
+import { redirect } from "next/navigation";
 
 const ClientDetailsContent: React.FC = () => {
   const searchParams = useSearchParams();
@@ -34,8 +35,12 @@ const ClientDetailsContent: React.FC = () => {
 
   const { name, address, teamID } = patientDetails;
 
+  const handleExit = () => {
+    redirect("/dashboard/clients/list");
+  };
+
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" key={patientDetails?.id || "default"}>
       <div className="flex flex-shrink-0">
         <div className="p-4 w-1/3">
           <h1 className="font-bold">Nafn:</h1>
@@ -52,9 +57,12 @@ const ClientDetailsContent: React.FC = () => {
             </Badge>
           </div>
           <div className="flex flex-col w-full items-end">
-            <Button className="bg-transparent border-none shadow-none hover:bg-transparent p-0">
+            <Button
+              className="bg-transparent border-none shadow-none hover:bg-transparent p-0"
+              onClick={handleExit}
+            >
               <Image
-                src="/nav_icons/close.svg"
+                src="/nav_icons/Close.svg"
                 alt="Close"
                 width={25}
                 height={25}
