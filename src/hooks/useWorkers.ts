@@ -3,12 +3,12 @@ import { fetchHealthcareWorkers } from "@/services/api";
 
 const useHealthcareWorkers = () => {
   const { data, error, isLoading } = useQuery({
-    queryKey: ["clients"],
+    queryKey: ["workers"],
     queryFn: fetchHealthcareWorkers,
     staleTime: 60000,
   });
   if (error) {
-    console.log("Error fetching clients: ", error);
+    console.log("Error fetching workers: ", error);
     return { data: [], error, isLoading };
   }
 

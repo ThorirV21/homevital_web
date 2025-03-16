@@ -9,6 +9,7 @@ import BloodSugar from "../icons/bloodSugar";
 import Scale from "../icons/scale";
 import Heart from "../icons/heart";
 import BodyTemp from "../icons/bodyTemp";
+import Loading from "../loading";
 
 const testMeasurements = [
   {
@@ -100,7 +101,7 @@ const Measurements = ({ id }: { id: string }) => {
   const [view, setView] = useState("registered");
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (error) {

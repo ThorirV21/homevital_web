@@ -7,20 +7,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-interface Worker {
-  id: number;
-  name: string;
-  phone: string;
-  teamID: string;
-  status: string;
-}
+import StaffForm from "./staffForm";
+import { WorkerDTO } from "@/types/types";
+import { Button } from "@/components/ui/button";
+import Loading from "../loading";
 
 const StaffView = () => {
   const { data, error, isLoading } = useHealthcareWorkers();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (error) {
@@ -31,9 +27,11 @@ const StaffView = () => {
     return <div>No staff found</div>;
   }
 
+  console.table(data);
+
   return (
     <div className="flex flex-col w-3/4">
-      {data.map((worker: Worker) => (
+      {data.map((worker: WorkerDTO) => (
         <Dialog key={worker.id}>
           <DialogTrigger key={worker.id}>
             <div
@@ -46,34 +44,25 @@ const StaffView = () => {
               <p>{worker.status}</p>
             </div>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-secondary">
             <DialogHeader>
               <DialogTitle>Breyta</DialogTitle>
               <DialogDescription>
                 Breyttu gildum og ýttu á vista.
               </DialogDescription>
             </DialogHeader>
-            <div className="flex flex-col p-4 gap-4 overflow-hidden">
-              <div className="flex flex-col gap-2">
-                <label>Nafn:</label>
-                <input type="text" defaultValue={worker.name} />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label>Sími:</label>
-                <input type="text" defaultValue={worker.phone} />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label>Teymi:</label>
-                <input type="text" defaultValue={worker.teamID} />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label>Staða:</label>
-                <input type="text" defaultValue={worker.status} />
-              </div>
-            </div>
+            <StaffForm user={worker} />
           </DialogContent>
         </Dialog>
       ))}
+      <div className="ms-auto mt-auto p-4">
+        <Button
+          className="mt-4"
+          onClick={() => console.log("Create new staff")}
+        >
+          Bæta við starfsfólki
+        </Button>
+      </div>
     </div>
   );
 };

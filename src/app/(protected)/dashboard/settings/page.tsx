@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import StaffView from "@/components/settings/staff";
+import Loading from "@/components/loading";
 
 const views = [
   { name: "Starfsmenn", value: "staff" },
@@ -38,7 +39,7 @@ export default function Settings() {
       )}
       {view === "other" && (
         <div className="flex flex-col w-3/4">
-          <h2>Annað</h2>
+          <Loading />
         </div>
       )}
     </div>

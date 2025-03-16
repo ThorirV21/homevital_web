@@ -60,3 +60,11 @@ export type MeasurementTypes =
   | BloodSugar
   | BodyWeight
   | BodyTemperature;
+
+export type WorkerDTO = {
+  id: number;
+  name: string;
+  phone: string;
+  teamID: string;
+  status: string;
+};

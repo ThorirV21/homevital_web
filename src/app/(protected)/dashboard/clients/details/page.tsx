@@ -12,6 +12,7 @@ import Treatment from "@/components/client_info/treatment";
 import Warnings from "@/components/client_info/warnings";
 import Vitals from "@/components/client_info/vitals";
 import Bell from "@/components/icons/bell";
+import Loading from "@/components/loading";
 
 const ClientDetailsContent: React.FC = () => {
   const searchParams = useSearchParams();
@@ -25,7 +26,7 @@ const ClientDetailsContent: React.FC = () => {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (error) {
@@ -111,7 +112,7 @@ const ClientDetailsContent: React.FC = () => {
 
 const ClientDetailsPage: React.FC = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <ClientDetailsContent />
     </Suspense>
   );
