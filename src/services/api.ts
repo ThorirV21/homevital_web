@@ -55,14 +55,25 @@ const fetchClientDetails = async (id: string) => {
 };
 
 const fetchClientMeasurements = async (id: string) => {
-  const url = new URL(`${API_URL}/Measurements/getById`);
-  url.searchParams.append("id", id);
+  const url = new URL(`${API_URL}/Measurements/${id}`);
+  //url.searchParams.append("id", id);
 
   const response = await fetch(url.toString(), {
     cache: "no-cache",
   });
   if (!response.ok) {
-    throw new Error("Failed to fetch client measurements");
+    console.error("Failed to fetch client measurements");
+    //throw new Error("Failed to fetch client measurements");
+  }
+  return await response.json();
+};
+
+const fetchVitalRanges = async (id: number) => {
+  const response = await fetch(`${API_URL}/vitalrange/${id}`, {
+    cache: "no-cache",
+  });
+  if (!response.ok) {
+    console.error("Failed to fetch vital ranges");
   }
   return await response.json();
 };
@@ -73,4 +84,5 @@ export {
   fetchClientMeasurements,
   login,
   mockLogin,
+  fetchVitalRanges,
 };
