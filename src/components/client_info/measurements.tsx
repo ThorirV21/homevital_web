@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useClientMeasurements } from "@/hooks/useClients";
-import { AllMeasurements } from "@/types/types";
+import { PatientMeasurement } from "@/types/types";
 
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import BodyTemp from "../icons/bodyTemp";
 import Sitting from "../icons/sitting";
 import InBed from "../icons/inBed";
 import Hand from "../icons/hand";
+import { Percent } from "lucide-react";
 
 const Measurements = ({ id }: { id: string }) => {
   const { measurements, error, isLoading } = useClientMeasurements(id);
@@ -29,7 +30,7 @@ const Measurements = ({ id }: { id: string }) => {
     return <div>No measurements found</div>;
   }
 
-  const mm: AllMeasurements[] = measurements[0].measurements;
+  const mm: PatientMeasurement[] = measurements;
 
   return (
     <div className="flex flex-col h-full">
@@ -53,7 +54,7 @@ const Measurements = ({ id }: { id: string }) => {
             <TableBody>
               {mm.map((item) => {
                 const type = item.measurementType;
-                const values = item.measurementValues[0];
+                const values = item.measurementValues;
                 const date = new Date(item.measurementDate);
                 const dateString = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
                 const icon =
@@ -65,6 +66,8 @@ const Measurements = ({ id }: { id: string }) => {
                     <BloodSugar />
                   ) : type === "BloodPressure" ? (
                     <Heart />
+                  ) : type === "OxygenSaturation" ? (
+                    <Percent />
                   ) : (
                     ""
                   );
@@ -75,6 +78,8 @@ const Measurements = ({ id }: { id: string }) => {
                     <TableCell>
                       {type === "BodyTemperature" ? (
                         `${values.temperature} °C`
+                      ) : type === "OxygenSaturation" ? (
+                        `${values.oxygenSaturation} %`
                       ) : type === "BodyWeight" ? (
                         `${values.weight} Kg`
                       ) : type === "BloodSugar" ? (

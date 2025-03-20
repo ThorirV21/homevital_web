@@ -47,12 +47,11 @@ export type BodyTemperature = {
 };
 
 export type PatientMeasurement = {
+  uid: number;
   id: number;
-  patientID: number;
-  bloodPressure: BloodPressure[];
-  bloodSugar: BloodSugar[];
-  bodyWeight: BodyWeight[];
-  bodyTemperature: BodyTemperature[];
+  measurementType: string;
+  measurementDate: string;
+  measurementValues: SingleMeasurement;
 };
 
 export type SingleMeasurement = {
