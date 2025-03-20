@@ -140,7 +140,7 @@ const Vitals = () => {
   };
 
   return (
-    <div className="flex p-4 flex-col h-full gap-4">
+    <div className="flex p-4 flex-col  gap-4">
       <div className="flex w-full ">
         {currentView.map((value) => (
           <div key={value.name} className="w-1/5 ">
@@ -153,10 +153,27 @@ const Vitals = () => {
           </div>
         ))}
       </div>
-      <div className="flex flex-col h-[94%] w-full border-primary border-2">
+      <div className="flex flex-col h-[92%] w-full border-primary border-2">
         <div className="flex flex-row p-6 items-center w-full">
+          {editing ? (
+            <div className="flex gap-2 items-center pl-14 ">
+              <Button size="lg" className="text-lg">
+                Vista
+              </Button>
+              <Button
+                variant="secondary"
+                size="lg"
+                className="text-lg"
+                onClick={() => setEditing(false)}
+              >
+                Hætta við
+              </Button>
+            </div>
+          ) : (
+            <></>
+          )}
           <Button
-            className="relative w-14 h-14 px-0 py-0 bg-transparent border-none shadow-none ml-auto"
+            className="relative w-10 h-10 px-0 py-0 bg-transparent border-none shadow-none ml-auto"
             onClick={handleChangeEditing}
           >
             <Pen
@@ -183,23 +200,6 @@ const Vitals = () => {
           )}
           ;
         </div>
-        {editing ? (
-          <div className="flex gap-2 items-center p-14 mt-auto ml-auto">
-            <Button size="lg" className="text-lg">
-              Vista
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              className="text-lg"
-              onClick={() => setEditing(false)}
-            >
-              Hætta við
-            </Button>
-          </div>
-        ) : (
-          <></>
-        )}
       </div>
     </div>
   );
