@@ -22,10 +22,10 @@ const VitalLine = ({
   console.log(distolicRanges);
   console.log(data);
   return (
-    <div className="flex flex-wrap p-6 items-center w-full">
+    <div className="flex flex-wrap p-5 items-center w-full">
       <div className="w-1/2 items-center flex gap-10">
         <Circle
-          className={`h-20 w-20 flex-shrink-0 ${settings.colors[index]}`}
+          className={`h-16 w-16 flex-shrink-0 ${settings.colors[index]}`}
         />
         <div>
           <p className="font-bold">{settings.texts[index]}</p>
