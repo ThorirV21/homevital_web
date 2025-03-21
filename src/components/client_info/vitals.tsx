@@ -51,9 +51,10 @@ const currentView: vitalSettings[] = [
     data: "Blood Pressure",
     texts: [
       "Eðlilegur blóðþrýstingur",
-      "Góður blóðþrýstingur",
-      "Ekki góður blóðþrýstingur",
-      "Hár blóðþrýstingur",
+      "Hækkaður blóðþrýstingur",
+      "Háþrýstingur stig 1",
+      "Háþrýstingur stig 2",
+      "Alvarlegur háþrýstingur",
     ],
     colors: ["alarm1", "alarm2", "alarm3", "alarm4", "alarm5"],
     type: "",
