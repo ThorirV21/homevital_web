@@ -42,7 +42,7 @@ const currentView: vitalSettings[] = [
     data: "Blood Sugar",
     texts: ["Eðlilegur blóðsykur", "Hækkaður blóðsykur", "Hár blóðsykur"],
     colors: ["alarm1", "alarm2", "alarm4"],
-    type: "mmol/L",
+    type: "mg/dL",
     min: 0,
     max: 200,
   },
@@ -70,7 +70,7 @@ const currentView: vitalSettings[] = [
       "30 daga þyngdarminkun",
     ],
     colors: ["alarm4", "alarm1", "alarm4"],
-    type: "kg",
+    type: "%",
     min: 0,
     max: 100,
   },
@@ -106,38 +106,44 @@ const Vitals = () => {
   }
   //console.log(vitalRanges);
   const handleChangeView = (view: vitalSettings) => {
-    console.log("changing view");
     setView(view);
     setCurrentData(vitalRanges.find((vital) => vital.name === view.data));
   };
 
   const handleChangeData = (e: ChangeEvent<HTMLInputElement>) => {
+    if (typeof currentData === "undefined") {
+      return;
+    }
     console.log(e.target.id);
     console.log(e.target.name);
     console.log(e.target.value);
 
-    const copyData = currentData;
+    const copyData: VitalCategory = { ...currentData };
 
-    copyData?.ranges.map((range) => {
+    copyData?.ranges?.map((range) => {
       if (range.name === e.target.id) {
         if (e.target.name === "min") {
-          range.min = parseInt(e.target.value);
+          range.min = e.target.value;
         } else {
-          range.max = parseInt(e.target.value);
+          range.max = e.target.value;
         }
       }
     });
 
-    setCurrentData(copyData);
+    setCurrentData({ ...copyData });
   };
 
   const handleChangeEditing = () => {
-    console.log("changing editing");
     if (editing) {
       setEditing(false);
     } else {
       setEditing(true);
     }
+  };
+
+  const handleSaveData = () => {
+    console.log("saving data");
+    console.table(currentData?.ranges);
   };
 
   return (
@@ -158,7 +164,11 @@ const Vitals = () => {
         <div className="flex flex-row p-6 items-center w-full">
           {editing ? (
             <div className="flex gap-2 items-center pl-14 ">
-              <Button size="lg" className="text-lg">
+              <Button
+                size="lg"
+                className="text-lg"
+                onClick={() => handleSaveData()}
+              >
                 Vista
               </Button>
               <Button
@@ -194,6 +204,7 @@ const Vitals = () => {
                 index={index}
                 editing={editing}
                 handleChangeData={handleChangeData}
+                distolicRanges={currentData.distolicRanges?.[index]}
               />
             ))
           ) : (
