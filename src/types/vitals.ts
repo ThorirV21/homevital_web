@@ -1,18 +1,11 @@
 export interface SingleRange {
   name: string | undefined;
-  min: string | undefined;
-  max: string | undefined;
+  min?: string | undefined;
+  max?: string | undefined;
+  prefix?: string;
 }
 
 export interface VitalCategory {
-  id: number | string | undefined;
-  patientId: number | string | undefined;
-  name: string | undefined;
-  ranges: SingleRange[];
-  distolicRanges?: SingleRange[];
-}
-
-export interface VitalCategoryPressure {
   id: number | string | undefined;
   patientId: number | string | undefined;
   name: string | undefined;
@@ -85,6 +78,12 @@ export interface RawVitalRanges {
     oxygenSaturationGood: string;
   };
 }
+export type VitalTransformKey =
+  | "bodytemperature"
+  | "bloodpressure"
+  | "bloodsugar"
+  | "oxygensaturation"
+  | "bodyweight";
 
 export type vitalSettings = {
   name: string;

@@ -1,9 +1,13 @@
 import { ChangeEvent, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
 import { useClientVitalRanges } from "@/hooks/useVitals";
 import VitalLine from "./vitalLine";
 import { VitalCategory, vitalSettings } from "@/types/vitals";
 import Pen from "../icons/pen";
+import { transformVitalRanges } from "@/services/transformData";
+import { VitalTransformKey } from "@/types/vitals";
+import { API_URL } from "@/services/api";
 
 /* const measurements = [
   "Súrefnismettun",
@@ -16,7 +20,7 @@ import Pen from "../icons/pen";
 const currentView: vitalSettings[] = [
   {
     name: "Súrefnismettun",
-    data: "Oxygen Saturation",
+    data: "oxygensaturation",
     texts: [
       "Eðlileg súrefnismettun",
       "Lækkuð súrefnismettun",
@@ -30,7 +34,7 @@ const currentView: vitalSettings[] = [
   },
   {
     name: "Hiti",
-    data: "Body Temperature",
+    data: "bodytemperature",
     texts: ["Undir meðallagi", "Eðlilegur hiti", "Yfir meðallagi", "Hiti"],
     colors: ["alarm2", "alarm1", "alarm3", "alarm4"],
     type: "°C",
@@ -39,7 +43,7 @@ const currentView: vitalSettings[] = [
   },
   {
     name: "Blóðsykur",
-    data: "Blood Sugar",
+    data: "bloodsugar",
     texts: ["Eðlilegur blóðsykur", "Hækkaður blóðsykur", "Hár blóðsykur"],
     colors: ["alarm1", "alarm2", "alarm4"],
     type: "mg/dL",
@@ -48,7 +52,7 @@ const currentView: vitalSettings[] = [
   },
   {
     name: "Blóðþrýstingur",
-    data: "Blood Pressure",
+    data: "bloodpressure",
     texts: [
       "Eðlilegur blóðþrýstingur",
       "Hækkaður blóðþrýstingur",
@@ -63,7 +67,7 @@ const currentView: vitalSettings[] = [
   },
   {
     name: "Vigt",
-    data: "Body Weight",
+    data: "bodyweight",
     texts: [
       "30 daga þyngdaraukning",
       "Þyngdarsveifla innan",
@@ -77,23 +81,28 @@ const currentView: vitalSettings[] = [
 ];
 
 const Vitals = () => {
-  const [view, setView] = useState(currentView[3]);
-  const { vitalRanges, error, isLoading } = useClientVitalRanges(1);
-  const [editing, setEditing] = useState(true);
+  const [view, setView] = useState(currentView[0]);
+  const searchParams = useSearchParams();
+  const clientId = searchParams.get("id");
+  const { vitalRanges, error, isLoading, refetch } = useClientVitalRanges(
+    Number(clientId)
+  );
+  const [editing, setEditing] = useState(false);
 
   const [currentData, setCurrentData] = useState<VitalCategory | undefined>(
     undefined
   );
 
   useEffect(() => {
-    const foundVital = vitalRanges.find((vital) => vital.name === view.data);
+    const foundVital = vitalRanges.find((vital) => {
+      return vital.name === view.data; // Simplified matching since names in transformVitalData now match view.data
+    });
 
     setCurrentData((prevData) => {
       if (prevData?.ranges[0].min === foundVital?.ranges[0].min) {
-        return prevData; // ✅ Prevents re-render if no change
+        return prevData;
       }
-      console.log("Updating currentData...", foundVital);
-      return foundVital; // ✅ Only update if it actually changes
+      return foundVital;
     });
   }, [vitalRanges, view]);
 
@@ -104,28 +113,30 @@ const Vitals = () => {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-  //console.log(vitalRanges);
+
   const handleChangeView = (view: vitalSettings) => {
     setView(view);
-    setCurrentData(vitalRanges.find((vital) => vital.name === view.data));
+    const foundVital = vitalRanges.find((vital) => {
+      if (!vital.name) return false;
+      const vitalNameLower = vital.name.toLowerCase().replace(" ", "");
+      return vitalNameLower === view.data;
+    });
+    setCurrentData(foundVital);
   };
 
   const handleChangeData = (e: ChangeEvent<HTMLInputElement>) => {
     if (typeof currentData === "undefined") {
       return;
     }
-    console.log(e.target.id);
-    console.log(e.target.name);
-    console.log(e.target.value);
 
     const copyData: VitalCategory = { ...currentData };
 
     copyData?.ranges?.map((range) => {
       if (range.name === e.target.id) {
         if (e.target.name === "min") {
-          range.min = e.target.value;
+          range.min = e.target.value.replace(",", ".");
         } else {
-          range.max = e.target.value;
+          range.max = e.target.value.replace(",", ".");
         }
       }
     });
@@ -139,11 +150,46 @@ const Vitals = () => {
     } else {
       setEditing(true);
     }
+    console.log(currentData);
   };
 
   const handleSaveData = () => {
-    console.log("saving data");
-    console.table(currentData?.ranges);
+    // TODO: Vantar að ath hvort gildi séu innan réttra marka, i.e. hiti má t.d. ekki vera 0 eða minna
+    // breyta kommum í punkta
+    const saveDataToAPI = async () => {
+      try {
+        if (!currentData || !clientId) return;
+
+        const formattedData = transformVitalRanges[
+          view.data as VitalTransformKey
+        ](currentData.ranges, Number(clientId), Number(currentData.id));
+
+        const response = await fetch(
+          `${API_URL}/vitalrange/${view.data}/${clientId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formattedData),
+          }
+        );
+        console.log(JSON.stringify(formattedData));
+
+        if (!response.ok) {
+          throw new Error(`Failed to save ${view.name} data`);
+        }
+
+        const data = await response.json();
+        console.log(`${view.name} data saved successfully:`, data);
+        setEditing(false);
+        await refetch();
+      } catch (error) {
+        console.error("Error saving data:", error);
+      }
+    };
+
+    saveDataToAPI();
   };
 
   return (
@@ -210,7 +256,6 @@ const Vitals = () => {
           ) : (
             <></>
           )}
-          ;
         </div>
       </div>
     </div>
