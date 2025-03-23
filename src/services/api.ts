@@ -1,7 +1,7 @@
 import { loginSchema } from "@/services/schemas";
 import { z } from "zod";
 
-const API_URL = process.env.API_URL;
+export const API_URL = process.env.API_URL;
 
 const login = async (form: z.infer<typeof loginSchema>) => {
   const response = await fetch(`${API_URL}user/login`, {
@@ -69,13 +69,33 @@ const fetchClientMeasurements = async (id: string) => {
 };
 
 const fetchVitalRanges = async (id: number) => {
-  const response = await fetch(`${API_URL}/vitalrange/${id}`, {
-    cache: "no-cache",
-  });
-  if (!response.ok) {
-    console.error("Failed to fetch vital ranges");
+  try {
+    const response = await fetch(`${API_URL}/vitalrange/${id}`, {
+      cache: "no-cache",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch vital ranges");
+    }
+    const data = await response.json();
+    return (
+      data || {
+        bloodPressureRange: { id, patientID: id },
+        bloodSugarRange: { id, patientID: id },
+        bodyTemperatureRange: { id, patientID: id },
+        oxygenSaturationRange: { id, patientID: id },
+        bodyWeightRange: { id, patientID: id },
+      }
+    );
+  } catch (error) {
+    console.error("Error fetching vital ranges:", error);
+    return {
+      bloodPressureRange: { id, patientID: id },
+      bloodSugarRange: { id, patientID: id },
+      bodyTemperatureRange: { id, patientID: id },
+      oxygenSaturationRange: { id, patientID: id },
+      bodyWeightRange: { id, patientID: id },
+    };
   }
-  return await response.json();
 };
 
 export {

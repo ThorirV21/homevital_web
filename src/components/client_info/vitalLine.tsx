@@ -18,9 +18,7 @@ const VitalLine = ({
   editing: boolean;
   handleChangeData: (e: ChangeEvent<HTMLInputElement>) => void;
 }) => {
-  console.log(editing);
-  console.log(distolicRanges);
-  console.log(data);
+  console.debug(distolicRanges);
   return (
     <div className="flex flex-wrap p-5 items-center w-full">
       <div className="w-1/2 items-center flex gap-10">
@@ -31,14 +29,20 @@ const VitalLine = ({
           <p className="font-bold">{settings.texts[index]}</p>
           {editing ? (
             <div className="flex gap-2 items-center">
-              <Input
-                id={data.name}
-                name="min"
-                defaultValue={data.min ?? ""}
-                onChange={(e) => handleChangeData(e)}
-                className="w-16 text-center"
-              />
-              <p>-</p>
+              {data.prefix ? (
+                <p>{data.prefix}</p>
+              ) : (
+                <>
+                  <Input
+                    id={data.name}
+                    name="min"
+                    defaultValue={data.min ?? ""}
+                    onChange={(e) => handleChangeData(e)}
+                    className="w-16 text-center"
+                  />
+                  <p>-</p>
+                </>
+              )}
               <Input
                 id={data.name}
                 name="max"
@@ -51,7 +55,8 @@ const VitalLine = ({
           ) : (
             <div className="flex gap-2 items-center">
               <p>
-                {data.min} - {data.max}
+                {data.prefix ? data.prefix : `${data.min} - `}
+                {data.max}
               </p>
               <p>{settings.type}</p>
             </div>
