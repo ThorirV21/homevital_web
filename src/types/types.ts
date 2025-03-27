@@ -54,6 +54,13 @@ export type PatientMeasurement = {
   measurementValues: SingleMeasurement;
 };
 
+export type WorkerDTO = {
+  id: number;
+  name: string;
+  phone: string;
+  teamID: number;
+  status: string;
+};
 export type SingleMeasurement = {
   systolic: number;
   diastolic: number;

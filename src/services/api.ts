@@ -1,4 +1,5 @@
 import { loginSchema } from "@/services/schemas";
+import { WorkerDTO } from "@/types/types";
 import { z } from "zod";
 
 export const API_URL = process.env.API_URL;
@@ -55,7 +56,7 @@ const fetchClientDetails = async (id: string) => {
 };
 
 const fetchClientMeasurements = async (id: string) => {
-  const url = new URL(`${API_URL}/Measurements/${id}`);
+  const url = new URL(`${API_URL}/measurements/${id}`);
   //url.searchParams.append("id", id);
 
   const response = await fetch(url.toString(), {
@@ -64,6 +65,65 @@ const fetchClientMeasurements = async (id: string) => {
   if (!response.ok) {
     console.error("Failed to fetch client measurements");
     //throw new Error("Failed to fetch client measurements");
+  }
+  return await response.json();
+};
+
+const fetchHealthcareWorkers = async () => {
+  const response = await fetch(`${API_URL}/healthcareworkers`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch healthcare workers");
+  }
+  return await response.json();
+};
+
+const createHealthcareWorker = async (worker: WorkerDTO) => {
+  const response = await fetch(`${API_URL}/healthcareworkers`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: worker.name,
+      phone: worker.phone,
+      teamID: worker.teamID,
+      status: worker.status,
+    }),
+  });
+  if (!response.ok) {
+    console.error("Failed to create healthcare worker", response.json());
+  }
+  return await response.json();
+};
+
+const updateHealthcareWorker = async (worker: WorkerDTO) => {
+  const response = await fetch(`${API_URL}/healthcareworkers/${worker.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: worker.name,
+      phone: worker.phone,
+      teamID: worker.teamID,
+      status: worker.status,
+    }),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to update healthcare worker");
+  }
+  return await response.json();
+};
+
+const deleteHealthcareWorker = async (id: string) => {
+  const response = await fetch(`${API_URL}/healthcareworkers/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete healthcare worker");
   }
   return await response.json();
 };
@@ -104,5 +164,9 @@ export {
   fetchClientMeasurements,
   login,
   mockLogin,
+  fetchHealthcareWorkers,
+  createHealthcareWorker,
+  updateHealthcareWorker,
+  deleteHealthcareWorker,
   fetchVitalRanges,
 };

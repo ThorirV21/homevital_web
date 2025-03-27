@@ -13,13 +13,14 @@ import Sitting from "../icons/sitting";
 import InBed from "../icons/inBed";
 import Hand from "../icons/hand";
 import { Percent } from "lucide-react";
+import Loading from "@/components/loading";
 
 const Measurements = ({ id }: { id: string }) => {
   const { measurements, error, isLoading } = useClientMeasurements(id);
   const [view, setView] = useState("registered");
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (error) {
