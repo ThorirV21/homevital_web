@@ -7,7 +7,7 @@ const loginSchema = z.object({
 const staffSchema = z.object({
   name: z.string().min(3),
   phone: z.string(),
-  team: z.string(),
+  team: z.number(),
   status: z.string(),
 });
 
