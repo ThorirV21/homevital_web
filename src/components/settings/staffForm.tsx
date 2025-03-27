@@ -20,7 +20,7 @@ import { FormInput } from "../forms/input";
 import { MultiSelect } from "../forms/multiSelect";
 
 const StaffForm = ({ user }: { user: WorkerDTO }) => {
-  const [selected, setSelected] = useState<string[]>([user.teamID]);
+  const [selected, setSelected] = useState<string[]>([user.status]);
   const form = useForm<z.infer<typeof staffSchema>>({
     resolver: zodResolver(staffSchema),
     defaultValues: {
@@ -59,7 +59,11 @@ const StaffForm = ({ user }: { user: WorkerDTO }) => {
             <FormItem>
               <FormLabel>Teymi:</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  type="number"
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
               </FormControl>
               <FormDescription>Teymi</FormDescription>
               <FormMessage />
@@ -74,7 +78,10 @@ const StaffForm = ({ user }: { user: WorkerDTO }) => {
               {...field}
               options={["active", "inactive"]}
               selected={selected}
-              onChange={setSelected}
+              onChange={(value) => {
+                setSelected(value);
+                field.onChange(value[0]);
+              }}
               label="Staða"
               description="Staða"
             />
