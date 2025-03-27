@@ -13,13 +13,14 @@ import Warnings from "@/components/client_info/warnings";
 import Vitals from "@/components/client_info/vitals";
 import Bell from "@/components/icons/bell";
 import Loading from "@/components/loading";
+import { redirect } from "next/navigation";
 
 const ClientDetailsContent: React.FC = () => {
   const searchParams = useSearchParams();
   const clientId = searchParams.get("id");
   const idString = clientId ? clientId : "";
   const { patientDetails, isLoading, error } = useClientDetails(idString);
-  const [currentView, setCurrentView] = useState("measurements");
+  const [currentView, setCurrentView] = useState("vitals"); // TODO: change this back to "measurements"
 
   if (!clientId) {
     return <></>;
@@ -33,13 +34,14 @@ const ClientDetailsContent: React.FC = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log(patientDetails);
-
   const { name, address, teamID } = patientDetails;
-  console.log(currentView);
+
+  const handleExit = () => {
+    redirect("/dashboard/clients/list");
+  };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" key={patientDetails?.id || "default"}>
       <div className="flex flex-shrink-0">
         <div className="p-4 w-1/3">
           <h1 className="font-bold">Nafn:</h1>
@@ -56,9 +58,12 @@ const ClientDetailsContent: React.FC = () => {
             </Badge>
           </div>
           <div className="flex flex-col w-full items-end">
-            <Button className="bg-transparent border-none shadow-none hover:bg-transparent p-0">
+            <Button
+              className="bg-transparent border-none shadow-none hover:bg-transparent p-0"
+              onClick={handleExit}
+            >
               <Image
-                src="/nav_icons/close.svg"
+                src="/nav_icons/Close.svg"
                 alt="Close"
                 width={25}
                 height={25}

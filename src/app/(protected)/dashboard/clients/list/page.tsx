@@ -30,8 +30,6 @@ import { useClients } from "@/hooks/useClients";
 
 export default function Clients() {
   const { patients, error, isLoading } = useClients();
-  console.log(error, isLoading);
-  console.table(patients);
 
   if (isLoading) {
     return <div>Loading...</div>;

@@ -33,6 +33,9 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --good: 122 100% 47%;
+    --warning: 45 100% 50%;
+    --bad: 0 100% 50%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -78,4 +81,29 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.alarm1 {
+  color: rgba(0, 240, 0, 1);
+  filter: drop-shadow(5px 5px 10px rgba(0, 100, 0, 0.7));
+}
+
+.alarm2 {
+  color: rgb(236, 240, 0);
+  filter: drop-shadow(5px 5px 10px rgba(100, 100, 0, 0.7));
+}
+
+.alarm3 {
+  color: rgb(240, 144, 0);
+  filter: drop-shadow(5px 5px 10px rgba(100, 50, 0, 0.7));
+}
+
+.alarm4 {
+  color: rgb(240, 0, 0);
+  filter: drop-shadow(5px 5px 10px rgba(100, 0, 0, 0.7));
+}
+
+.alarm5 {
+  color: rgb(156, 2, 2);
+  filter: drop-shadow(5px 5px 10px rgba(50, 0, 0, 0.7));
 }

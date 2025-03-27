@@ -2,7 +2,7 @@ import { loginSchema } from "@/services/schemas";
 import { WorkerDTO } from "@/types/types";
 import { z } from "zod";
 
-const API_URL = process.env.API_URL;
+export const API_URL = process.env.API_URL;
 
 const login = async (form: z.infer<typeof loginSchema>) => {
   const response = await fetch(`${API_URL}user/login`, {
@@ -43,7 +43,7 @@ const fetchClients = async () => {
 const fetchClientDetails = async (id: string) => {
   try {
     const response = await fetch(`${API_URL}/patients/${id}`, {
-      cache: "no-cache",
+      cache: "no-store",
     });
     if (!response.ok) {
       throw new Error("Failed to fetch client details");
@@ -51,6 +51,7 @@ const fetchClientDetails = async (id: string) => {
     return await response.json();
   } catch (error) {
     console.error("Error fetching client details: ", error);
+    return null;
   }
 };
 
@@ -62,7 +63,8 @@ const fetchClientMeasurements = async (id: string) => {
     cache: "no-cache",
   });
   if (!response.ok) {
-    throw new Error("Failed to fetch client measurements");
+    console.error("Failed to fetch client measurements");
+    //throw new Error("Failed to fetch client measurements");
   }
   return await response.json();
 };
@@ -126,6 +128,36 @@ const deleteHealthcareWorker = async (id: string) => {
   return await response.json();
 };
 
+const fetchVitalRanges = async (id: number) => {
+  try {
+    const response = await fetch(`${API_URL}/vitalrange/${id}`, {
+      cache: "no-cache",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch vital ranges");
+    }
+    const data = await response.json();
+    return (
+      data || {
+        bloodPressureRange: { id, patientID: id },
+        bloodSugarRange: { id, patientID: id },
+        bodyTemperatureRange: { id, patientID: id },
+        oxygenSaturationRange: { id, patientID: id },
+        bodyWeightRange: { id, patientID: id },
+      }
+    );
+  } catch (error) {
+    console.error("Error fetching vital ranges:", error);
+    return {
+      bloodPressureRange: { id, patientID: id },
+      bloodSugarRange: { id, patientID: id },
+      bodyTemperatureRange: { id, patientID: id },
+      oxygenSaturationRange: { id, patientID: id },
+      bodyWeightRange: { id, patientID: id },
+    };
+  }
+};
+
 export {
   fetchClients,
   fetchClientDetails,
@@ -136,4 +168,5 @@ export {
   createHealthcareWorker,
   updateHealthcareWorker,
   deleteHealthcareWorker,
+  fetchVitalRanges,
 };

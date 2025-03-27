@@ -62,7 +62,6 @@ const Filter = ({
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
     setFilters({
       status: data.items,
       teamId: data.items.includes("min-teymi"),

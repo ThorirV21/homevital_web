@@ -28,6 +28,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Filter from "../filter";
+import Checkmark from "../icons/checkmark";
 
 export interface filterProps {
   status: string[];
@@ -53,14 +54,12 @@ export const columns: ColumnDef<clientListProps>[] = [
   {
     accessorKey: "status",
     header: "",
-    cell: ({ row }) => (
-      <Image
-        src={`/status_${row.getValue("status")}.svg`}
-        alt="Status"
-        width={20}
-        height={20}
-      />
-    ),
+    cell: ({ row }) => {
+      const status = row.getValue("status");
+      if (status === "Inactive") {
+        return <Checkmark className="m-auto" />;
+      }
+    },
   },
 ];
 
@@ -155,7 +154,7 @@ const ClientList = ({ data }: { data: clientListProps[] }) => {
                   onClick={() => handleRowClick(row.original.id)}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
