@@ -65,6 +65,6 @@ export type WorkerDTO = {
   id: number;
   name: string;
   phone: string;
-  teamID: string;
+  teamID: number;
   status: string;
 };

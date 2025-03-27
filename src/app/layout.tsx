@@ -11,7 +11,9 @@ const openSans = Open_Sans({
 export const metadata: Metadata = {
   title: "Heimahjúkrun Akureyri",
   description: "Home care services in Akureyri",
-  icons: "/homeVital.svg",
+  icons: {
+    icon: "/homeVital.svg",
+  },
 };
 
 export default function RootLayout({
