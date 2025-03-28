@@ -20,7 +20,7 @@ const ClientDetailsContent: React.FC = () => {
   const clientId = searchParams.get("id");
   const idString = clientId ? clientId : "";
   const { patientDetails, isLoading, error } = useClientDetails(idString);
-  const [currentView, setCurrentView] = useState("vitals"); // TODO: change this back to "measurements"
+  const [currentView, setCurrentView] = useState("measurements");
 
   if (!clientId) {
     return <></>;

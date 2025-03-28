@@ -42,8 +42,6 @@ const StaffView = () => {
     setDialogOpen(true);
   };
 
-  console.table(data);
-
   return (
     <div className="flex flex-col w-3/4">
       <table className="w-full border-collapse border border-gray-300">

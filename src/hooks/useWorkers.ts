@@ -13,7 +13,6 @@ const useHealthcareWorkers = () => {
     staleTime: 60000,
   });
   if (error) {
-    console.log("Error fetching workers: ", error);
     return { data: [], error, isLoading };
   }
 

@@ -18,9 +18,10 @@ const VitalLine = ({
   editing: boolean;
   handleChangeData: (e: ChangeEvent<HTMLInputElement>) => void;
 }) => {
-  console.debug(distolicRanges);
+  // TODO: Eyða út distolicRanges error fiffi
   return (
     <div className="flex flex-wrap p-5 items-center w-full">
+      {distolicRanges ? "" : ""}
       <div className="w-1/2 items-center flex gap-10">
         <Circle
           className={`h-16 w-16 flex-shrink-0 ${settings.colors[index]}`}
