@@ -14,7 +14,7 @@ export default function Settings() {
   const [view, setView] = useState(views[0].value);
 
   return (
-    <div className="flex h-full bg-white">
+    <div className="flex h-full w-full bg-white">
       <div className="flex flex-col w-1/4 border-r border-black">
         <div className="flex items-center justify-center p-4 border-b border-gray-300">
           <h2 className="text-2xl font-bold">Stillingar</h2>
@@ -31,17 +31,19 @@ export default function Settings() {
           ))}
         </div>
       </div>
-      {view === "staff" && <StaffView />}
-      {view === "team" && (
-        <div className="flex flex-col w-3/4">
-          <h2>Teymi</h2>
-        </div>
-      )}
-      {view === "other" && (
-        <div className="flex flex-col w-3/4">
-          <Loading />
-        </div>
-      )}
+      <div className="flex flex-col w-3/4 h-full">
+        {view === "staff" && <StaffView />}
+        {view === "team" && (
+          <div className="flex flex-col w-3/4">
+            <h2>Teymi</h2>
+          </div>
+        )}
+        {view === "other" && (
+          <div className="flex flex-col w-3/4">
+            <Loading />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

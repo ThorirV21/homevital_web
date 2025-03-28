@@ -43,7 +43,7 @@ const StaffView = () => {
   };
 
   return (
-    <div className="flex flex-col w-3/4">
+    <div className="flex flex-col">
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr className="flex flex-row items-center text-left justify-between border-b border-gray-300 p-3">
