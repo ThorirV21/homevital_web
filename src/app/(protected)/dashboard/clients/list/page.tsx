@@ -10,6 +10,7 @@ import { Client } from "@/types/clientTypes";
 import Error from "@/components/error";
 import NewFilter from "@/components/newFilter";
 import { FilterProps } from "@/types/filterTypes";
+import { Suspense } from "react";
 
 // TODO: Get this from the backend
 const items: FilterProps = {
@@ -50,7 +51,7 @@ const items: FilterProps = {
   ],
 };
 
-export default function Clients() {
+const ClientListContent = () => {
   const router = useRouter();
   const { patients, error, isLoading } = useClients();
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -80,7 +81,6 @@ export default function Clients() {
   }
 
   const handleClickPatient = (patient: Client) => {
-    setSelectedPatient(patient);
     router.push(`?id=${patient.id}`, { scroll: false });
   };
 
@@ -134,4 +134,14 @@ export default function Clients() {
       </div>
     </div>
   );
-}
+};
+
+const Clients = () => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <ClientListContent />
+    </Suspense>
+  );
+};
+
+export default Clients;
