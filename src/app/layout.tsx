@@ -21,10 +21,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // TODO: Change min-w-[1340px] and fix the layout for small screens
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="preload"
+          href="/homeVital.svg"
+          as="image"
+          type="image/svg+xml"
+        />
+      </head>
       <body
-        className={`${openSans.className} antialiased flex flex-col h-screen min-w-[1440px]`}
+        className={`${openSans.className} antialiased flex flex-col h-screen min-w-[1340px]`}
       >
         <Providers>{children}</Providers>
       </body>
