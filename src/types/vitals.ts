@@ -78,12 +78,20 @@ export interface RawVitalRanges {
     oxygenSaturationGood: string;
   };
 }
+
 export type VitalTransformKey =
   | "bodytemperature"
   | "bloodpressure"
   | "bloodsugar"
   | "oxygensaturation"
   | "bodyweight";
+
+export type VitalPatch = {
+  clientId: number;
+  id: number;
+  data: SingleRange[];
+  type: string;
+};
 
 export type vitalSettings = {
   name: string;

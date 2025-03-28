@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchVitalRanges } from "@/services/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchVitalRanges, updateVitalRange } from "@/services/api";
 import { transformVitalData } from "@/services/transformData";
 
 const useClientVitalRanges = (id: number) => {
@@ -9,9 +9,23 @@ const useClientVitalRanges = (id: number) => {
     staleTime: 60000,
   });
 
-  const vitalRanges = [...transformVitalData(data)];
+  const vitalRanges = data ? transformVitalData(data) : [];
 
   return { vitalRanges, error, isLoading, refetch };
 };
 
-export { useClientVitalRanges };
+const useVitalRangeMutations = (id: number) => {
+  const queryClient = useQueryClient();
+
+  console.log(id);
+
+  const updateMutation = useMutation({
+    mutationFn: updateVitalRange,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["vitalRanges", id] });
+    },
+  });
+
+  return { updateMutation };
+};
+export { useClientVitalRanges, useVitalRangeMutations };

@@ -1,6 +1,9 @@
 import { loginSchema } from "@/services/schemas";
 import { WorkerDTO } from "@/types/types";
+import { VitalTransformKey } from "@/types/vitals";
+import { VitalPatch } from "@/types/vitals";
 import { z } from "zod";
+import { transformVitalRanges } from "@/services/transformData";
 
 export const API_URL = process.env.API_URL;
 
@@ -158,6 +161,31 @@ const fetchVitalRanges = async (id: number) => {
   }
 };
 
+const updateVitalRange = async (data: VitalPatch) => {
+  const formattedData = transformVitalRanges[data.type as VitalTransformKey](
+    data.data,
+    data.clientId,
+    data.id
+  );
+
+  console.log(JSON.stringify(formattedData));
+  const response = await fetch(
+    `${API_URL}/vitalrange/${data.type}/${data.clientId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify(formattedData),
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to update vital range");
+  }
+  return await response.json();
+};
+
 export {
   fetchClients,
   fetchClientDetails,
@@ -169,4 +197,5 @@ export {
   updateHealthcareWorker,
   deleteHealthcareWorker,
   fetchVitalRanges,
+  updateVitalRange,
 };

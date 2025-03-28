@@ -4,27 +4,27 @@ import {
   fetchClientDetails,
   fetchClientMeasurements,
 } from "@/services/api";
+import { Client } from "@/types/clientTypes";
+import { PatientMeasurement } from "@/types/types";
 
 const refetchInterval = 1000;
 
 const useClients = () => {
-  const {
-    data: patients,
-    error,
-    isLoading,
-  } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["clients"],
     queryFn: fetchClients,
     staleTime: 60000,
   });
   if (error) {
-    console.log("Error fetching clients: ", error);
     return { patients: [], error, isLoading };
   }
+
+  const patients = data as Client[];
 
   return { patients, error, isLoading };
 };
 
+// TODO: Check if this is needed
 const useClientDetails = (id: string) => {
   const {
     data: patientDetails,
@@ -41,12 +41,7 @@ const useClientDetails = (id: string) => {
 };
 
 const useClientMeasurements = (id: string) => {
-  const {
-    data: measurements,
-    error,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["clientMeasurements", id],
     queryFn: () => (id ? fetchClientMeasurements(id) : Promise.resolve(null)),
     staleTime: 0,
@@ -54,11 +49,14 @@ const useClientMeasurements = (id: string) => {
     refetchOnMount: true,
     refetchOnReconnect: true,
     refetchOnWindowFocus: true,
-    select: (data) => {
-      console.log("New Data from Query:", data);
-      return data;
-    },
   });
+
+  console.log(data);
+
+  const measurements = data as PatientMeasurement[];
+
+  console.log(measurements);
+
   if (error) {
     return { measurements: null, error, isLoading, refetch };
   }

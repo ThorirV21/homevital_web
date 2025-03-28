@@ -1,14 +1,15 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
-import { useClientVitalRanges } from "@/hooks/useVitals";
+import {
+  useClientVitalRanges,
+  useVitalRangeMutations,
+} from "@/hooks/useVitals";
 import VitalLine from "./vitalLine";
 import { VitalCategory, vitalSettings } from "@/types/vitals";
 import Pen from "../icons/pen";
-import { transformVitalRanges } from "@/services/transformData";
-import { VitalTransformKey } from "@/types/vitals";
-import { API_URL } from "@/services/api";
-
+import Loading from "@/components/loading";
+import Error from "@/components/error";
 /* const measurements = [
   "Súrefnismettun",
   "Hiti",
@@ -88,40 +89,31 @@ const Vitals = () => {
     Number(clientId)
   );
   const [editing, setEditing] = useState(false);
-
+  const { updateMutation } = useVitalRangeMutations(Number(clientId));
   const [currentData, setCurrentData] = useState<VitalCategory | undefined>(
     undefined
   );
 
-  useEffect(() => {
-    const foundVital = vitalRanges.find((vital) => {
-      return vital.name === view.data; // Simplified matching since names in transformVitalData now match view.data
-    });
-
-    setCurrentData((prevData) => {
-      if (prevData?.ranges[0].min === foundVital?.ranges[0].min) {
-        return prevData;
-      }
-      return foundVital;
-    });
-  }, [vitalRanges, view]);
-
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <Error />;
+  }
+
+  // Set initial currentData if it's not set yet
+  if (!currentData) {
+    const foundVital = vitalRanges.find((vital) => vital.name === view.data);
+    setCurrentData(foundVital);
   }
 
   const handleChangeView = (view: vitalSettings) => {
-    setView(view);
-    const foundVital = vitalRanges.find((vital) => {
-      if (!vital.name) return false;
-      const vitalNameLower = vital.name.toLowerCase().replace(" ", "");
-      return vitalNameLower === view.data;
-    });
+    const foundVital = vitalRanges.find((vital) => vital.name === view.data);
     setCurrentData(foundVital);
+    console.log(foundVital);
+    setEditing(false);
+    setView(view);
   };
 
   const handleChangeData = (e: ChangeEvent<HTMLInputElement>) => {
@@ -150,45 +142,41 @@ const Vitals = () => {
     } else {
       setEditing(true);
     }
-    console.log(currentData);
   };
 
   const handleSaveData = () => {
-    // TODO: Vantar að ath hvort gildi séu innan réttra marka, i.e. hiti má t.d. ekki vera 0 eða minna
-    // breyta kommum í punkta
     const saveDataToAPI = async () => {
-      try {
-        if (!currentData || !clientId) return;
+      if (
+        !currentData ||
+        !clientId ||
+        !currentData.id ||
+        typeof currentData.id !== "number"
+      )
+        return;
 
-        const formattedData = transformVitalRanges[
-          view.data as VitalTransformKey
-        ](currentData.ranges, Number(clientId), Number(currentData.id));
-
-        const response = await fetch(
-          `${API_URL}/vitalrange/${view.data}/${clientId}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formattedData),
-          }
-        );
-        console.log(JSON.stringify(formattedData));
-
-        if (!response.ok) {
-          throw new Error(`Failed to save ${view.name} data`);
+      updateMutation.mutate(
+        {
+          clientId: Number(clientId),
+          id: Number(currentData.id),
+          data: currentData.ranges,
+          type: view.data,
+        },
+        {
+          onSuccess: () => {
+            refetch();
+            setEditing(false);
+            console.log("Successfully saved data");
+            const foundVital = vitalRanges.find(
+              (vital) => vital.name === view.data
+            );
+            setCurrentData(foundVital);
+          },
+          onError: (error) => {
+            console.error("Error saving data:", error);
+          },
         }
-
-        const data = await response.json();
-        console.log(`${view.name} data saved successfully:`, data);
-        setEditing(false);
-        await refetch();
-      } catch (error) {
-        console.error("Error saving data:", error);
-      }
+      );
     };
-
     saveDataToAPI();
   };
 
