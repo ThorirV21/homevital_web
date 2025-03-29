@@ -4,11 +4,12 @@ import { VitalTransformKey } from "@/types/vitals";
 import { VitalPatch } from "@/types/vitals";
 import { z } from "zod";
 import { transformVitalRanges } from "@/services/transformData";
+import { UserDTO } from "@/types/workerTypes";
 
 export const API_URL = process.env.API_URL;
 
 const login = async (form: z.infer<typeof loginSchema>) => {
-  const response = await fetch(`${API_URL}user/login`, {
+  const response = await fetch(`${API_URL}/user/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -18,11 +19,12 @@ const login = async (form: z.infer<typeof loginSchema>) => {
   if (!response.ok) {
     throw new Error("Failed to login");
   }
-  return await response.json();
+  const data: UserDTO = await response.json();
+  return data;
 };
 
 const mockLogin = async (form: z.infer<typeof loginSchema>) => {
-  const response = await fetch(`${API_URL}user/MockLogin`, {
+  const response = await fetch(`${API_URL}/user/MockLogin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -69,13 +71,22 @@ const fetchClientMeasurements = async (id: string) => {
     console.error("Failed to fetch client measurements");
     //throw new Error("Failed to fetch client measurements");
   }
-  return await response.json();
+  const data = await response.json();
+  return data;
 };
 
 const fetchHealthcareWorkers = async () => {
   const response = await fetch(`${API_URL}/healthcareworkers`);
   if (!response.ok) {
     throw new Error("Failed to fetch healthcare workers");
+  }
+  return await response.json();
+};
+
+const fetchHealthcareWorker = async (id: string) => {
+  const response = await fetch(`${API_URL}/healthcareworkers/${id}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch healthcare worker");
   }
   return await response.json();
 };
@@ -168,7 +179,6 @@ const updateVitalRange = async (data: VitalPatch) => {
     data.id
   );
 
-  console.log(JSON.stringify(formattedData));
   const response = await fetch(
     `${API_URL}/vitalrange/${data.type}/${data.clientId}`,
     {
@@ -198,4 +208,5 @@ export {
   deleteHealthcareWorker,
   fetchVitalRanges,
   updateVitalRange,
+  fetchHealthcareWorker,
 };

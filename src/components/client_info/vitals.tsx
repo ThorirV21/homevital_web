@@ -111,7 +111,7 @@ const Vitals = () => {
   const handleChangeView = (view: vitalSettings) => {
     const foundVital = vitalRanges.find((vital) => vital.name === view.data);
     setCurrentData(foundVital);
-    console.log(foundVital);
+
     setEditing(false);
     setView(view);
   };
@@ -165,7 +165,7 @@ const Vitals = () => {
           onSuccess: () => {
             refetch();
             setEditing(false);
-            console.log("Successfully saved data");
+
             const foundVital = vitalRanges.find(
               (vital) => vital.name === view.data
             );

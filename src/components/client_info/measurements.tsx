@@ -87,8 +87,8 @@ const Measurements = ({ id }: { id: string }) => {
 
   if (!currentData) {
     setCurrentData(measurements);
-    console.log(currentData);
   }
+
   console.log(currentData);
 
   return (
@@ -174,11 +174,13 @@ const Measurements = ({ id }: { id: string }) => {
                         </div>
                       ) : null}
                     </TableCell>
-                    {
+                    {values.status !== "" && values.status !== "Invalid" ? (
                       <TableCell className="p-0">
-                        <Circle className="text-good fill-good" />
+                        <Circle className={values.status} />
                       </TableCell>
-                    }
+                    ) : (
+                      <></>
+                    )}
                   </TableRow>
                 );
               })}

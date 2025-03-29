@@ -47,8 +47,8 @@ export type BodyTemperature = {
 };
 
 export type PatientMeasurement = {
-  uid: number;
   id: number;
+  uid: number;
   measurementType: string;
   measurementDate: string;
   measurementValues: SingleMeasurement;
@@ -71,18 +71,5 @@ export type SingleMeasurement = {
   weight: number;
   temperature: number;
   oxygenSaturation: number;
-};
-
-export type AllMeasurements = {
-  id: number;
-  measurementID: number;
-  measurementType: string;
-  measurementValues: [SingleMeasurement];
-  measurementDate: string;
-};
-
-export type MeasurementTypes = {
-  id: number;
-  patientID: number;
-  measurements: [AllMeasurements];
+  status: string;
 };
