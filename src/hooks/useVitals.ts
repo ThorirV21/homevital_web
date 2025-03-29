@@ -17,8 +17,6 @@ const useClientVitalRanges = (id: number) => {
 const useVitalRangeMutations = (id: number) => {
   const queryClient = useQueryClient();
 
-  console.log(id);
-
   const updateMutation = useMutation({
     mutationFn: updateVitalRange,
     onSuccess: () => {

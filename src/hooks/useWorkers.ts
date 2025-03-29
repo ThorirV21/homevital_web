@@ -4,6 +4,7 @@ import {
   fetchHealthcareWorkers,
   updateHealthcareWorker,
   deleteHealthcareWorker,
+  fetchHealthcareWorker,
 } from "@/services/api";
 
 const useHealthcareWorkers = () => {
@@ -46,4 +47,23 @@ const useHealthcareWorkerMutations = () => {
   return { createMutation, updateMutation, deleteMutation };
 };
 
-export { useHealthcareWorkers, useHealthcareWorkerMutations };
+const useHealthcareWorker = (id: string) => {
+  const {
+    data: worker,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["workers", id],
+    queryFn: () => fetchHealthcareWorker(id),
+  });
+  if (error) {
+    return { worker: null, error, isLoading };
+  }
+  return { worker, error, isLoading };
+};
+
+export {
+  useHealthcareWorkers,
+  useHealthcareWorkerMutations,
+  useHealthcareWorker,
+};

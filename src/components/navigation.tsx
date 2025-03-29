@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import NavButton from "./navButton";
 
@@ -47,11 +49,11 @@ const Navigation: React.FC = () => {
       <div className="p-8 flex flex-col gap-6">
         <div>
           <h6 className="font-bold">Innskráður notandi:</h6>
-          <p>Þórir Gunnar Valgeirsson</p>
+          <p></p>
         </div>
         <div>
           <h6 className="font-bold">Teymi:</h6>
-          <p>Sárateymi, Teymi 2</p>
+          <p></p>
         </div>
       </div>
     </nav>

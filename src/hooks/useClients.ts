@@ -7,13 +7,13 @@ import {
 import { Client } from "@/types/clientTypes";
 import { PatientMeasurement } from "@/types/types";
 
-const refetchInterval = 1000;
+const refetchInterval = 10000;
 
 const useClients = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["clients"],
     queryFn: fetchClients,
-    staleTime: 60000,
+    staleTime: 10000,
   });
   if (error) {
     return { patients: [], error, isLoading };
@@ -51,11 +51,7 @@ const useClientMeasurements = (id: string) => {
     refetchOnWindowFocus: true,
   });
 
-  console.log(data);
-
   const measurements = data as PatientMeasurement[];
-
-  console.log(measurements);
 
   if (error) {
     return { measurements: null, error, isLoading, refetch };
