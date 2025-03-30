@@ -18,13 +18,78 @@ const VitalLine = ({
   editing: boolean;
   handleChangeData: (e: ChangeEvent<HTMLInputElement>) => void;
 }) => {
-  // TODO: Eyða út distolicRanges error fiffi
+  const distolicRangesString = () => {
+    if (distolicRanges) {
+      if (distolicRanges.prefix) {
+        return ` / ${distolicRanges.prefix} ${distolicRanges.max}`;
+      } else {
+        return ` / ${distolicRanges.min} - ${distolicRanges.max}`;
+      }
+    }
+    return "";
+  };
+
+  const inputClasses = "w-14 text-center text-sm !px-0";
+
+  const distolicRangesEditing = () => {
+    if (distolicRanges) {
+      if (distolicRanges.prefix) {
+        return (
+          <>
+            <p> / </p>
+            <p>{distolicRanges.prefix}</p>
+            <Input
+              id={distolicRanges.name}
+              name="distolic-max"
+              value={distolicRanges.max ?? ""}
+              onChange={(e) => handleChangeData(e)}
+              className={inputClasses}
+              type="number"
+              min={settings.min}
+              max={settings.max}
+              step={settings.data === "bodytemperature" ? "0.1" : "1"}
+            />
+          </>
+        );
+      } else {
+        return (
+          <>
+            <p> / </p>
+            <Input
+              id={distolicRanges.name}
+              name="distolic-min"
+              value={distolicRanges.min ?? ""}
+              onChange={(e) => handleChangeData(e)}
+              className={inputClasses}
+              type="number"
+              min={settings.min}
+              max={settings.max}
+              step={settings.data === "bodytemperature" ? "0.1" : "1"}
+            />
+            <p>-</p>
+            <Input
+              id={distolicRanges.name}
+              name="distolic-max"
+              value={distolicRanges.max ?? ""}
+              onChange={(e) => handleChangeData(e)}
+              className={inputClasses}
+              type="number"
+              min={settings.min}
+              max={settings.max}
+              step={settings.data === "bodytemperature" ? "0.1" : "1"}
+            />
+          </>
+        );
+      }
+    }
+  };
+
   return (
     <div className="flex flex-wrap p-5 items-center w-full">
       {distolicRanges ? "" : ""}
-      <div className="w-1/2 items-center flex gap-10">
+      <div className="w-3/5 items-center flex gap-10">
         <Circle
-          className={`h-16 w-16 flex-shrink-0 ${settings.colors[index]}`}
+          className={`h-14 w-14 flex-shrink-0 ${settings.colors[index]}`}
         />
         <div>
           <p className="font-bold">{settings.texts[index]}</p>
@@ -39,33 +104,47 @@ const VitalLine = ({
                     name="min"
                     defaultValue={data.min ?? ""}
                     onChange={(e) => handleChangeData(e)}
-                    className="w-16 text-center"
+                    className={inputClasses}
+                    type="number"
+                    min={settings.min}
+                    max={settings.max}
+                    step={settings.data === "bodytemperature" ? "0.1" : "1"}
                   />
                   <p>-</p>
                 </>
               )}
+              {data.name === "Weight Loss" ? "- " : ""}
+              {data.name === "Weight Gain" ? "+ " : ""}
               <Input
                 id={data.name}
                 name="max"
                 value={data.max ?? ""}
                 onChange={(e) => handleChangeData(e)}
-                className="w-16 text-center"
+                className={inputClasses}
+                type="number"
+                min={settings.min}
+                max={settings.max}
+                step={settings.data === "bodytemperature" ? "0.1" : "1"}
               />
+              {distolicRangesEditing()}
               <p>{settings.type}</p>
             </div>
           ) : (
             <div className="flex gap-2 items-center">
               <p>
                 {data.prefix ? data.prefix : `${data.min} - `}
+                {data.name === "Weight Loss" ? "- " : ""}
+                {data.name === "Weight Gain" ? "+ " : ""}
                 {data.max}
+                {distolicRangesString()}
               </p>
               <p>{settings.type}</p>
             </div>
           )}
         </div>
       </div>
-      <div className="w-1/4 flex justify-center"></div>
-      <div className="w-1/4 flex justify-center"></div>
+      <div className="w-1/5 flex justify-center"></div>
+      <div className="w-1/5 flex justify-center"></div>
     </div>
   );
 };
