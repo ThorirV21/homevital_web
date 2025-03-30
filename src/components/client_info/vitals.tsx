@@ -82,13 +82,13 @@ const currentView: vitalSettings[] = [
 ];
 
 const Vitals = () => {
-  const [view, setView] = useState(currentView[4]);
+  const [view, setView] = useState(currentView[0]);
   const searchParams = useSearchParams();
   const clientId = searchParams.get("id");
   const { vitalRanges, error, isLoading, refetch } = useClientVitalRanges(
     Number(clientId)
   );
-  const [editing, setEditing] = useState(true);
+  const [editing, setEditing] = useState(false);
   const { updateMutation } = useVitalRangeMutations(Number(clientId));
   const [currentData, setCurrentData] = useState<VitalCategory | undefined>(
     undefined
@@ -124,19 +124,11 @@ const Vitals = () => {
     if (!currentData) return;
 
     const copyData = { ...currentData };
-    const fieldName = e.target.id;
-    const fieldType = e.target.name;
+    const fieldName = e.target.id.split("-")[0]; // Get the base name without -min or -max
+    const fieldType = e.target.name; // Get min/max from ID or fallback to name
 
     // Only allow numbers and decimal point
-    const numericValue = e.target.value.replace(/[^0-9.]/g, "");
-
-    // Convert to number and clamp between min and max
-    let value = numericValue;
-    const numberValue = parseFloat(numericValue);
-    if (!isNaN(numberValue)) {
-      const clampedValue = Math.min(Math.max(numberValue, view.min), view.max);
-      value = clampedValue.toString();
-    }
+    const value = e.target.value.replace(/[^0-9.]/g, "");
 
     if (view.data === "bloodpressure") {
       if (fieldType === "distolic-min" || fieldType === "distolic-max") {

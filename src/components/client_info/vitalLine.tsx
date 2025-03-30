@@ -39,13 +39,12 @@ const VitalLine = ({
             <p> / </p>
             <p>{distolicRanges.prefix}</p>
             <Input
-              id={distolicRanges.name}
+              id={`${distolicRanges.name}-distolic-max`}
               name="distolic-max"
               value={distolicRanges.max ?? ""}
               onChange={(e) => handleChangeData(e)}
               className={inputClasses}
               type="number"
-              min={settings.min}
               max={settings.max}
               step={settings.data === "bodytemperature" ? "0.1" : "1"}
             />
@@ -56,25 +55,23 @@ const VitalLine = ({
           <>
             <p> / </p>
             <Input
-              id={distolicRanges.name}
+              id={`${distolicRanges.name}-distolic-min`}
               name="distolic-min"
               value={distolicRanges.min ?? ""}
               onChange={(e) => handleChangeData(e)}
               className={inputClasses}
               type="number"
-              min={settings.min}
               max={settings.max}
               step={settings.data === "bodytemperature" ? "0.1" : "1"}
             />
             <p>-</p>
             <Input
-              id={distolicRanges.name}
+              id={`${distolicRanges.name}-distolic-max`}
               name="distolic-max"
               value={distolicRanges.max ?? ""}
               onChange={(e) => handleChangeData(e)}
               className={inputClasses}
               type="number"
-              min={settings.min}
               max={settings.max}
               step={settings.data === "bodytemperature" ? "0.1" : "1"}
             />
@@ -100,13 +97,12 @@ const VitalLine = ({
               ) : (
                 <>
                   <Input
-                    id={data.name}
+                    id={`${data.name}-min`}
                     name="min"
                     defaultValue={data.min ?? ""}
                     onChange={(e) => handleChangeData(e)}
                     className={inputClasses}
                     type="number"
-                    min={settings.min}
                     max={settings.max}
                     step={settings.data === "bodytemperature" ? "0.1" : "1"}
                   />
@@ -116,13 +112,12 @@ const VitalLine = ({
               {data.name === "Weight Loss" ? "- " : ""}
               {data.name === "Weight Gain" ? "+ " : ""}
               <Input
-                id={data.name}
+                id={`${data.name}-max`}
                 name="max"
                 value={data.max ?? ""}
                 onChange={(e) => handleChangeData(e)}
                 className={inputClasses}
                 type="number"
-                min={settings.min}
                 max={settings.max}
                 step={settings.data === "bodytemperature" ? "0.1" : "1"}
               />

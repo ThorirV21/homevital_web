@@ -81,17 +81,17 @@ const transformVitalData = (rawData?: RawVitalRanges) => {
       name: "bloodsugar",
       ranges: [
         {
-          name: "Good",
+          name: "bloodSugarGood",
           min: rawData?.bloodSugarRange.bloodSugarGoodMin,
           max: rawData?.bloodSugarRange.bloodSugarGoodMax,
         },
         {
-          name: "Not Ok",
+          name: "bloodSugarNotOk",
           min: rawData?.bloodSugarRange.bloodSugarNotOkMin,
           max: rawData?.bloodSugarRange.bloodSugarNotOkMax,
         },
         {
-          name: "Critical",
+          name: "bloodSugarCritical",
           min: rawData?.bloodSugarRange.bloodSugarCriticalMin,
           max: rawData?.bloodSugarRange.bloodSugarCriticalMax,
           prefix: "< ",
@@ -104,22 +104,22 @@ const transformVitalData = (rawData?: RawVitalRanges) => {
       name: "bodytemperature",
       ranges: [
         {
-          name: "Under Average",
+          name: "temperatureUnderAverage",
           max: rawData?.bodyTemperatureRange.temperatureUnderAverage,
           prefix: "< ",
         },
         {
-          name: "Good",
+          name: "temperatureGood",
           min: rawData?.bodyTemperatureRange.temperatureGoodMin,
           max: rawData?.bodyTemperatureRange.temperatureGoodMax,
         },
         {
-          name: "Not Ok",
+          name: "temperatureNotOk",
           min: rawData?.bodyTemperatureRange.temperatureNotOkMin,
           max: rawData?.bodyTemperatureRange.temperatureNotOkMax,
         },
         {
-          name: "Critical",
+          name: "temperatureCritical",
           min: rawData?.bodyTemperatureRange.temperatureCriticalMin,
           max: rawData?.bodyTemperatureRange.temperatureCriticalMax,
         },
@@ -131,23 +131,23 @@ const transformVitalData = (rawData?: RawVitalRanges) => {
       name: "oxygensaturation",
       ranges: [
         {
-          name: "Good",
+          name: "oxygenSaturationGood",
           min: rawData?.oxygenSaturationRange.oxygenSaturationGood,
           max: rawData?.oxygenSaturationRange.oxygenSaturationGood,
           prefix: "> ",
         },
         {
-          name: "Lowered",
+          name: "oxygenSaturationOk",
           min: rawData?.oxygenSaturationRange.oxygenSaturationOkMin,
           max: rawData?.oxygenSaturationRange.oxygenSaturationOkMax,
         },
         {
-          name: "Low",
+          name: "oxygenSaturationNotOk",
           min: rawData?.oxygenSaturationRange.oxygenSaturationNotOkMin,
           max: rawData?.oxygenSaturationRange.oxygenSaturationNotOkMax,
         },
         {
-          name: "Critical",
+          name: "oxygenSaturationCritical",
           min: rawData?.oxygenSaturationRange.oxygenSaturationCriticalMin,
           max: rawData?.oxygenSaturationRange.oxygenSaturationCriticalMax,
           prefix: "< ",
@@ -160,19 +160,19 @@ const transformVitalData = (rawData?: RawVitalRanges) => {
       name: "bodyweight",
       ranges: [
         {
-          name: "Weight Loss",
+          name: "weightLossFluctuationPercentageGood",
           min: rawData?.bodyWeightRange.weightLossFluctuationPercentageGood,
           max: rawData?.bodyWeightRange.weightLossFluctuationPercentageGood,
           prefix: "> ",
         },
         {
-          name: "Good",
+          name: "weightGainPercentageGood",
           min: rawData?.bodyWeightRange.weightGainPercentageGoodMax,
           max: rawData?.bodyWeightRange.weightGainPercentageGoodMax,
           prefix: " ",
         },
         {
-          name: "Weight Gain",
+          name: "weightGainFluctuationPercentageGood",
           min: rawData?.bodyWeightRange.weightGainFluctuationPercentageGood,
           max: rawData?.bodyWeightRange.weightGainFluctuationPercentageGood,
           prefix: "> ",
@@ -322,6 +322,9 @@ const transformForApi = (data: VitalCategory): TransformedVitalRange => {
     // Handle other vital types
     data.ranges.forEach((range) => {
       if (range.name) {
+        if (range.name === "temperatureUnderAverage") {
+          transformed[`${range.name}`] = Number(range.max);
+        }
         if (range.min !== undefined) {
           transformed[`${range.name}Min`] = Number(range.min);
         }
