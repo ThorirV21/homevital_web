@@ -180,8 +180,6 @@ const updateVitalRange = async (data: VitalPatch) => {
     distolicRanges: data?.distolicRanges,
   });
 
-  console.log(formattedData);
-
   const response = await fetch(
     `${API_URL}/vitalrange/${data.type}/${data.clientId}`,
     {
@@ -197,7 +195,6 @@ const updateVitalRange = async (data: VitalPatch) => {
     throw new Error("Failed to update vital range");
   }
   const res = await response.json();
-  console.log(res);
   return res;
 };
 
