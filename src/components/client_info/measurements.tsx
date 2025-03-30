@@ -89,8 +89,6 @@ const Measurements = ({ id }: { id: string }) => {
     setCurrentData(measurements);
   }
 
-  console.log(currentData);
-
   return (
     <div className="flex flex-col h-full">
       <div className="w-full flex justify-between p-4">

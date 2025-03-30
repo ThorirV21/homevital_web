@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
 import {
@@ -82,17 +82,30 @@ const currentView: vitalSettings[] = [
 ];
 
 const Vitals = () => {
-  const [view, setView] = useState(currentView[0]);
+  const [view, setView] = useState(currentView[4]);
   const searchParams = useSearchParams();
   const clientId = searchParams.get("id");
   const { vitalRanges, error, isLoading, refetch } = useClientVitalRanges(
     Number(clientId)
   );
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(true);
   const { updateMutation } = useVitalRangeMutations(Number(clientId));
   const [currentData, setCurrentData] = useState<VitalCategory | undefined>(
     undefined
   );
+
+  // Combined effect to handle both initial load and view changes
+  useEffect(() => {
+    if (!vitalRanges?.length) return;
+
+    const foundVital = vitalRanges.find((vital) => vital.name === view.data);
+    if (!foundVital) return;
+
+    // Only update if data is different
+    if (!currentData || currentData.name !== foundVital.name) {
+      setCurrentData({ ...foundVital });
+    }
+  }, [vitalRanges, view.data, currentData]); // Only depend on currentData.name instead of entire object
 
   if (isLoading) {
     return <Loading />;
@@ -102,46 +115,68 @@ const Vitals = () => {
     return <Error />;
   }
 
-  // Set initial currentData if it's not set yet
-  if (!currentData) {
-    const foundVital = vitalRanges.find((vital) => vital.name === view.data);
-    setCurrentData(foundVital);
-  }
-
-  const handleChangeView = (view: vitalSettings) => {
-    const foundVital = vitalRanges.find((vital) => vital.name === view.data);
-    setCurrentData(foundVital);
-
+  const handleChangeView = (newView: vitalSettings) => {
+    setView(newView);
     setEditing(false);
-    setView(view);
   };
 
   const handleChangeData = (e: ChangeEvent<HTMLInputElement>) => {
-    if (typeof currentData === "undefined") {
-      return;
+    if (!currentData) return;
+
+    const copyData = { ...currentData };
+    const fieldName = e.target.id;
+    const fieldType = e.target.name;
+
+    // Only allow numbers and decimal point
+    const numericValue = e.target.value.replace(/[^0-9.]/g, "");
+
+    // Convert to number and clamp between min and max
+    let value = numericValue;
+    const numberValue = parseFloat(numericValue);
+    if (!isNaN(numberValue)) {
+      const clampedValue = Math.min(Math.max(numberValue, view.min), view.max);
+      value = clampedValue.toString();
     }
 
-    const copyData: VitalCategory = { ...currentData };
-
-    copyData?.ranges?.map((range) => {
-      if (range.name === e.target.id) {
-        if (e.target.name === "min") {
-          range.min = e.target.value.replace(",", ".");
-        } else {
-          range.max = e.target.value.replace(",", ".");
-        }
+    if (view.data === "bloodpressure") {
+      if (fieldType === "distolic-min" || fieldType === "distolic-max") {
+        copyData.distolicRanges = copyData.distolicRanges?.map((range) => {
+          if (range.name === fieldName) {
+            return {
+              ...range,
+              [fieldType === "distolic-min" ? "min" : "max"]: value,
+            };
+          }
+          return range;
+        });
+      } else {
+        copyData.ranges = copyData.ranges.map((range) => {
+          if (range.name === fieldName) {
+            return {
+              ...range,
+              [fieldType]: value,
+            };
+          }
+          return range;
+        });
       }
-    });
+    } else {
+      copyData.ranges = copyData.ranges.map((range) => {
+        if (range.name === fieldName) {
+          return {
+            ...range,
+            [fieldType]: value,
+          };
+        }
+        return range;
+      });
+    }
 
-    setCurrentData({ ...copyData });
+    setCurrentData(copyData);
   };
 
   const handleChangeEditing = () => {
-    if (editing) {
-      setEditing(false);
-    } else {
-      setEditing(true);
-    }
+    setEditing(!editing);
   };
 
   const handleSaveData = () => {
@@ -154,28 +189,20 @@ const Vitals = () => {
       )
         return;
 
-      updateMutation.mutate(
-        {
+      try {
+        await updateMutation.mutateAsync({
           clientId: Number(clientId),
           id: Number(currentData.id),
           data: currentData.ranges,
           type: view.data,
-        },
-        {
-          onSuccess: () => {
-            refetch();
-            setEditing(false);
+          distolicRanges: currentData.distolicRanges,
+        });
 
-            const foundVital = vitalRanges.find(
-              (vital) => vital.name === view.data
-            );
-            setCurrentData(foundVital);
-          },
-          onError: (error) => {
-            console.error("Error saving data:", error);
-          },
-        }
-      );
+        await refetch();
+        setEditing(false);
+      } catch (error) {
+        console.error("Error saving data:", error);
+      }
     };
     saveDataToAPI();
   };
@@ -228,7 +255,7 @@ const Vitals = () => {
           </Button>
         </div>
 
-        <div className="pb-14 px-14">
+        <div className="flex flex-col pb-14 pl-4">
           {currentData ? (
             currentData.ranges.map((range, index) => (
               <VitalLine

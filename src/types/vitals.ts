@@ -3,6 +3,7 @@ export interface SingleRange {
   min?: string | undefined;
   max?: string | undefined;
   prefix?: string;
+  rawValue?: string;
 }
 
 export interface VitalCategory {
@@ -21,7 +22,8 @@ export interface RawVitalRanges {
     diastolicCriticalMin: string;
     diastolicCriticalStage3Max: string;
     diastolicCriticalStage3Min: string;
-    diastolicGood: string;
+
+    diastolicGoodMax: string;
     diastolicNotOkMax: string;
     diastolicNotOkMin: string;
     diastolicOkMax: string;
@@ -30,7 +32,7 @@ export interface RawVitalRanges {
     systolicCriticalMin: string;
     systolicCriticalStage3Max: string;
     systolicCriticalStage3Min: string;
-    systolicGood: string;
+    systolicGoodMax: string;
     systolicNotOkMax: string;
     systolicNotOkMin: string;
     systolicOkMax: string;
@@ -91,6 +93,7 @@ export type VitalPatch = {
   id: number;
   data: SingleRange[];
   type: string;
+  distolicRanges?: SingleRange[];
 };
 
 export type vitalSettings = {

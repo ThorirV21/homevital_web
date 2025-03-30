@@ -1,9 +1,8 @@
 import { loginSchema } from "@/services/schemas";
 import { WorkerDTO } from "@/types/types";
-import { VitalTransformKey } from "@/types/vitals";
 import { VitalPatch } from "@/types/vitals";
 import { z } from "zod";
-import { transformVitalRanges } from "@/services/transformData";
+import { transformForApi } from "@/services/transformData";
 import { UserDTO } from "@/types/workerTypes";
 
 export const API_URL = process.env.API_URL;
@@ -173,11 +172,15 @@ const fetchVitalRanges = async (id: number) => {
 };
 
 const updateVitalRange = async (data: VitalPatch) => {
-  const formattedData = transformVitalRanges[data.type as VitalTransformKey](
-    data.data,
-    data.clientId,
-    data.id
-  );
+  const formattedData = transformForApi({
+    id: data.id,
+    patientId: data.clientId,
+    name: data.type,
+    ranges: data.data,
+    distolicRanges: data?.distolicRanges,
+  });
+
+  console.log(formattedData);
 
   const response = await fetch(
     `${API_URL}/vitalrange/${data.type}/${data.clientId}`,
@@ -193,7 +196,9 @@ const updateVitalRange = async (data: VitalPatch) => {
   if (!response.ok) {
     throw new Error("Failed to update vital range");
   }
-  return await response.json();
+  const res = await response.json();
+  console.log(res);
+  return res;
 };
 
 export {

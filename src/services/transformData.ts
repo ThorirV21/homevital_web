@@ -17,56 +17,61 @@ const transformVitalData = (rawData?: RawVitalRanges) => {
       name: "bloodpressure",
       ranges: [
         {
-          name: "Normal",
-          min: rawData?.bloodPressureRange.diastolicGood,
-          max: rawData?.bloodPressureRange.diastolicGood,
+          name: "systolicGood",
+          max: rawData?.bloodPressureRange.systolicGoodMax,
+          prefix: "< ",
         },
         {
-          name: "Raised",
-          min: rawData?.bloodPressureRange.diastolicOkMin,
-          max: rawData?.bloodPressureRange.diastolicOkMax,
-        },
-        {
-          name: "High stage 1",
-          min: rawData?.bloodPressureRange.diastolicNotOkMin,
-          max: rawData?.bloodPressureRange.diastolicNotOkMax,
-        },
-        {
-          name: "High stage 2",
-          min: rawData?.bloodPressureRange.diastolicCriticalMin,
-          max: rawData?.bloodPressureRange.diastolicCriticalMax,
-        },
-        {
-          name: "Critical",
-          min: rawData?.bloodPressureRange.diastolicCriticalStage3Min,
-          max: rawData?.bloodPressureRange.diastolicCriticalStage3Max,
-        },
-      ],
-      distolicRanges: [
-        {
-          name: "Normal",
-          min: rawData?.bloodPressureRange.systolicGood,
-          max: rawData?.bloodPressureRange.systolicGood,
-        },
-        {
-          name: "Raised",
+          name: "systolicOk",
           min: rawData?.bloodPressureRange.systolicOkMin,
           max: rawData?.bloodPressureRange.systolicOkMax,
         },
         {
-          name: "High stage 1",
+          name: "systolicNotOk",
           min: rawData?.bloodPressureRange.systolicNotOkMin,
           max: rawData?.bloodPressureRange.systolicNotOkMax,
         },
         {
-          name: "High stage 2",
+          name: "systolicCritical",
           min: rawData?.bloodPressureRange.systolicCriticalMin,
           max: rawData?.bloodPressureRange.systolicCriticalMax,
+          prefix: "> ",
         },
         {
-          name: "Critical",
+          name: "systolicCriticalStage3",
           min: rawData?.bloodPressureRange.systolicCriticalStage3Min,
           max: rawData?.bloodPressureRange.systolicCriticalStage3Max,
+          prefix: "> ",
+        },
+      ],
+      distolicRanges: [
+        {
+          name: "diastolicGood",
+          max: rawData?.bloodPressureRange.diastolicGoodMax,
+          prefix: "< ",
+        },
+        {
+          name: "diastolicOk",
+          min: rawData?.bloodPressureRange.diastolicOkMin,
+          max: rawData?.bloodPressureRange.diastolicOkMax,
+          prefix: "< ",
+        },
+        {
+          name: "diastolicNotOk",
+          min: rawData?.bloodPressureRange.diastolicNotOkMin,
+          max: rawData?.bloodPressureRange.diastolicNotOkMax,
+        },
+        {
+          name: "diastolicCritical",
+          min: rawData?.bloodPressureRange.diastolicCriticalMin,
+          max: rawData?.bloodPressureRange.diastolicCriticalMax,
+          prefix: "> ",
+        },
+        {
+          name: "diastolicCriticalStage3",
+          min: rawData?.bloodPressureRange.diastolicCriticalStage3Min,
+          max: rawData?.bloodPressureRange.diastolicCriticalStage3Max,
+          prefix: "> ",
         },
       ],
     },
@@ -158,16 +163,19 @@ const transformVitalData = (rawData?: RawVitalRanges) => {
           name: "Weight Loss",
           min: rawData?.bodyWeightRange.weightLossFluctuationPercentageGood,
           max: rawData?.bodyWeightRange.weightLossFluctuationPercentageGood,
+          prefix: "> ",
         },
         {
           name: "Good",
           min: rawData?.bodyWeightRange.weightGainPercentageGoodMax,
           max: rawData?.bodyWeightRange.weightGainPercentageGoodMax,
+          prefix: " ",
         },
         {
           name: "Weight Gain",
           min: rawData?.bodyWeightRange.weightGainFluctuationPercentageGood,
           max: rawData?.bodyWeightRange.weightGainFluctuationPercentageGood,
+          prefix: "> ",
         },
       ],
     },
@@ -180,7 +188,8 @@ export const transformVitalRanges: Record<
   (
     ranges: SingleRange[],
     patientId: number,
-    id: number
+    id: number,
+    distolicRanges?: SingleRange[]
   ) =>
     | BodyTemperatureRange
     | BloodPressureRange
@@ -199,23 +208,32 @@ export const transformVitalRanges: Record<
     bodyTemperatureCriticalMin: Number(ranges[3].min),
     bodyTemperatureCriticalMax: Number(ranges[3].max),
   }),
-  bloodpressure: (ranges: SingleRange[], patientId: number, id: number) => ({
+  bloodpressure: (
+    ranges: SingleRange[],
+    patientId: number,
+    id: number,
+    distolicRanges?: SingleRange[]
+  ) => ({
     id: id,
     patientID: patientId,
-    systolicGood: Number(ranges[0].min),
+    systolicGoodMax: Number(ranges[0].max),
     systolicOkMin: Number(ranges[1].min),
     systolicOkMax: Number(ranges[1].max),
     systolicNotOkMin: Number(ranges[2].min),
     systolicNotOkMax: Number(ranges[2].max),
     systolicCriticalMin: Number(ranges[3].min),
     systolicCriticalMax: Number(ranges[3].max),
-    diastolicGood: Number(ranges[0].min),
-    diastolicOkMin: Number(ranges[1].min),
-    diastolicOkMax: Number(ranges[1].max),
-    diastolicNotOkMin: Number(ranges[2].min),
-    diastolicNotOkMax: Number(ranges[2].max),
-    diastolicCriticalMin: Number(ranges[3].min),
-    diastolicCriticalMax: Number(ranges[3].max),
+    systolicCriticalStage3Min: Number(ranges[4].min),
+    systolicCriticalStage3Max: Number(ranges[4].max),
+    diastolicGoodMax: Number(distolicRanges?.[0].max),
+    diastolicOkMin: Number(distolicRanges?.[1].min),
+    diastolicOkMax: Number(distolicRanges?.[1].max),
+    diastolicNotOkMin: Number(distolicRanges?.[2].min),
+    diastolicNotOkMax: Number(distolicRanges?.[2].max),
+    diastolicCriticalMin: Number(distolicRanges?.[3].min),
+    diastolicCriticalMax: Number(distolicRanges?.[3].max),
+    diastolicCriticalStage3Min: Number(distolicRanges?.[4].min),
+    diastolicCriticalStage3Max: Number(distolicRanges?.[4].max),
   }),
   bloodsugar: (ranges: SingleRange[], patientId: number, id: number) => ({
     id: id,
@@ -250,4 +268,71 @@ export const transformVitalRanges: Record<
   }),
 };
 
-export { transformVitalData };
+interface TransformedVitalRange {
+  id: number | string | undefined;
+  patientID: number | string | undefined;
+  [key: string]: string | number | undefined; // Index signature for dynamic properties
+}
+
+const transformForApi = (data: VitalCategory): TransformedVitalRange => {
+  const transformed: TransformedVitalRange = {
+    id: data.id,
+    patientID: data.patientId,
+  };
+
+  if (data.name === "bloodpressure") {
+    // Handle systolic ranges
+    data.ranges.forEach((range) => {
+      if (range.name === "systolicGood") {
+        transformed.systolicGoodMax = Number(range.max);
+      } else if (range.name === "systolicOk") {
+        transformed.systolicOkMin = Number(range.min);
+        transformed.systolicOkMax = Number(range.max);
+      } else if (range.name === "systolicNotOk") {
+        transformed.systolicNotOkMin = Number(range.min);
+        transformed.systolicNotOkMax = Number(range.max);
+      } else if (range.name === "systolicCritical") {
+        transformed.systolicCriticalMin = Number(range.min);
+        transformed.systolicCriticalMax = Number(range.max);
+      } else if (range.name === "systolicCriticalStage3") {
+        transformed.systolicCriticalStage3Min = Number(range.min);
+        transformed.systolicCriticalStage3Max = Number(range.max);
+      }
+    });
+
+    // Handle diastolic ranges
+    data.distolicRanges?.forEach((range) => {
+      if (range.name === "diastolicGood") {
+        transformed.diastolicGoodMax = Number(range.max);
+      } else if (range.name === "diastolicOk") {
+        transformed.diastolicOkMin = Number(range.min);
+        transformed.diastolicOkMax = Number(range.max);
+      } else if (range.name === "diastolicNotOk") {
+        transformed.diastolicNotOkMin = Number(range.min);
+        transformed.diastolicNotOkMax = Number(range.max);
+      } else if (range.name === "diastolicCritical") {
+        transformed.diastolicCriticalMin = Number(range.min);
+        transformed.diastolicCriticalMax = Number(range.max);
+      } else if (range.name === "diastolicCriticalStage3") {
+        transformed.diastolicCriticalStage3Min = Number(range.min);
+        transformed.diastolicCriticalStage3Max = Number(range.max);
+      }
+    });
+  } else {
+    // Handle other vital types
+    data.ranges.forEach((range) => {
+      if (range.name) {
+        if (range.min !== undefined) {
+          transformed[`${range.name}Min`] = Number(range.min);
+        }
+        if (range.max !== undefined) {
+          transformed[`${range.name}Max`] = Number(range.max);
+        }
+      }
+    });
+  }
+
+  return transformed;
+};
+
+export { transformVitalData, transformForApi };
