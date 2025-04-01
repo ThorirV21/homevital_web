@@ -121,7 +121,7 @@ const Measurements = ({ id }: { id: string }) => {
         </div>
       </div>
       <div className="p-4 flex-grow overflow-hidden">
-        <ScrollArea className="w-full h-full border border-primary rounded-md">
+        <ScrollArea className="w-full h-full max-h-[calc(100vh-23rem)] border border-primary rounded-md">
           <Table>
             <TableBody>
               {currentData.map((item) => {
