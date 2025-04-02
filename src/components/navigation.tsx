@@ -1,7 +1,6 @@
-"use client";
-
 import React from "react";
 import NavButton from "./navButton";
+import { getSession } from "@/services/session";
 
 const elem = [
   {
@@ -31,7 +30,11 @@ const elem = [
   },
 ];
 
-const Navigation: React.FC = () => {
+const Navigation: React.FC = async () => {
+  const session = await getSession();
+
+  console.log("Nav Session: ", session);
+
   return (
     <nav className="flex justify-between flex-col h-full">
       <ul>
@@ -49,7 +52,7 @@ const Navigation: React.FC = () => {
       <div className="p-8 flex flex-col gap-6">
         <div>
           <h6 className="font-bold">Innskráður notandi:</h6>
-          <p></p>
+          <p>{session.user?.name}</p>
         </div>
         <div>
           <h6 className="font-bold">Teymi:</h6>
