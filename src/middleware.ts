@@ -11,7 +11,11 @@ export default async function middleware(request: NextRequest) {
     sessionOptions
   );
 
-  if (!session.isLoggedIn) {
+  if (session.isLoggedIn && request.nextUrl.pathname === "/login") {
+    return NextResponse.redirect(new URL("/dashboard/clients", request.url));
+  }
+
+  if (!session.isLoggedIn && request.nextUrl.pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -19,5 +23,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/(protected)/:path*", "/dashboard/:path*"],
+  matcher: ["/login", "/dashboard/:path*"],
 };

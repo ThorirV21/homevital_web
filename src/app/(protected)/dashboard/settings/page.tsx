@@ -3,27 +3,27 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import StaffView from "@/components/settings/staff";
 import Loading from "@/components/loading";
+import Teams from "@/components/settings/teams";
+import ClientsView from "@/components/settings/clients";
 
 const views = [
   { name: "Starfsmenn", value: "staff" },
   { name: "Teymi", value: "team" },
+  { name: "Skjólstæðingar", value: "clients" },
   { name: "Annað", value: "other" },
 ];
 
 export default function Settings() {
-  const [view, setView] = useState(views[0].value);
+  const [view, setView] = useState(views[2].value);
 
   return (
-    <div className="flex h-full w-full bg-white">
-      <div className="flex flex-col w-1/4 border-r border-black">
-        <div className="flex items-center justify-center p-4 border-b border-gray-300">
-          <h2 className="text-2xl font-bold">Stillingar</h2>
-        </div>
-        <div className="flex flex-col pt-3">
+    <div className="flex w-full h-full flex-col bg-white">
+      <div className="flex flex-col w-full px-4 pb-4 border-b">
+        <div className="flex flex-row gap-2 pt-3">
           {views.map((v) => (
             <Button
               key={v.value}
-              className="rounded-none"
+              className={`rounded-none ${view === v.value ? "" : "opacity-50"}`}
               onClick={() => setView(v.value)}
             >
               {v.name}
@@ -31,13 +31,10 @@ export default function Settings() {
           ))}
         </div>
       </div>
-      <div className="flex flex-col w-3/4 h-full">
+      <div className="flex flex-col h-full">
         {view === "staff" && <StaffView />}
-        {view === "team" && (
-          <div className="flex flex-col w-3/4">
-            <h2>Teymi</h2>
-          </div>
-        )}
+        {view === "team" && <Teams />}
+        {view === "clients" && <ClientsView />}
         {view === "other" && (
           <div className="flex flex-col w-3/4">
             <Loading />

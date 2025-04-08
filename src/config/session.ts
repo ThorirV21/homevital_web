@@ -6,7 +6,7 @@ export interface User {
   phone: string;
   status: string;
   role: string;
-  groups: string[];
+  groups: number[];
 }
 
 export interface SessionData {

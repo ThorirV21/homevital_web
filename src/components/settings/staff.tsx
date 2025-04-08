@@ -1,24 +1,28 @@
 import { useHealthcareWorkers } from "@/hooks/useWorkers";
-import {
+/* import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"; */
 import { WorkerDTO } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import Loading from "../loading";
-import NewStaffForm from "./newStaffForm";
+/* import NewStaffForm from "./newStaffForm"; */
 import { useState } from "react";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import StaffForm from "./staffForm";
+import { useTeams } from "@/hooks/useTeams";
+import { Team } from "@/types/teamTypes";
 
 const StaffView = () => {
   const { data, error, isLoading } = useHealthcareWorkers();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [worker, setWorker] = useState<WorkerDTO | null>(null);
-  const [creating, setCreating] = useState(false);
-
+  const { teams } = useTeams();
+  const [hoveredWorker, setHoveredWorker] = useState<WorkerDTO | null>(null);
   if (isLoading) {
     return <Loading />;
   }
@@ -32,44 +36,53 @@ const StaffView = () => {
 
   const handleClickWorker = (worker: WorkerDTO) => {
     setWorker(worker);
-    setCreating(false);
     setDialogOpen(true);
   };
 
   const handleClickCreate = () => {
     setWorker(null);
-    setCreating(true);
     setDialogOpen(true);
   };
 
   return (
-    <div className="flex flex-col">
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="flex flex-row items-center text-left justify-between border-b border-gray-300 p-3">
-            <th className="w-1/4">Nafn</th>
-            <th className="w-1/4">Sími</th>
-            <th className="w-1/4">Teymi</th>
-            <th className="w-1/4">Staða</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((worker: WorkerDTO) => (
-            <tr
-              key={worker.id}
-              className="flex flex-row items-center justify-between border-b border-gray-300 p-3"
-              onClick={() => handleClickWorker(worker)}
-            >
-              <td className="w-1/4">{worker.name}</td>
-              <td className="w-1/4">{worker.phone}</td>
-              <td className="w-1/4">{worker.teamID}</td>
-              <td className="w-1/4">{worker.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="flex flex-col h-full">
+      <div className="flex flex-row items-center text-left justify-between border-b border-gray-300 p-3">
+        <h3 className="w-1/4 font-bold">Nafn</h3>
+        <h3 className="w-1/4 font-bold">Sími</h3>
+        <h3 className="w-1/4 font-bold">Teymi</h3>
+        <h3 className="w-1/4 font-bold">Staða</h3>
+      </div>
+      <ScrollArea className="overflow-y-auto max-h-[calc(100vh-23rem)] border-b">
+        <table className="w-full border-collapse border border-gray-300">
+          <thead></thead>
+          <tbody>
+            {data.map((worker: WorkerDTO) => (
+              <tr
+                key={worker.id}
+                className={`flex flex-row items-center justify-between border-b border-gray-300 p-3 ${hoveredWorker?.id === worker.id ? "bg-gray-100" : ""}`}
+                onMouseEnter={() => setHoveredWorker(worker)}
+                onMouseLeave={() => setHoveredWorker(null)}
+                onClick={() => handleClickWorker(worker)}
+              >
+                <td className="w-1/4">{worker.name}</td>
+                <td className="w-1/4">{worker.phone}</td>
+                <td className="w-1/4">
+                  {worker.teamIDs
+                    .map(
+                      (team: number) =>
+                        teams.find((t: Team) => t.id === team)?.name
+                    )
+                    .join(", ")}
+                </td>
+                <td className="w-1/4">{worker.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </ScrollArea>
+      <StaffForm open={dialogOpen} setOpen={setDialogOpen} staff={worker} />
 
-      <Dialog
+      {/*       <Dialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         key={"change-staff"}
@@ -88,7 +101,7 @@ const StaffView = () => {
             creating={creating}
           />
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
       <div className="ms-auto mt-auto p-4">
         <Button className="mt-4" onClick={handleClickCreate}>
           Bæta við starfsfólki

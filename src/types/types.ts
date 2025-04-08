@@ -58,7 +58,7 @@ export type WorkerDTO = {
   id: number;
   name: string;
   phone: string;
-  teamID: number;
+  teamIDs: number[];
   status: string;
 };
 export type SingleMeasurement = {

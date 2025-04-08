@@ -33,7 +33,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${openSans.className} antialiased flex flex-col h-screen min-w-[1340px]`}
+        className={`${openSans.className} antialiased flex flex-col min-h-screen`}
       >
         <Providers>{children}</Providers>
       </body>

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { transformForApi } from "@/services/transformData";
 import { parseJwt } from "@/lib/utils";
 import { getSession, saveSession } from "./session";
-import { redirect } from "next/navigation";
+import { Team, TeamPost } from "@/types/teamTypes";
 
 export const API_URL = process.env.API_URL;
 
@@ -37,8 +37,6 @@ const login = async (form: z.infer<typeof loginSchema>) => {
     throw new Error("Invalid token");
   }
 
-  console.log(token);
-
   const user = await fetch(`${API_URL}/healthcareworkers/${token.sub}`, {
     headers: {
       Authorization: `Bearer ${data.token}`,
@@ -48,7 +46,6 @@ const login = async (form: z.infer<typeof loginSchema>) => {
     console.error("Failed to fetch healthcare worker data");
   }
   const userData = await user.json();
-  console.log(userData);
 
   //console.log(token);
   session.isLoggedIn = true;
@@ -59,14 +56,14 @@ const login = async (form: z.infer<typeof loginSchema>) => {
     phone: userData.phone,
     status: userData.status,
     role: token["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
-    groups: ["test"],
+    groups: userData.teamIDs,
   };
 
   console.log("Session: ", session);
 
   await saveSession(session);
 
-  redirect("/dashboard/clients");
+  return session;
 };
 
 const mockLogin = async (form: z.infer<typeof loginSchema>) => {
@@ -146,7 +143,7 @@ const createHealthcareWorker = async (worker: WorkerDTO) => {
     body: JSON.stringify({
       name: worker.name,
       phone: worker.phone,
-      teamID: worker.teamID,
+      teamIDs: worker.teamIDs,
       status: worker.status,
     }),
   });
@@ -165,7 +162,7 @@ const updateHealthcareWorker = async (worker: WorkerDTO) => {
     body: JSON.stringify({
       name: worker.name,
       phone: worker.phone,
-      teamID: worker.teamID,
+      teamIDs: worker.teamIDs,
       status: worker.status,
     }),
   });
@@ -245,6 +242,52 @@ const updateVitalRange = async (data: VitalPatch) => {
   return res;
 };
 
+const fetchTeams = async () => {
+  const response = await fetch(`${API_URL}/teams`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch teams");
+  }
+  return await response.json();
+};
+
+const fetchCreateTeam = async (team: TeamPost) => {
+  const response = await fetch(`${API_URL}/teams`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(team),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to create team");
+  }
+  return await response.json();
+};
+
+const fetchUpdateTeam = async (team: Team) => {
+  const response = await fetch(`${API_URL}/teams/${team.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(team),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to update team");
+  }
+  return await response.json();
+};
+
+const fetchDeleteTeam = async (id: string) => {
+  const response = await fetch(`${API_URL}/teams/${id}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete team");
+  }
+  return await response.json();
+};
+
 export {
   fetchClients,
   fetchClientDetails,
@@ -258,4 +301,8 @@ export {
   fetchVitalRanges,
   updateVitalRange,
   fetchHealthcareWorker,
+  fetchTeams,
+  fetchCreateTeam,
+  fetchUpdateTeam,
+  fetchDeleteTeam,
 };

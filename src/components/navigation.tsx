@@ -1,7 +1,11 @@
+"use client";
+
 import React from "react";
 import NavButton from "./navButton";
-import { getSession } from "@/services/session";
-
+import { useTeams } from "@/hooks/useTeams";
+import useSession from "@/hooks/useSession";
+import Loading from "./loading";
+import { Team } from "@/types/teamTypes";
 const elem = [
   {
     name: "Skjólstæðingar",
@@ -30,10 +34,26 @@ const elem = [
   },
 ];
 
-const Navigation: React.FC = async () => {
-  const session = await getSession();
+const Navigation: React.FC = () => {
+  //  const session = await getSession();
+  const { session, sessionLoading, sessionError } = useSession();
+  const { teams, teamsLoading, teamsError } = useTeams();
 
-  console.log("Nav Session: ", session);
+  if (sessionLoading || teamsLoading) {
+    return <Loading />;
+  }
+
+  if (sessionError || teamsError || !session || !teams) {
+    return <div>Error: {sessionError?.message || teamsError?.message}</div>;
+  }
+
+  const clientTeams: string[] = teams.map((team: Team) => {
+    if (session.user?.groups.includes(team.id)) {
+      return team.name;
+    }
+  });
+
+  const filteredTeams = clientTeams.filter((team) => team !== undefined);
 
   return (
     <nav className="flex justify-between flex-col h-full">
@@ -56,7 +76,7 @@ const Navigation: React.FC = async () => {
         </div>
         <div>
           <h6 className="font-bold">Teymi:</h6>
-          <p></p>
+          <p>{filteredTeams.join(", ")}</p>
         </div>
       </div>
     </nav>
