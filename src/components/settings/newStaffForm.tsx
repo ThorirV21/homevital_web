@@ -20,7 +20,7 @@ const NewStaffForm = ({
   const [formData, setFormData] = useState({
     name: user?.name || "",
     phone: user?.phone || "",
-    team: user?.teamID || 1,
+    team: user?.teamIDs || [],
     status: user?.status || "",
   });
 
@@ -36,7 +36,7 @@ const NewStaffForm = ({
       createMutation.mutate({
         name: formData.name,
         phone: formData.phone,
-        teamID: formData.team,
+        teamIDs: formData.team,
         status: formData.status,
         id: 0,
       });
@@ -44,7 +44,7 @@ const NewStaffForm = ({
       updateMutation.mutate({
         name: formData.name,
         phone: formData.phone,
-        teamID: formData.team,
+        teamIDs: formData.team,
         status: formData.status,
         id: user?.id || 0,
       });
