@@ -1,0 +1,324 @@
+{
+  "config": {
+    "configFile": "/Users/thorir/Desktop/HomeVital/homevital_web/playwright.config.ts",
+    "rootDir": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 5
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/thorir/Desktop/HomeVital/homevital_web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/thorir/Desktop/HomeVital/homevital_web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/thorir/Desktop/HomeVital/homevital_web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.51.0",
+    "workers": 5,
+    "webServer": {
+      "command": "npm run start",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "login.spec.ts",
+      "file": "login.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Login function",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2201,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-03-08T22:06:52.123Z",
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "41d3fd2474a19feb00a1-bdca0a9b27bf04da2bfc",
+          "file": "login.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "Login function",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1884,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-03-08T22:06:52.124Z",
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "41d3fd2474a19feb00a1-cf39e6e0ea6a1e36fa68",
+          "file": "login.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "Login function",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 2429,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-03-08T22:06:52.120Z",
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "41d3fd2474a19feb00a1-eac031d992a8aa76869c",
+          "file": "login.spec.ts",
+          "line": 3,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "test-1.spec.ts",
+      "file": "test-1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Login displays error when incorrect id number is entered",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 350,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-03-08T22:06:52.120Z",
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "492d4a3e7e76c4aacf4a-f88fb013087b6e9b0945",
+          "file": "test-1.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "Login displays error when incorrect id number is entered",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 1091,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-03-08T22:06:52.124Z",
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "492d4a3e7e76c4aacf4a-9a2deac6ab2cba033f06",
+          "file": "test-1.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "Login displays error when incorrect id number is entered",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 588,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-03-08T22:06:53.032Z",
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "492d4a3e7e76c4aacf4a-d26ff90e5184a1d06f5a",
+          "file": "test-1.spec.ts",
+          "line": 3,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-03-08T22:06:51.691Z",
+    "duration": 3691.127,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
