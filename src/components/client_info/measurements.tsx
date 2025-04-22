@@ -15,7 +15,7 @@ import { Percent } from "lucide-react";
 import Loading from "@/components/loading";
 import NewFilter from "../newFilter";
 import { FilterProps } from "@/types/filterTypes";
-
+import TooltipInfo from "../tooltipInfo";
 const items: FilterProps = {
   header: "Sía",
   description: "Sía eftir tegundum mælinga",
@@ -167,14 +167,28 @@ const Measurements = ({ id }: { id: string }) => {
                             ) : values.bodyPosition === "Laying" ? (
                               <InBed className="" />
                             ) : null}
-                            <Hand className="mx-2" />
+                            <TooltipInfo
+                              info={
+                                values.measureHand === "Right"
+                                  ? "Hægri"
+                                  : values.measureHand === "Left"
+                                    ? "Vinstri"
+                                    : ""
+                              }
+                            >
+                              <Hand
+                                className={`mx-2 ${values.measureHand === "Right" ? "flip-horizontal" : ""}`}
+                              />
+                            </TooltipInfo>
                           </div>
                         </div>
                       ) : null}
                     </TableCell>
                     {values.status !== "" && values.status !== "Invalid" ? (
                       <TableCell className="p-0">
-                        <Circle className={values.status} />
+                        <TooltipInfo info={values.status}>
+                          <Circle className={values.status} />
+                        </TooltipInfo>
                       </TableCell>
                     ) : (
                       <></>

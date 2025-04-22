@@ -2,7 +2,10 @@
 
 import React from "react";
 import NavButton from "./navButton";
-
+import { useTeams } from "@/hooks/useTeams";
+import useSession from "@/hooks/useSession";
+import Loading from "./loading";
+import { Team } from "@/types/teamTypes";
 const elem = [
   {
     name: "Skjólstæðingar",
@@ -32,6 +35,26 @@ const elem = [
 ];
 
 const Navigation: React.FC = () => {
+  //  const session = await getSession();
+  const { session, sessionLoading, sessionError } = useSession();
+  const { teams, teamsLoading, teamsError } = useTeams();
+
+  if (sessionLoading || teamsLoading) {
+    return <Loading />;
+  }
+
+  if (sessionError || teamsError || !session || !teams) {
+    return <div>Error: {sessionError?.message || teamsError?.message}</div>;
+  }
+
+  const clientTeams: string[] = teams.map((team: Team) => {
+    if (session.user?.groups.includes(team.id)) {
+      return team.name;
+    }
+  });
+
+  const filteredTeams = clientTeams.filter((team) => team !== undefined);
+
   return (
     <nav className="flex justify-between flex-col h-full">
       <ul>
@@ -49,11 +72,11 @@ const Navigation: React.FC = () => {
       <div className="p-8 flex flex-col gap-6">
         <div>
           <h6 className="font-bold">Innskráður notandi:</h6>
-          <p></p>
+          <p>{session.user?.name}</p>
         </div>
         <div>
           <h6 className="font-bold">Teymi:</h6>
-          <p></p>
+          <p>{filteredTeams.join(", ")}</p>
         </div>
       </div>
     </nav>

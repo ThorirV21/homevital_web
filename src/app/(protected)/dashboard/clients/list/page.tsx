@@ -11,7 +11,8 @@ import Error from "@/components/error";
 import NewFilter from "@/components/newFilter";
 import { FilterProps } from "@/types/filterTypes";
 import { Suspense } from "react";
-
+import { useTeams } from "@/hooks/useTeams";
+import { Team } from "@/types/teamTypes";
 // TODO: Get this from the backend
 const items: FilterProps = {
   header: "sía",
@@ -54,6 +55,7 @@ const items: FilterProps = {
 const ClientListContent = () => {
   const router = useRouter();
   const { patients, error, isLoading } = useClients();
+  const { teams, teamsLoading, teamsError } = useTeams();
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState("");
   const [filter, setFilter] = useState<FilterProps>(items);
@@ -72,11 +74,11 @@ const ClientListContent = () => {
     }
   }, [searchParams, patients]);
 
-  if (isLoading) {
+  if (isLoading || teamsLoading) {
     return <Loading />;
   }
 
-  if (error) {
+  if (error || teamsError) {
     return <Error />;
   }
 
@@ -89,7 +91,7 @@ const ClientListContent = () => {
       {/* <ClientList data={patients} /> */}
 
       <div className="flex flex-row items-center gap-5 my-2">
-        <p className="text-xl px-2">Skjólstæðingar</p>
+        <p className="text-xl px-2 max-lg:hidden">Skjólstæðingar</p>
         <NewFilter
           setPopoverOpen={setPopoverOpen}
           filters={filter}
@@ -125,7 +127,9 @@ const ClientListContent = () => {
               >
                 <td className="w-1/4">{patient.name}</td>
                 <td className="w-1/4">{patient.address}</td>
-                <td className="w-1/4">{patient.teamID}</td>
+                <td className="w-1/4">
+                  {teams.find((team: Team) => team.id === patient.teamID)?.name}
+                </td>
                 <td className="w-1/4">{patient.status}</td>
               </tr>
             ))}

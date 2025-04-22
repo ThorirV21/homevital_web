@@ -59,7 +59,7 @@ const Filter = ({
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
         <PopoverTrigger>
           <div className="inline-flex rounded-2xl ml-auto pr-2">
-            <p className="text-xl pr-5">Sía</p>
+            <p className="text-xl pr-5 pl-2">Sía</p>
             <Image src="/Tune.svg" alt="Filter" width={30} height={30} />
           </div>
         </PopoverTrigger>

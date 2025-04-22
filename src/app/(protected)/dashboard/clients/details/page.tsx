@@ -14,6 +14,8 @@ import Vitals from "@/components/client_info/vitals";
 import Bell from "@/components/icons/bell";
 import Loading from "@/components/loading";
 import { redirect } from "next/navigation";
+import { useTeams } from "@/hooks/useTeams";
+import { Team } from "@/types/teamTypes";
 
 const ClientDetailsContent: React.FC = () => {
   const searchParams = useSearchParams();
@@ -21,17 +23,18 @@ const ClientDetailsContent: React.FC = () => {
   const idString = clientId ? clientId : "";
   const { patientDetails, isLoading, error } = useClientDetails(idString);
   const [currentView, setCurrentView] = useState("measurements");
+  const { teams, teamsLoading, teamsError } = useTeams();
 
   if (!clientId) {
     return <></>;
   }
 
-  if (isLoading) {
+  if (isLoading || teamsLoading) {
     return <Loading />;
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (error || teamsError) {
+    return <div>Error: {error?.message || teamsError?.message}</div>;
   }
 
   const { name, address, teamID } = patientDetails;
@@ -54,7 +57,9 @@ const ClientDetailsContent: React.FC = () => {
         <div className="p-4 w-1/3 flex with-auto justify-between">
           <div className="w-full">
             <Badge className="bg-white text-foreground border-foreground">
-              <p className="text-base">{teamID}</p>
+              <p className="text-base">
+                {teams.find((team: Team) => team.id === teamID)?.name}
+              </p>
             </Badge>
           </div>
           <div className="flex flex-col w-full items-end">
