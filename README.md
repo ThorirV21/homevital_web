@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![Static Badge](https://img.shields.io/badge/next.js-v15.2.3-blue)
 
-## Getting Started
 
-First, run the development server:
+# HomeVital Harmony - Web application
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Description
+This project is part of a final project in computer science at Reykjavík University.
+This is the web application part that Heimahjúkrun would use to manage and observe patient vital measurements.
+
+Other parts of this project are the API, and the mobile application for patients.
+
+The teck stack used was mainly choosen because it was known by the group members from other classes.
+
+### Group Members
+Aron Ingi Jónsson   |  aronj22@ru.is
+
+Jakub Ingvar Pitak  |   jakub22@ru.is
+
+Sindri Guðmundsson  |   sindrig23@ru.is
+
+Þórir Gunnar Valgeirsson    |   thorirv21@ru.is |   Guarantor for Web application
+
+## Installation for progress view
+1. Fork the repository to your machine
+
+2. Create .env file in the root folder and add the following
+``` 
+API_URL=[Your-API-URL]
+
+SESSION_SECRET=[Your-random-session-secret]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> We have a running API on https://homevitaldev-app.azurewebsites.net/api but there are no guranties that the service is working at all times. 
+For stable local setup fork the repository for the API and run it on your local machine.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run `npm install`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run `npm run dev``
 
-## Learn More
+You should have the web page running on localhost, port 3000
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If you run into any trouble, please contact us and let us know of the trouble.
