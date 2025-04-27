@@ -34,6 +34,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${openSans.className} antialiased flex flex-col min-h-screen`}
+        data-pw-cursor="pointer"
       >
         <Providers>{children}</Providers>
       </body>

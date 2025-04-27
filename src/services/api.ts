@@ -135,19 +135,28 @@ const fetchHealthcareWorker = async (id: string) => {
 };
 
 const createHealthcareWorker = async (worker: WorkerDTO) => {
+  console.log("Creating healthcare worker", worker);
   const response = await fetch(`${API_URL}/healthcareworkers`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     },
     body: JSON.stringify({
       name: worker.name,
       phone: worker.phone,
       teamIDs: worker.teamIDs,
       status: worker.status,
+      kennitala: worker.ssn,
     }),
   });
   if (!response.ok) {
+    console.log(response);
     console.error("Failed to create healthcare worker", response.json());
   }
   return await response.json();
@@ -164,6 +173,7 @@ const updateHealthcareWorker = async (worker: WorkerDTO) => {
       phone: worker.phone,
       teamIDs: worker.teamIDs,
       status: worker.status,
+      kennitala: worker.ssn,
     }),
   });
   if (!response.ok) {

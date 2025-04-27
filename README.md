@@ -1,4 +1,5 @@
-![Static Badge](https://img.shields.io/badge/next.js-v15.2.3-blue)
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+
 
 
 # HomeVital Harmony - Web application

@@ -22,6 +22,7 @@ const NewStaffForm = ({
     phone: user?.phone || "",
     team: user?.teamIDs || [],
     status: user?.status || "",
+    ssn: user?.ssn || "",
   });
 
   const { teams, isLoading } = useTeams(user?.id || 1);
@@ -32,12 +33,14 @@ const NewStaffForm = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("trying to submit");
     if (creating) {
       createMutation.mutate({
         name: formData.name,
         phone: formData.phone,
         teamIDs: formData.team,
         status: formData.status,
+        ssn: formData.ssn,
         id: 0,
       });
     } else {
@@ -46,9 +49,11 @@ const NewStaffForm = ({
         phone: formData.phone,
         teamIDs: formData.team,
         status: formData.status,
+        ssn: formData.ssn,
         id: user?.id || 0,
       });
     }
+    console.log("submitted");
     setDialogOpen(false);
   };
 

@@ -10,7 +10,7 @@ const useLoginMutation = () => {
   const { mutate: loginMutation, isPending: isPending } = useMutation({
     mutationFn: async (form: z.infer<typeof loginSchema>) => {
       const mockLoginResult = await mockLogin(form);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       console.log("Mock login result: ", mockLoginResult);
       await login({ kennitala: mockLoginResult.toString() });
     },

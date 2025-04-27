@@ -23,12 +23,14 @@ import { z } from "zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { MultiSelect } from "../forms/multiSelect";
+import { useHealthcareWorkerMutations } from "@/hooks/useWorkers";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nafn er nauðsynlegt"),
   phone: z.string().min(1, "Símanúmer er nauðsynlegt"),
   team: z.array(z.string()).min(1, "Teymi er nauðsynlegt"),
   status: z.string().min(1, "Staða er nauðsynlegt"),
+  ssn: z.string().length(10, "Kennitala verður að vera 10 stafir"),
 });
 
 type FormShape = z.infer<typeof formSchema>;
@@ -41,7 +43,8 @@ interface StaffFormProps {
 
 const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
   const { teams } = useTeams();
-
+  const { updateMutation, deleteMutation, createMutation } =
+    useHealthcareWorkerMutations();
   const form = useForm<FormShape>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,6 +52,7 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
       phone: "",
       team: [],
       status: "",
+      ssn: "",
     },
   });
 
@@ -60,11 +64,38 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
         .filter((team: Team) => staff?.teamIDs.includes(team.id))
         .map((team: Team) => team.name),
       status: staff?.status || "",
+      ssn: staff?.ssn || "",
     });
   }, [staff, form, teams]);
 
   const onSubmit = (values: FormShape) => {
-    console.log(values);
+    console.log("reyni að vista");
+    if (staff) {
+      updateMutation.mutate({
+        id: staff?.id || 0,
+        name: values.name,
+        phone: values.phone,
+        teamIDs: values.team.map(
+          (team: string) => teams.find((t: Team) => t.name === team)?.id
+        ),
+        status: values.status,
+        ssn: values.ssn,
+      });
+    } else {
+      createMutation.mutate({
+        id: 0,
+        name: values.name,
+        phone: values.phone,
+        teamIDs: values.team.map(
+          (team: string) => teams.find((t: Team) => t.name === team)?.id
+        ),
+        status: values.status,
+        ssn: values.ssn,
+      });
+    }
+    console.log("vistaði");
+    form.reset();
+    setOpen(false);
   };
 
   const handleClose = () => {
@@ -72,7 +103,8 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
   };
 
   const handleDelete = () => {
-    console.log("Eyða");
+    deleteMutation.mutate(staff?.id.toString() || "");
+    setOpen(false);
   };
 
   const inputClasses = "bg-white";
@@ -94,6 +126,19 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Nafn</FormLabel>
+                    <FormControl>
+                      <Input className={inputClasses} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="ssn"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kennitala</FormLabel>
                     <FormControl>
                       <Input className={inputClasses} {...field} />
                     </FormControl>
@@ -132,7 +177,11 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
                 )}
               />
               <div className="flex flex-row gap-2">
-                <Button className="mt-6 ml-auto" type="submit">
+                <Button
+                  className="mt-6 ml-auto"
+                  type="button"
+                  onClick={() => onSubmit(form.getValues())}
+                >
                   Vista
                 </Button>
                 <Button

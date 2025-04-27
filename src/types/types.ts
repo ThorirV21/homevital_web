@@ -60,6 +60,7 @@ export type WorkerDTO = {
   phone: string;
   teamIDs: number[];
   status: string;
+  ssn: string;
 };
 export type SingleMeasurement = {
   systolic: number;

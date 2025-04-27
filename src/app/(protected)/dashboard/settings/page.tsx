@@ -14,7 +14,7 @@ const views = [
 ];
 
 export default function Settings() {
-  const [view, setView] = useState(views[2].value);
+  const [view, setView] = useState(views[0].value);
 
   return (
     <div className="flex w-full h-full flex-col bg-white">
