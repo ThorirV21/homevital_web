@@ -21,9 +21,10 @@ const StaffView = () => {
   const { data, error, isLoading } = useHealthcareWorkers();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [worker, setWorker] = useState<WorkerDTO | null>(null);
-  const { teams } = useTeams();
+  const { teams, teamsLoading } = useTeams();
   const [hoveredWorker, setHoveredWorker] = useState<WorkerDTO | null>(null);
-  if (isLoading) {
+
+  if (isLoading || teamsLoading) {
     return <Loading />;
   }
   if (error) {
@@ -50,7 +51,7 @@ const StaffView = () => {
         <h3 className="w-1/4 font-bold">Nafn</h3>
         <h3 className="w-1/4 font-bold">Sími</h3>
         <h3 className="w-1/4 font-bold">Teymi</h3>
-        <h3 className="w-1/4 font-bold">Staða</h3>
+        <h3 className="w-1/4 font-bold"></h3>
       </div>
       <ScrollArea className="overflow-y-auto max-h-[calc(100vh-23rem)] border-b">
         <table className="w-full border-collapse border border-gray-300">
@@ -74,7 +75,7 @@ const StaffView = () => {
                     )
                     .join(", ")}
                 </td>
-                <td className="w-1/4">{worker.status}</td>
+                <td className="w-1/4"></td>
               </tr>
             ))}
           </tbody>

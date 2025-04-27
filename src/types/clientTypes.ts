@@ -5,6 +5,7 @@ export interface Client {
   status: string;
   address: string;
   teamID: number;
+  ssn: string;
 }
 
 export interface MeasurementValue {

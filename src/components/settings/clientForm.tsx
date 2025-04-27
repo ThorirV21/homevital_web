@@ -45,6 +45,7 @@ const formSchema = z.object({
     }
   ),
   team: z.string().min(1, "Veldu teymi"),
+  ssn: z.string().length(10, "Kennitala verður að vera 10 stafir"),
 });
 
 type FormShape = z.infer<typeof formSchema>;
@@ -67,6 +68,7 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
       address: "",
       phone: "",
       team: "",
+      ssn: "",
     },
   });
 
@@ -76,6 +78,7 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
       address: client?.address || "",
       phone: client?.phone || "",
       team: teams.find((team: Team) => team.id === client?.teamID)?.name || "",
+      ssn: client?.ssn || "",
     });
   }, [client, form, teams]);
 
@@ -110,6 +113,19 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Nafn</FormLabel>
+                    <FormControl>
+                      <Input className={inputClasses} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="ssn"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kennitala</FormLabel>
                     <FormControl>
                       <Input className={inputClasses} {...field} />
                     </FormControl>

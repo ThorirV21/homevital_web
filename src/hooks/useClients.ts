@@ -7,7 +7,7 @@ import {
 import { Client } from "@/types/clientTypes";
 import { PatientMeasurement } from "@/types/types";
 
-const refetchInterval = 10000;
+const refetchInterval = 2000;
 
 const useClients = () => {
   const { data, error, isLoading } = useQuery({
