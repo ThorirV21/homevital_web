@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useClientMutations } from "@/hooks/useClients";
 
 const formSchema = z.object({
   name: z.string().min(4, "Nafn er nauðsynlegt"),
@@ -56,11 +57,12 @@ interface ClientFormProps {
   client: Client | null;
 }
 
-const inputClasses = "bg-white";
+const inputClasses = "bg-background";
 
 const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
   const { teams } = useTeams();
-
+  const { updateMutation, deleteMutation, createMutation } =
+    useClientMutations();
   const form = useForm<FormShape>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -84,6 +86,29 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
 
   const onSubmit = (values: FormShape) => {
     console.log(values);
+    if (client) {
+      updateMutation.mutate({
+        id: client.id,
+        name: values.name,
+        address: values.address,
+        phone: values.phone,
+        teamID: teams.find((team: Team) => team.name === values.team)?.id,
+        ssn: values.ssn,
+        status: "",
+      });
+    } else {
+      createMutation.mutate({
+        id: 0,
+        name: values.name,
+        address: values.address,
+        phone: values.phone,
+        teamID: teams.find((team: Team) => team.name === values.team)?.id,
+        ssn: values.ssn,
+        status: "",
+      });
+    }
+    form.reset();
+    setOpen(false);
   };
 
   const handleClose = () => {
@@ -92,7 +117,8 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
   };
 
   const handleDelete = () => {
-    console.log("Eyða");
+    deleteMutation.mutate(client?.id.toString() || "");
+    setOpen(false);
   };
 
   return (
@@ -170,11 +196,11 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="bg-white">
+                        <SelectTrigger className="bg-background">
                           <SelectValue placeholder="Veldu teymi" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent className="bg-white">
+                      <SelectContent className="bg-background">
                         {teams.map((team: Team) => (
                           <SelectItem key={team.id} value={team.name}>
                             {team.name}

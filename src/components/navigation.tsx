@@ -44,6 +44,8 @@ const Navigation: React.FC = () => {
     return <div>Error: {sessionError?.message || teamsError?.message}</div>;
   }
 
+  console.log(session);
+
   return (
     <nav className="flex justify-between flex-col h-full">
       <ul>

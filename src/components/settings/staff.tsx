@@ -1,16 +1,8 @@
 import { useHealthcareWorkers } from "@/hooks/useWorkers";
-/* import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"; */
+
 import { WorkerDTO } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import Loading from "../loading";
-/* import NewStaffForm from "./newStaffForm"; */
 import { useState } from "react";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import StaffForm from "./staffForm";
@@ -82,27 +74,6 @@ const StaffView = () => {
         </table>
       </ScrollArea>
       <StaffForm open={dialogOpen} setOpen={setDialogOpen} staff={worker} />
-
-      {/*       <Dialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        key={"change-staff"}
-      >
-        <DialogTrigger key={"change-staff-trigger"}></DialogTrigger>
-        <DialogContent className="bg-secondary">
-          <DialogHeader>
-            <DialogTitle>Breyta</DialogTitle>
-            <DialogDescription>
-              Breyttu gildum og ýttu á vista.
-            </DialogDescription>
-          </DialogHeader>
-          <NewStaffForm
-            user={worker}
-            setDialogOpen={setDialogOpen}
-            creating={creating}
-          />
-        </DialogContent>
-      </Dialog> */}
       <div className="ms-auto mt-auto p-4">
         <Button className="mt-4" onClick={handleClickCreate}>
           Bæta við starfsfólki

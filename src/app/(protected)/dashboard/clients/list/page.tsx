@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import { useClients } from "@/hooks/useClients";
 import Loading from "@/components/loading";
@@ -99,7 +100,7 @@ const ClientListContent = () => {
           popoverOpen={popoverOpen}
         />
         <Input
-          className="mx-2 rounded-xl bg-input text-foreground w-80"
+          className="mx-2 rounded-xl bg-secondary text-foreground w-80"
           placeholder="Search"
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}

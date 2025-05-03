@@ -33,7 +33,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${openSans.className} antialiased flex flex-col min-h-screen`}
+        className={`${openSans.className} antialiased flex flex-col min-h-screen bg-banner`}
         data-pw-cursor="pointer"
       >
         <Providers>{children}</Providers>

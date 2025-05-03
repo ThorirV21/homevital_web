@@ -17,7 +17,7 @@ export default function Settings() {
   const [view, setView] = useState(views[0].value);
 
   return (
-    <div className="flex w-full h-full flex-col bg-white">
+    <div className="flex w-full h-full flex-col bg-background">
       <div className="flex flex-col w-full px-4 pb-4 border-b">
         <div className="flex flex-row gap-2 pt-3">
           {views.map((v) => (

@@ -37,7 +37,7 @@ const MultiSelect = ({
   return (
     <Command className="overflow-visible bg-transparent">
       <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-        <div className="flex gap-1 flex-wrap bg-white items-center">
+        <div className="flex gap-1 flex-wrap bg-background items-center">
           {selected.map((option) => {
             return (
               <Badge key={option} className="w-fit h-8">

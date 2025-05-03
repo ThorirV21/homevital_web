@@ -69,7 +69,6 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
   }, [staff, form, teams]);
 
   const onSubmit = (values: FormShape) => {
-    console.log("reyni að vista");
     if (staff) {
       updateMutation.mutate({
         id: staff?.id || 0,
@@ -93,7 +92,6 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
         ssn: values.ssn,
       });
     }
-    console.log("vistaði");
     form.reset();
     setOpen(false);
   };
@@ -107,14 +105,14 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
     setOpen(false);
   };
 
-  const inputClasses = "bg-white";
+  const inputClasses = "bg-background";
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Breyta starfsmanni</DialogTitle>
+          <DialogTitle>Starfsmaður</DialogTitle>
           <DialogDescription>
-            Breyta upplýsingum starfsmannsins og vistaðu breytingar.
+            Settu inn upplýsingar starfsmannsins og vistaðu.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2" inert={!open}>

@@ -51,8 +51,6 @@ const TeamForm = ({ open, setOpen, team }: TeamFormProps) => {
   }, [team, form]);
 
   const onSubmit = (values: FormShape) => {
-    console.log(values);
-
     if (team) {
       updateTeam({
         id: team.id,
@@ -80,21 +78,16 @@ const TeamForm = ({ open, setOpen, team }: TeamFormProps) => {
     setOpen(false);
   };
 
-  const inputClasses = "bg-white";
-
-  const texts = {
-    title: "Breyta teymi",
-    description: "Breyttu starfsmennum í starfsmennasafnið",
-    button: "Vista",
-    deleteButton: "Eyða",
-  };
+  const inputClasses = "bg-background";
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{texts.title}</DialogTitle>
-          <DialogDescription>{texts.description}</DialogDescription>
+          <DialogTitle>Teymi</DialogTitle>
+          <DialogDescription>
+            Settu inn upplýsingar teymis og vistaðu.
+          </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2" inert={!open}>
           <Form {...form}>

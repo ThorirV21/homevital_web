@@ -1,8 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchClients,
   fetchClientDetails,
   fetchClientMeasurements,
+  updateClient,
+  createClient,
+  deleteClient,
 } from "@/services/api";
 import { Client } from "@/types/clientTypes";
 import { PatientMeasurement } from "@/types/types";
@@ -22,6 +25,33 @@ const useClients = () => {
   const patients = data as Client[];
 
   return { patients, error, isLoading };
+};
+
+const useClientMutations = () => {
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: createClient,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateClient,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteClient,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+    },
+  });
+
+  return { createMutation, updateMutation, deleteMutation };
 };
 
 // TODO: Check if this is needed
@@ -60,4 +90,9 @@ const useClientMeasurements = (id: string) => {
   return { measurements, error, isLoading, refetch };
 };
 
-export { useClients, useClientDetails, useClientMeasurements };
+export {
+  useClients,
+  useClientDetails,
+  useClientMeasurements,
+  useClientMutations,
+};

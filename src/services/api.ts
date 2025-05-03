@@ -6,6 +6,8 @@ import { transformForApi } from "@/services/transformData";
 import { parseJwt } from "@/lib/utils";
 import { getSession, saveSession } from "./session";
 import { Team, TeamPost } from "@/types/teamTypes";
+import { Client } from "@/types/clientTypes";
+import { TreatmentPost } from "@/types/treatmentTypes";
 
 export const API_URL = process.env.API_URL;
 
@@ -46,7 +48,7 @@ const login = async (form: z.infer<typeof loginSchema>) => {
     console.error("Failed to fetch healthcare worker data");
   }
   const userData = await user.json();
-
+  console.log(user);
   //console.log(token);
   session.isLoggedIn = true;
   session.userId = token.sub;
@@ -86,6 +88,43 @@ const fetchClients = async () => {
     throw new Error("Failed to fetch clients");
   }
   return await response.json();
+};
+
+const createClient = async (client: Client) => {
+  const response = await fetch(`${API_URL}/patients`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(client),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to create client");
+  }
+  return await response.json();
+};
+
+const updateClient = async (client: Client) => {
+  const response = await fetch(`${API_URL}/patients/${client.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(client),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to update client");
+  }
+  return await response.json();
+};
+
+const deleteClient = async (id: string) => {
+  const response = await fetch(`${API_URL}/patients/${id}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete client");
+  }
 };
 
 const fetchClientDetails = async (id: string) => {
@@ -163,6 +202,7 @@ const createHealthcareWorker = async (worker: WorkerDTO) => {
 };
 
 const updateHealthcareWorker = async (worker: WorkerDTO) => {
+  console.log("updating healthcare worker", worker);
   const response = await fetch(`${API_URL}/healthcareworkers/${worker.id}`, {
     method: "PATCH",
     headers: {
@@ -176,8 +216,12 @@ const updateHealthcareWorker = async (worker: WorkerDTO) => {
       kennitala: worker.ssn,
     }),
   });
+  if (response.status === 500) {
+    console.log(await response.json());
+  }
   if (!response.ok) {
-    throw new Error("Failed to update healthcare worker");
+    console.log(await response.json());
+    //throw new Error("Failed to update healthcare worker");
   }
   return await response.json();
 };
@@ -261,20 +305,25 @@ const fetchTeams = async () => {
 };
 
 const fetchCreateTeam = async (team: TeamPost) => {
+  console.log("creating team", team);
   const response = await fetch(`${API_URL}/teams`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(team),
+    body: JSON.stringify({ name: team.name }),
   });
+  if (response.status === 500) {
+    console.log("error", await response.json());
+  }
   if (!response.ok) {
-    throw new Error("Failed to create team");
+    console.error("Failed to create team", await response.json());
   }
   return await response.json();
 };
 
 const fetchUpdateTeam = async (team: Team) => {
+  console.log("updating team", team);
   const response = await fetch(`${API_URL}/teams/${team.id}`, {
     method: "PATCH",
     headers: {
@@ -298,8 +347,55 @@ const fetchDeleteTeam = async (id: string) => {
   return await response.json();
 };
 
+const postTreatment = async (treatment: TreatmentPost) => {
+  console.log("posting treatment", treatment);
+  const response = await fetch(`${API_URL}/patientplans`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(treatment),
+  });
+  if (response.status === 400) {
+    console.log("error", await response.json());
+  }
+  if (!response.ok) {
+    throw new Error("Failed to create treatment");
+  }
+  return await response.json();
+};
+
+const fetchTreatments = async (id: string) => {
+  //TODO: Handle date strings, turn into date objects
+  const response = await fetch(`${API_URL}/patientplans/${id}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch treatments");
+  }
+  return await response.json();
+};
+
+const fetchPatientTreatments = async (id: string) => {
+  const response = await fetch(`${API_URL}/patientplans/patient/${id}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch treatments");
+  }
+  return await response.json();
+};
+
+const fetchAlarms = async () => {
+  const response = await fetch(`${API_URL}/measurements/warnings`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch alarms");
+  }
+  return await response.json();
+};
+
 export {
   fetchClients,
+  createClient,
+  updateClient,
+  deleteClient,
   fetchClientDetails,
   fetchClientMeasurements,
   login,
@@ -315,4 +411,8 @@ export {
   fetchCreateTeam,
   fetchUpdateTeam,
   fetchDeleteTeam,
+  postTreatment,
+  fetchTreatments,
+  fetchPatientTreatments,
+  fetchAlarms,
 };
