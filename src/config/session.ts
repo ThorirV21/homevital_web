@@ -13,6 +13,7 @@ export interface SessionData {
   userId?: string;
   isLoggedIn: boolean;
   user?: User;
+  token?: string;
 }
 
 export const defaultSession: SessionData = {

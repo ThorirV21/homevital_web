@@ -17,7 +17,7 @@ export default function ClientsLayout({
   );
 
   return (
-    <div className="flex h-full bg-white">
+    <div className="flex h-full bg-background">
       <div className="w-1/2 border-r">{children}</div>
       <div className="w-1/2">
         <Suspense fallback={<Loading />}>

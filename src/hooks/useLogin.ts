@@ -11,11 +11,10 @@ const useLoginMutation = () => {
     mutationFn: async (form: z.infer<typeof loginSchema>) => {
       const mockLoginResult = await mockLogin(form);
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Mock login result: ", mockLoginResult);
+
       await login({ kennitala: mockLoginResult.toString() });
     },
     onSuccess: () => {
-      console.log("Login success");
       router.push("/dashboard/clients");
     },
     onError: (error) => {

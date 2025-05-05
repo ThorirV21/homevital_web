@@ -4,10 +4,15 @@ import { VitalPatch } from "@/types/vitals";
 import { z } from "zod";
 import { transformForApi } from "@/services/transformData";
 import { parseJwt } from "@/lib/utils";
-import { getSession, saveSession } from "./session";
+import { getSession, saveSession } from "@/services/session";
 import { Team, TeamPost } from "@/types/teamTypes";
+import { Client } from "@/types/clientTypes";
+import { TreatmentPost } from "@/types/treatmentTypes";
+import { api } from "@/lib/api";
 
 export const API_URL = process.env.API_URL;
+
+//TODO: Klára að refaktora, nota @/lib/api (authorized api calls)
 
 const login = async (form: z.infer<typeof loginSchema>) => {
   const session = await getSession();
@@ -47,7 +52,6 @@ const login = async (form: z.infer<typeof loginSchema>) => {
   }
   const userData = await user.json();
 
-  //console.log(token);
   session.isLoggedIn = true;
   session.userId = token.sub;
   session.user = {
@@ -59,7 +63,7 @@ const login = async (form: z.infer<typeof loginSchema>) => {
     groups: userData.teamIDs,
   };
 
-  console.log("Session: ", session);
+  session.token = data.token;
 
   await saveSession(session);
 
@@ -81,11 +85,37 @@ const mockLogin = async (form: z.infer<typeof loginSchema>) => {
 };
 
 const fetchClients = async () => {
-  const response = await fetch(`${API_URL}/patients`, {});
+  const response = await api.get("/patients");
+  return response;
+};
+
+const createClient = async (client: Client) => {
+  const response = await api.post("/patients", client);
+
+  return response;
+};
+
+const updateClient = async (client: Client) => {
+  const response = await fetch(`${API_URL}/patients/${client.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(client),
+  });
   if (!response.ok) {
-    throw new Error("Failed to fetch clients");
+    throw new Error("Failed to update client");
   }
   return await response.json();
+};
+
+const deleteClient = async (id: string) => {
+  const response = await fetch(`${API_URL}/patients/${id}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete client");
+  }
 };
 
 const fetchClientDetails = async (id: string) => {
@@ -135,7 +165,6 @@ const fetchHealthcareWorker = async (id: string) => {
 };
 
 const createHealthcareWorker = async (worker: WorkerDTO) => {
-  console.log("Creating healthcare worker", worker);
   const response = await fetch(`${API_URL}/healthcareworkers`, {
     method: "POST",
     headers: {
@@ -156,7 +185,6 @@ const createHealthcareWorker = async (worker: WorkerDTO) => {
     }),
   });
   if (!response.ok) {
-    console.log(response);
     console.error("Failed to create healthcare worker", response.json());
   }
   return await response.json();
@@ -176,6 +204,7 @@ const updateHealthcareWorker = async (worker: WorkerDTO) => {
       kennitala: worker.ssn,
     }),
   });
+
   if (!response.ok) {
     throw new Error("Failed to update healthcare worker");
   }
@@ -253,39 +282,21 @@ const updateVitalRange = async (data: VitalPatch) => {
 };
 
 const fetchTeams = async () => {
-  const response = await fetch(`${API_URL}/teams`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch teams");
-  }
-  return await response.json();
+  const response = await api.get("/teams");
+
+  return response;
 };
 
 const fetchCreateTeam = async (team: TeamPost) => {
-  const response = await fetch(`${API_URL}/teams`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(team),
-  });
-  if (!response.ok) {
-    throw new Error("Failed to create team");
-  }
-  return await response.json();
+  const response = await api.post("/teams", { name: team.name });
+
+  return response;
 };
 
 const fetchUpdateTeam = async (team: Team) => {
-  const response = await fetch(`${API_URL}/teams/${team.id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(team),
-  });
-  if (!response.ok) {
-    throw new Error("Failed to update team");
-  }
-  return await response.json();
+  const response = await api.patch(`/teams/${team.id}`, team);
+
+  return response;
 };
 
 const fetchDeleteTeam = async (id: string) => {
@@ -298,8 +309,51 @@ const fetchDeleteTeam = async (id: string) => {
   return await response.json();
 };
 
+const postTreatment = async (treatment: TreatmentPost) => {
+  const response = await fetch(`${API_URL}/patientplans`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(treatment),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to create treatment");
+  }
+  return await response.json();
+};
+
+const fetchTreatments = async (id: string) => {
+  //TODO: Handle date strings, turn into date objects
+  const response = await fetch(`${API_URL}/patientplans/${id}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch treatments");
+  }
+  return await response.json();
+};
+
+const fetchPatientTreatments = async (id: string) => {
+  const response = await fetch(`${API_URL}/patientplans/patient/${id}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch treatments");
+  }
+  return await response.json();
+};
+
+const fetchAlarms = async () => {
+  const response = await fetch(`${API_URL}/measurements/warnings`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch alarms");
+  }
+  return await response.json();
+};
+
 export {
   fetchClients,
+  createClient,
+  updateClient,
+  deleteClient,
   fetchClientDetails,
   fetchClientMeasurements,
   login,
@@ -315,4 +369,8 @@ export {
   fetchCreateTeam,
   fetchUpdateTeam,
   fetchDeleteTeam,
+  postTreatment,
+  fetchTreatments,
+  fetchPatientTreatments,
+  fetchAlarms,
 };

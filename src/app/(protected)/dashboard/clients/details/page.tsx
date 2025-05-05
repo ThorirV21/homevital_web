@@ -22,7 +22,7 @@ const ClientDetailsContent: React.FC = () => {
   const clientId = searchParams.get("id");
   const idString = clientId ? clientId : "";
   const { patientDetails, isLoading, error } = useClientDetails(idString);
-  const [currentView, setCurrentView] = useState("measurements");
+  const [currentView, setCurrentView] = useState("treatment"); // TODO: Change back to "measurements"
   const { teams, teamsLoading, teamsError } = useTeams();
 
   if (!clientId) {
@@ -56,9 +56,9 @@ const ClientDetailsContent: React.FC = () => {
         </div>
         <div className="p-4 w-1/3 flex with-auto justify-between">
           <div className="w-full">
-            <Badge className="bg-white text-foreground border-foreground">
+            <Badge className="bg-background text-foreground border-foreground">
               <p className="text-base">
-                {teams.find((team: Team) => team.id === teamID)?.name}
+                {teams?.find((team: Team) => team.id === teamID)?.name}
               </p>
             </Badge>
           </div>
@@ -86,7 +86,7 @@ const ClientDetailsContent: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex overflow-hidden justify-between bg-background ">
+      <div className="flex overflow-hidden justify-between bg-banner">
         <button
           className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "measurements" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("measurements")}
@@ -113,8 +113,8 @@ const ClientDetailsContent: React.FC = () => {
         </button>
       </div>
       {currentView === "measurements" && <Measurements id={clientId} />}
-      {currentView === "treatment" && <Treatment />}
-      {currentView === "warnings" && <Warnings />}
+      {currentView === "treatment" && <Treatment id={clientId} />}
+      {currentView === "warnings" && <Warnings id={clientId} />}
       {currentView === "vitals" && <Vitals />}
     </div>
   );

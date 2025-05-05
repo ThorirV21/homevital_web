@@ -61,7 +61,7 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
       name: staff?.name || "",
       phone: staff?.phone || "",
       team: teams
-        .filter((team: Team) => staff?.teamIDs.includes(team.id))
+        ?.filter((team: Team) => staff?.teamIDs.includes(team.id))
         .map((team: Team) => team.name),
       status: staff?.status || "",
       ssn: staff?.ssn || "",
@@ -69,14 +69,13 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
   }, [staff, form, teams]);
 
   const onSubmit = (values: FormShape) => {
-    console.log("reyni að vista");
     if (staff) {
       updateMutation.mutate({
         id: staff?.id || 0,
         name: values.name,
         phone: values.phone,
         teamIDs: values.team.map(
-          (team: string) => teams.find((t: Team) => t.name === team)?.id
+          (team: string) => teams?.find((t: Team) => t.name === team)?.id || 0
         ),
         status: values.status,
         ssn: values.ssn,
@@ -87,13 +86,12 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
         name: values.name,
         phone: values.phone,
         teamIDs: values.team.map(
-          (team: string) => teams.find((t: Team) => t.name === team)?.id
+          (team: string) => teams?.find((t: Team) => t.name === team)?.id || 0
         ),
         status: values.status,
         ssn: values.ssn,
       });
     }
-    console.log("vistaði");
     form.reset();
     setOpen(false);
   };
@@ -107,14 +105,14 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
     setOpen(false);
   };
 
-  const inputClasses = "bg-white";
+  const inputClasses = "bg-background";
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Breyta starfsmanni</DialogTitle>
+          <DialogTitle>Starfsmaður</DialogTitle>
           <DialogDescription>
-            Breyta upplýsingum starfsmannsins og vistaðu breytingar.
+            Settu inn upplýsingar starfsmannsins og vistaðu.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2" inert={!open}>
@@ -167,7 +165,7 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
                     <FormLabel>Teymi</FormLabel>
                     <FormControl>
                       <MultiSelect
-                        options={teams.map((team: Team) => team.name)}
+                        options={teams?.map((team: Team) => team.name) || []}
                         selected={field.value}
                         onChange={field.onChange}
                       />

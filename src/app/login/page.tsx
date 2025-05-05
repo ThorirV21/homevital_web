@@ -52,7 +52,7 @@ const Login = () => {
           height={400}
           className="pb-40"
         />
-        <div className="flex flex-col items-center justify-center bg-white p-10 rounded-xl">
+        <div className="flex flex-col items-center justify-center bg-background p-10 rounded-xl">
           {isPending ? (
             <LoginLoader />
           ) : (

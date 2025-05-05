@@ -22,12 +22,12 @@ const ClientsView = () => {
     return <div>Error: {error?.message || teamsError?.message}</div>;
   }
 
-  const handleClientChange = (client: Client) => {
+  const handleClickClient = (client: Client) => {
     setCurrentClient(client);
     setOpen(true);
   };
 
-  const handleOpenDialog = () => {
+  const handleClickCreate = () => {
     setCurrentClient(null);
     setOpen(true);
   };
@@ -51,7 +51,7 @@ const ClientsView = () => {
                   className={`flex flex-row items-center justify-between border-b border-gray-300 p-3 ${hoveredPatient?.id === patient.id ? "bg-gray-100" : ""}`}
                   onMouseEnter={() => setHoveredPatient(patient)}
                   onMouseLeave={() => setHoveredPatient(null)}
-                  onClick={() => handleClientChange(patient)}
+                  onClick={() => handleClickClient(patient)}
                 >
                   <td className="w-1/5">{patient.name}</td>
                   <td className="w-1/5">{patient.address}</td>
@@ -59,7 +59,7 @@ const ClientsView = () => {
                   <td className="w-1/5">{patient.status}</td>
                   <td className="w-1/5">
                     {
-                      teams.find((team: Team) => team.id === patient.teamID)
+                      teams?.find((team: Team) => team.id === patient.teamID)
                         ?.name
                     }
                   </td>
@@ -70,7 +70,7 @@ const ClientsView = () => {
         </table>
       </ScrollArea>
       <div className="flex flex-row w-full justify-end py-4 px-4 mt-auto">
-        <Button onClick={handleOpenDialog}>Bæta við</Button>
+        <Button onClick={handleClickCreate}>Bæta við</Button>
       </div>
       <ClientForm open={open} setOpen={setOpen} client={currentClient} />
     </div>

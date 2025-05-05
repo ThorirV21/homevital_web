@@ -44,6 +44,8 @@ const Navigation: React.FC = () => {
     return <div>Error: {sessionError?.message || teamsError?.message}</div>;
   }
 
+  console.log(session);
+
   return (
     <nav className="flex justify-between flex-col h-full">
       <ul>
@@ -74,7 +76,9 @@ const Navigation: React.FC = () => {
           ) : (
             <p>
               {teams
-                .filter((team: Team) => session?.user?.groups.includes(team.id))
+                ?.filter((team: Team) =>
+                  session?.user?.groups.includes(team.id)
+                )
                 .map((team: Team) => team.name)
                 .join(", ")}
             </p>

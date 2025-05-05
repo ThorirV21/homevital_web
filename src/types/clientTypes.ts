@@ -28,3 +28,12 @@ export interface ClientMeasurements {
   measurementDate: string;
   measurementValues: MeasurementValue[];
 }
+
+export interface RawWarning {
+  uid: number;
+  id: number;
+  patientID: number;
+  measurementType: string;
+  measurementDate: string;
+  measurementValues: MeasurementValue;
+}

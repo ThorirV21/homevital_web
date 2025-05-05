@@ -1,10 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  fetchTeams,
   fetchCreateTeam,
   fetchDeleteTeam,
   fetchUpdateTeam,
 } from "@/services/api";
+import { api } from "@/lib/api";
+import { Team } from "@/types/teamTypes";
 
 const useTeams = () => {
   const {
@@ -13,7 +14,10 @@ const useTeams = () => {
     error: teamsError,
   } = useQuery({
     queryKey: ["teams"],
-    queryFn: () => fetchTeams(),
+    queryFn: async () => {
+      const response: Team[] = await api.get("/teams");
+      return response;
+    },
   });
 
   return { teams, teamsLoading, teamsError };

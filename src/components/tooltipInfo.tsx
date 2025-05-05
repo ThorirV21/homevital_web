@@ -8,15 +8,17 @@ import {
 const TooltipInfo = ({
   children,
   info,
+  className,
 }: {
   children: React.ReactNode;
   info: string;
+  className?: string;
 }) => {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger>{children}</TooltipTrigger>
-        <TooltipContent>{info}</TooltipContent>
+        <TooltipContent className={className}>{info}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
