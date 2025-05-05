@@ -1,5 +1,5 @@
 "use client";
-import { useAlarms } from "@/hooks/useAlarms";
+import { useWarnings } from "@/hooks/useWarnings";
 import Loading from "@/components/loading";
 import Error from "@/components/error";
 import { warningColumns, Warning } from "@/components/dataTable/warningColumns";
@@ -12,7 +12,7 @@ import { ColumnFiltersState } from "@tanstack/react-table";
 import { useState } from "react";
 
 const Alarms = () => {
-  const { data, isLoading, error } = useAlarms();
+  const { data, isLoading, error } = useWarnings();
   const {
     patients,
     isLoading: isLoadingClients,
@@ -48,14 +48,15 @@ const Alarms = () => {
     },
   ];
 
-  const warnings: Warning[] = data?.map((alarm: RawWarning) => {
+  const warnings: Warning[] = (data ?? []).map((alarm: RawWarning) => {
     const client = patients?.find((patient) => patient.id === alarm.patientID);
     const team = teams?.find((team: Team) => team.id === client?.teamID);
     return {
       ...alarm,
       clientName: client?.name,
-      team: team?.name,
-      name: client?.name,
+      team: team?.name ?? "",
+      name: client?.name ?? "",
+      status: alarm.measurementValues.status,
     };
   });
 

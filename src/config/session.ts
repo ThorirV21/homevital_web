@@ -9,10 +9,14 @@ export interface User {
   groups: number[];
 }
 
+export interface UserWithSSN extends User {
+  ssn: string;
+}
+
 export interface SessionData {
   userId?: string;
   isLoggedIn: boolean;
-  user?: User;
+  user?: UserWithSSN;
   token?: string;
 }
 
