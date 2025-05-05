@@ -96,7 +96,7 @@ const TreatmentForm = ({ id }: { id: string }) => {
       endDate: values.endDate?.toISOString() || "",
       patientID: Number(id),
       instructions: values.notes || "",
-      teamID: teams.find((team: Team) => team.name === values.team)?.id || 0,
+      teamID: teams?.find((team: Team) => team.name === values.team)?.id || 0,
       weightMeasurementDays: selectDays(Number(values.weightInterval)),
       bloodSugarMeasurementDays: selectDays(Number(values.bloodSugarInterval)),
       bloodPressureMeasurementDays: selectDays(
@@ -358,7 +358,7 @@ const TreatmentForm = ({ id }: { id: string }) => {
                         <SelectValue placeholder="Velja teymi" />
                       </SelectTrigger>
                       <SelectContent>
-                        {teams.map((team: Team) => (
+                        {teams?.map((team: Team) => (
                           <SelectItem key={team.id} value={team.id.toString()}>
                             {team.name}
                           </SelectItem>

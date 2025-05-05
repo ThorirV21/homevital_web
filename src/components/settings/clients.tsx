@@ -59,7 +59,7 @@ const ClientsView = () => {
                   <td className="w-1/5">{patient.status}</td>
                   <td className="w-1/5">
                     {
-                      teams.find((team: Team) => team.id === patient.teamID)
+                      teams?.find((team: Team) => team.id === patient.teamID)
                         ?.name
                     }
                   </td>

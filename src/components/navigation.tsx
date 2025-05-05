@@ -76,7 +76,9 @@ const Navigation: React.FC = () => {
           ) : (
             <p>
               {teams
-                .filter((team: Team) => session?.user?.groups.includes(team.id))
+                ?.filter((team: Team) =>
+                  session?.user?.groups.includes(team.id)
+                )
                 .map((team: Team) => team.name)
                 .join(", ")}
             </p>

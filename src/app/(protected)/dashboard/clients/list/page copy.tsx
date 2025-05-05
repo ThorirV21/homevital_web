@@ -129,7 +129,10 @@ const ClientListContent = () => {
                 <td className="w-1/4">{patient.name}</td>
                 <td className="w-1/4">{patient.address}</td>
                 <td className="w-1/4">
-                  {teams.find((team: Team) => team.id === patient.teamID)?.name}
+                  {
+                    teams?.find((team: Team) => team.id === patient.teamID)
+                      ?.name
+                  }
                 </td>
                 <td className="w-1/4">{patient.status}</td>
               </tr>

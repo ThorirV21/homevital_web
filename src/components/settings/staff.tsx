@@ -63,7 +63,7 @@ const StaffView = () => {
                   {worker.teamIDs
                     .map(
                       (team: number) =>
-                        teams.find((t: Team) => t.id === team)?.name
+                        teams?.find((t: Team) => t.id === team)?.name
                     )
                     .join(", ")}
                 </td>

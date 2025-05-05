@@ -58,7 +58,7 @@ const ClientDetailsContent: React.FC = () => {
           <div className="w-full">
             <Badge className="bg-background text-foreground border-foreground">
               <p className="text-base">
-                {teams.find((team: Team) => team.id === teamID)?.name}
+                {teams?.find((team: Team) => team.id === teamID)?.name}
               </p>
             </Badge>
           </div>

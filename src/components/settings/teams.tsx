@@ -39,7 +39,7 @@ const Teams = () => {
       <ScrollArea className="overflow-y-auto max-h-[calc(100vh-23rem)] border-b">
         <table className="w-full border-collapse border border-gray-300">
           <tbody>
-            {teams.map((team: Team) => (
+            {teams?.map((team: Team) => (
               <tr
                 key={team.id}
                 className={`flex flex-row items-center justify-between border-b border-gray-300 p-3 ${hoveredTeam?.id === team.id ? "bg-gray-100" : ""}`}
