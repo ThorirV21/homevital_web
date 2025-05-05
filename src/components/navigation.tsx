@@ -16,7 +16,7 @@ const elem = [
   {
     name: "Viðvaranir",
     logo_path: "/nav_icons/Alarm.svg",
-    dashboard_path: "/dashboard/alerts",
+    dashboard_path: "/dashboard/warnings",
   },
   {
     name: "Stillingar",

@@ -1,16 +1,11 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import {
-  createHealthcareWorker,
-  fetchHealthcareWorkers,
-  updateHealthcareWorker,
-  deleteHealthcareWorker,
-  fetchHealthcareWorker,
-} from "@/services/api";
+import { api } from "@/lib/api";
+import { WorkerDTO } from "@/types/types";
 
 const useHealthcareWorkers = () => {
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["workers"],
-    queryFn: fetchHealthcareWorkers,
+    queryFn: () => api.get("/healthcareworkers"),
     staleTime: 60000,
   });
   if (error) {
@@ -24,14 +19,15 @@ const useHealthcareWorkerMutations = () => {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: createHealthcareWorker,
+    mutationFn: (worker: WorkerDTO) => api.post("healthcareworkers", worker),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workers"] });
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateHealthcareWorker,
+    mutationFn: (worker: WorkerDTO) =>
+      api.patch(`healthcareworkers/${worker.id}`, worker),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workers"] });
     },
@@ -41,7 +37,7 @@ const useHealthcareWorkerMutations = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteHealthcareWorker,
+    mutationFn: (id: string) => api.delete(`healthcareworkers/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workers"] });
     },
@@ -57,7 +53,7 @@ const useHealthcareWorker = (id: string) => {
     isLoading,
   } = useQuery({
     queryKey: ["workers", id],
-    queryFn: () => fetchHealthcareWorker(id),
+    queryFn: () => api.get(`healthcareworkers/${id}`),
   });
   if (error) {
     return { worker: null, error, isLoading };

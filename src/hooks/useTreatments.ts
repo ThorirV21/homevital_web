@@ -1,14 +1,11 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import {
-  fetchPatientTreatments,
-  fetchTreatments,
-  postTreatment,
-} from "@/services/api";
+import { api } from "@/lib/api";
+import { TreatmentPost } from "@/types/treatmentTypes";
 
 const useTreatment = (id: string) => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["treatments", id],
-    queryFn: () => fetchTreatments(id),
+    queryFn: () => api.get(`patientplans/${id}`),
   });
   if (error) {
     return { data: null, error, isLoading };
@@ -20,7 +17,7 @@ const useTreatmentMutations = () => {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: postTreatment,
+    mutationFn: (data: TreatmentPost) => api.post("patientplans", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["treatments"] });
     },
@@ -32,7 +29,7 @@ const useTreatmentMutations = () => {
 const usePatientTreatments = (id: string) => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["patientTreatments", id],
-    queryFn: () => fetchPatientTreatments(id),
+    queryFn: () => api.get(`patientplans/patient/${id}`),
   });
   if (error) {
     return { data: [], error, isLoading };

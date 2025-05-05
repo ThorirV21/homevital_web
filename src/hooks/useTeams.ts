@@ -1,11 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  fetchCreateTeam,
-  fetchDeleteTeam,
-  fetchUpdateTeam,
-} from "@/services/api";
+
 import { api } from "@/lib/api";
-import { Team } from "@/types/teamTypes";
+import { Team, TeamPost } from "@/types/teamTypes";
 
 const useTeams = () => {
   const {
@@ -27,23 +23,24 @@ const useTeamMutation = () => {
   const queryClient = useQueryClient();
 
   const { mutate: createTeam, isPending: isCreatingTeam } = useMutation({
-    mutationFn: fetchCreateTeam,
+    mutationFn: (team: TeamPost) => api.post("teams", team),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
     },
   });
 
   const { mutate: updateTeam, isPending: isUpdatingTeam } = useMutation({
-    mutationFn: fetchUpdateTeam,
+    mutationFn: (team: Team) => api.patch(`teams/${team.id}`, team),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
     },
   });
 
   const { mutate: deleteTeam, isPending: isDeletingTeam } = useMutation({
-    mutationFn: fetchDeleteTeam,
+    mutationFn: (id: string) => api.delete(`teams/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
+      console.log("Team deleted");
     },
   });
 
