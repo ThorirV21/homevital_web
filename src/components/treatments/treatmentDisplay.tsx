@@ -11,9 +11,6 @@ interface TreatmentDisplayProps {
 }
 
 const TreatmentDisplay = ({ treatment }: TreatmentDisplayProps) => {
-  console.log(treatment);
-  console.log(treatment.weightMeasurementDays);
-
   const measurementDays = (Days: number[] = []) => {
     return Days.reduce((count, day) => count + (day === 1 ? 1 : 0), 0);
   };

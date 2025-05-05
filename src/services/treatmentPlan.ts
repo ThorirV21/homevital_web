@@ -36,11 +36,13 @@ const mergeMeasurementDays = (...arrays: number[][]): number[] => {
 
 const selectedDates = (treatment: TreatmentType) => {
   const startDate = new Date(treatment.startDate);
-  const endDate = new Date();
+  let endDate = new Date();
   if (!treatment.endDate) {
-    endDate.setDate(startDate.getDate() + 365);
+    endDate = new Date(startDate.getDate() + 365);
+    console.log("no end date", endDate);
   } else {
-    endDate.setDate(new Date(treatment.endDate).getDate());
+    endDate = new Date(treatment.endDate);
+    console.log("end date", endDate);
   }
 
   const mergedMeasurementDays = mergeMeasurementDays(

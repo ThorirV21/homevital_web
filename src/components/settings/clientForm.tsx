@@ -79,7 +79,7 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
       name: client?.name || "",
       address: client?.address || "",
       phone: client?.phone || "",
-      team: teams.find((team: Team) => team.id === client?.teamID)?.name || "",
+      team: teams?.find((team: Team) => team.id === client?.teamID)?.name || "",
       ssn: client?.ssn || "",
     });
   }, [client, form, teams]);
@@ -92,7 +92,7 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
         name: values.name,
         address: values.address,
         phone: values.phone,
-        teamID: teams.find((team: Team) => team.name === values.team)?.id,
+        teamID: teams?.find((team: Team) => team.name === values.team)?.id || 0,
         ssn: values.ssn,
         status: "",
       });
@@ -102,7 +102,7 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
         name: values.name,
         address: values.address,
         phone: values.phone,
-        teamID: teams.find((team: Team) => team.name === values.team)?.id,
+        teamID: teams?.find((team: Team) => team.name === values.team)?.id || 0,
         ssn: values.ssn,
         status: "",
       });
@@ -201,7 +201,7 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-background">
-                        {teams.map((team: Team) => (
+                        {teams?.map((team: Team) => (
                           <SelectItem key={team.id} value={team.name}>
                             {team.name}
                           </SelectItem>

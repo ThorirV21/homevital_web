@@ -8,6 +8,8 @@ import { useClients } from "@/hooks/useClients";
 import { RawWarning } from "@/types/clientTypes";
 import { useTeams } from "@/hooks/useTeams";
 import { Team } from "@/types/teamTypes";
+import { ColumnFiltersState } from "@tanstack/react-table";
+import { useState } from "react";
 
 const Alarms = () => {
   const { data, isLoading, error } = useAlarms();
@@ -17,6 +19,7 @@ const Alarms = () => {
     error: errorClients,
   } = useClients();
   const { teams, teamsLoading, teamsError } = useTeams();
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   if (isLoading || isLoadingClients || teamsLoading) {
     return <Loading />;
@@ -25,6 +28,25 @@ const Alarms = () => {
   if (error || errorClients || teamsError) {
     return <Error />;
   }
+
+  const buttons = [
+    {
+      label: "Allt",
+      selected: false,
+      onClick: () => setColumnFilters([]),
+    },
+    {
+      label: "Mín teymi",
+      selected: false,
+      onClick: () =>
+        setColumnFilters([{ id: "team", value: ["Team A", "Team B"] }]),
+    },
+    {
+      label: "Utan marka",
+      selected: false,
+      onClick: () => setColumnFilters([{ id: "team", value: ["Utan marka"] }]),
+    },
+  ];
 
   const warnings: Warning[] = data?.map((alarm: RawWarning) => {
     const client = patients?.find((patient) => patient.id === alarm.patientID);
@@ -41,7 +63,14 @@ const Alarms = () => {
 
   return (
     <div className="flex flex-row bg-background p-4 h-full">
-      <DataTable columns={warningColumns} data={warnings} name="Viðvaranir" />
+      <DataTable
+        columns={warningColumns}
+        data={warnings}
+        name="Viðvaranir"
+        buttons={buttons}
+        setColumnFilters={setColumnFilters}
+        columnFilters={columnFilters}
+      />
     </div>
   );
 };

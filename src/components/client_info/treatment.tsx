@@ -48,8 +48,6 @@ const Treatment = ({ id }: { id: string }) => {
     return <Error />;
   }
 
-  console.log(data);
-
   const currentTreatment = data?.find(
     (treatment: TreatmentType) => treatment.isActive
   );

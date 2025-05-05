@@ -16,6 +16,7 @@ export async function getSession(): Promise<SessionData> {
     isLoggedIn: ironSession.isLoggedIn,
     userId: ironSession.userId,
     user: ironSession.user,
+    token: ironSession.token,
   };
 }
 
@@ -28,6 +29,7 @@ export async function saveSession(session: SessionData): Promise<void> {
   ironSession.isLoggedIn = session.isLoggedIn;
   ironSession.userId = session.userId;
   ironSession.user = session.user;
+  ironSession.token = session.token;
   await ironSession.save();
 }
 
@@ -37,4 +39,12 @@ export const logout = async () => {
   cookieStore.delete(sessionOptions.cookieName);
 
   redirect("/login");
+};
+
+export const getToken = async () => {
+  const session = await getSession();
+
+  console.log("Getting token from session", session);
+
+  return session.token;
 };

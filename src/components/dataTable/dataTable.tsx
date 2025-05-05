@@ -9,6 +9,8 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
+  RowSelectionState,
+  OnChangeFn,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 
@@ -25,21 +27,52 @@ import useDebounce from "@/hooks/useDebounce";
 import { Button } from "../ui/button";
 import { arrayIncludesFilter } from "./multiSelectFilter";
 
-interface DataTableProps<TData, TValue> {
+interface BaseRow {
+  id: number | string;
+}
+
+interface ButtonProps {
+  label: string;
+  selected: boolean;
+  onClick: () => void;
+}
+
+interface DataTableProps<TData extends BaseRow, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   name: string;
+  onRowClick?: (row: TData) => void;
+  selectedRow?: TData | null;
+  setColumnFilters?: (columnFilters: ColumnFiltersState) => void;
+  columnFilters?: ColumnFiltersState;
+  buttons?: ButtonProps[];
 }
 
-const DataTable = <TData, TValue>({
+const DataTable = <TData extends BaseRow, TValue>({
   columns,
   data,
   name,
+  onRowClick,
+  selectedRow,
+  setColumnFilters,
+  columnFilters = [],
+  buttons,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  //const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const debouncedGlobalFilter = useDebounce(globalFilter, 300);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (
+    updater
+  ) => {
+    if (setColumnFilters) {
+      const newValue =
+        typeof updater === "function" ? updater(columnFilters) : updater;
+      setColumnFilters(newValue);
+    }
+  };
 
   const table = useReactTable({
     data,
@@ -47,8 +80,9 @@ const DataTable = <TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: handleColumnFiltersChange,
     getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
     filterFns: {
       arrayIncludesFilter,
     },
@@ -61,34 +95,12 @@ const DataTable = <TData, TValue>({
     onGlobalFilterChange: setGlobalFilter,
   });
 
-  const buttons = [
-    {
-      label: "Allar skjólstæðingar",
-      selected: false,
-      onClick: () => {
-        setColumnFilters([]);
-      },
-    },
-    {
-      label: "Mín teymi",
-      selected: false,
-      onClick: () => {
-        setColumnFilters([{ id: "team", value: ["Team A", "Team B"] }]);
-      },
-    },
-    {
-      label: "Utan marka",
-      selected: false,
-      onClick: () => {},
-    },
-  ];
-
   return (
     <div>
-      <div className="flex flex-row gap-2 items-center pb-4">
+      <div className="flex flex-row gap-2 items-center p-4">
         <h2 className="text-xl">{name}</h2>
         <div className="flex flex-row gap-2 items-center">
-          {buttons.map((button) => (
+          {buttons?.map((button) => (
             <Button
               key={button.label}
               variant="outline"
@@ -129,7 +141,15 @@ const DataTable = <TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  className={
+                    row.original.id === selectedRow?.id ? "bg-muted" : ""
+                  }
+                  data-state={rowSelection[row.id] && "selected"}
+                  onClick={() => {
+                    if (onRowClick) {
+                      onRowClick(row.original);
+                    }
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -147,7 +167,7 @@ const DataTable = <TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Engum gögn til að sýna
+                  Ekkert fannst
                 </TableCell>
               </TableRow>
             )}
