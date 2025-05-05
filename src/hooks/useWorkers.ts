@@ -3,7 +3,7 @@ import { api } from "@/lib/api";
 import { WorkerDTO } from "@/types/types";
 
 const useHealthcareWorkers = () => {
-  const { data, error, isLoading, refetch } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery<WorkerDTO[]>({
     queryKey: ["workers"],
     queryFn: () => api.get("/healthcareworkers"),
     staleTime: 60000,
@@ -51,7 +51,7 @@ const useHealthcareWorker = (id: string) => {
     data: worker,
     error,
     isLoading,
-  } = useQuery({
+  } = useQuery<WorkerDTO>({
     queryKey: ["workers", id],
     queryFn: () => api.get(`healthcareworkers/${id}`),
   });

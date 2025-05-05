@@ -5,8 +5,6 @@ import { getSession, saveSession } from "@/services/session";
 
 export const API_URL = process.env.API_URL;
 
-//TODO: Klára að refaktora, nota @/lib/api (authorized api calls)
-
 const login = async (form: z.infer<typeof loginSchema>) => {
   const session = await getSession();
   const response = await fetch(`${API_URL}/user/generate-token`, {

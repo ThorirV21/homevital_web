@@ -1,9 +1,9 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { TreatmentPost } from "@/types/treatmentTypes";
+import { TreatmentPost, TreatmentType } from "@/types/treatmentTypes";
 
 const useTreatment = (id: string) => {
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery<TreatmentType[]>({
     queryKey: ["treatments", id],
     queryFn: () => api.get(`patientplans/${id}`),
   });
@@ -27,7 +27,7 @@ const useTreatmentMutations = () => {
 };
 
 const usePatientTreatments = (id: string) => {
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery<TreatmentType[]>({
     queryKey: ["patientTreatments", id],
     queryFn: () => api.get(`patientplans/patient/${id}`),
   });
