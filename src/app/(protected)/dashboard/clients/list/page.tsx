@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useClients } from "@/hooks/useClients";
 import Loading from "@/components/loading";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Error from "@/components/error";
 import { Suspense } from "react";
@@ -15,8 +15,12 @@ import { ColumnFiltersState } from "@tanstack/react-table";
 
 const ClientListContent = () => {
   const router = useRouter();
-  const { patients, error, isLoading } = useClients();
+  const { data: rawClients, error, isLoading } = useClients();
   const { teams, teamsLoading, teamsError } = useTeams();
+
+  const patients = useMemo(() => {
+    return rawClients ? rawClients.data : [];
+  }, [rawClients]);
 
   const [selectedPatient, setSelectedPatient] = useState<ClientRow | null>(
     null

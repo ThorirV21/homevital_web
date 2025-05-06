@@ -1,3 +1,10 @@
+export interface RawClient {
+  data: Client[];
+  totalCount: number;
+  pageSize: number;
+  pageNumber: number;
+}
+
 export interface Client {
   id: number;
   name: string;
@@ -30,6 +37,13 @@ export interface ClientMeasurements {
 }
 
 export interface RawWarning {
+  data: WarningList[];
+  totalCount: number;
+  pageSize: number;
+  pageNumber: number;
+}
+
+export interface WarningList {
   uid: number;
   id: number;
   patientID: number;

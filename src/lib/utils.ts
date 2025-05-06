@@ -34,7 +34,7 @@ export const encodeJwt = (token: string) => {
 export const shouldRefreshToken = (token: string) => {
   const decodedToken = parseJwt(token);
   const currentTime = Date.now() / 1000;
-  const threshold = 60 * 5;
+  const threshold = 60 * 10; // 2 minutes
   return decodedToken.exp - currentTime < threshold;
 };
 
@@ -42,4 +42,20 @@ export const isTokenValid = (token: string) => {
   const decodedToken = parseJwt(token);
   const currentTime = Date.now() / 1000;
   return decodedToken.exp > currentTime;
+};
+
+export const getStatusText = (status: string) => {
+  let statusText = "";
+  if (status.toLowerCase() === "critical") {
+    statusText = "Hættuleg hækkun á mælingu";
+  } else if (status.toLowerCase() === "high") {
+    statusText = "Hækkun á mælingu";
+  } else if (status.toLowerCase() === "raised") {
+    statusText = "Rétt yfir mörkum";
+  } else if (status.toLowerCase() === "normal") {
+    statusText = "Í lagi";
+  } else if (status.toLowerCase() === "low") {
+    statusText = "Rétt undir mörkum";
+  }
+  return statusText;
 };
