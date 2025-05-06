@@ -54,6 +54,13 @@ export type PatientMeasurement = {
   measurementValues: SingleMeasurement;
 };
 
+export type RawWorker = {
+  data: WorkerDTO[];
+  totalCount: number;
+  pageSize: number;
+  pageNumber: number;
+};
+
 export type WorkerDTO = {
   id: number;
   name: string;
