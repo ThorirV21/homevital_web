@@ -16,6 +16,7 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import BodyTemp from "../icons/bodyTemp";
 import { arrayIncludesFilter } from "./multiSelectFilter";
+import { getStatusText } from "@/lib/utils";
 
 export interface Warning {
   id: number;
@@ -144,9 +145,13 @@ export const warningColumns: ColumnDef<Warning>[] = [
             <p>Púls {measurementValues.bpm}</p>
             <div className="ml-auto flex">
               {measurementValues.bodyPosition === "Sitting" ? (
-                <Sitting className="" />
+                <TooltipInfo info="Sitjandi" className="text-md">
+                  <Sitting className="" />
+                </TooltipInfo>
               ) : measurementValues.bodyPosition === "Laying" ? (
-                <InBed className="" />
+                <TooltipInfo info="Liggjandi" className="text-md">
+                  <InBed className="" />
+                </TooltipInfo>
               ) : null}
               <TooltipInfo
                 className="text-md"
@@ -192,20 +197,20 @@ export const warningColumns: ColumnDef<Warning>[] = [
   },
   {
     accessorKey: "status",
-    filterFn: (row, id, filterValue) => {
-      return row.original.status
-        .toLowerCase()
-        .includes(filterValue.toLowerCase());
-    },
+    filterFn: arrayIncludesFilter,
     header: "Staða",
     cell: ({ row }) => {
       const status = row.original.measurementValues.status;
+      const statusText = getStatusText(status);
 
       return (
-        <TooltipInfo info={status} className="text-md">
+        <TooltipInfo info={statusText} className="text-md">
           <Circle className={`w-4 h-4 mx-auto ${status}`} />
         </TooltipInfo>
       );
+    },
+    meta: {
+      filterVariant: "multi-select",
     },
   },
 ];

@@ -3,18 +3,22 @@ import { useHealthcareWorkers } from "@/hooks/useWorkers";
 import { WorkerDTO } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import Loading from "../loading";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import StaffForm from "./staffForm";
 import { useTeams } from "@/hooks/useTeams";
 import { Team } from "@/types/teamTypes";
 
 const StaffView = () => {
-  const { data, error, isLoading } = useHealthcareWorkers();
+  const { data: rawWorkers, error, isLoading } = useHealthcareWorkers();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [worker, setWorker] = useState<WorkerDTO | null>(null);
   const { teams, teamsLoading } = useTeams();
   const [hoveredWorker, setHoveredWorker] = useState<WorkerDTO | null>(null);
+
+  const data = useMemo(() => {
+    return rawWorkers ? rawWorkers.data : [];
+  }, [rawWorkers]);
 
   if (isLoading || teamsLoading) {
     return <Loading />;

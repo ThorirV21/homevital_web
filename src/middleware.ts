@@ -13,15 +13,6 @@ export default async function middleware(request: NextRequest) {
     sessionOptions
   );
 
-  if (!session.token || !isTokenValid(session.token)) {
-    cookieStore.delete(sessionOptions.cookieName);
-    session.token = undefined;
-    session.isLoggedIn = false;
-    session.user = undefined;
-    session.userId = undefined;
-    await session.save();
-  }
-
   if (
     session.token &&
     isTokenValid(session.token) &&
@@ -35,14 +26,17 @@ export default async function middleware(request: NextRequest) {
     !isTokenValid(session.token) &&
     request.nextUrl.pathname !== "/login"
   ) {
+    cookieStore.delete(sessionOptions.cookieName);
+    session.token = undefined;
+    session.isLoggedIn = false;
+    session.user = undefined;
+    session.userId = undefined;
+    await session.save();
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (session.token && shouldRefreshToken(session.token)) {
     await login({ kennitala: session.user?.ssn || "" });
-    console.warn("Token refreshed");
-    console.log("Refreshing token");
-    console.warn("Token refreshed");
   }
 
   return NextResponse.next();

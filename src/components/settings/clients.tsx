@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ClientForm from "./clientForm";
 import { useClients } from "@/hooks/useClients";
 import { ScrollArea } from "../ui/scroll-area";
@@ -10,10 +10,15 @@ import { Button } from "../ui/button";
 
 const ClientsView = () => {
   const [open, setOpen] = useState(false);
-  const { patients, isLoading, error } = useClients();
+  const { data: rawClients, isLoading, error } = useClients();
   const { teams, teamsLoading, teamsError } = useTeams();
   const [hoveredPatient, setHoveredPatient] = useState<Client | null>(null);
   const [currentClient, setCurrentClient] = useState<Client | null>(null);
+
+  const patients = useMemo(() => {
+    return rawClients ? rawClients.data : [];
+  }, [rawClients]);
+
   if (isLoading || teamsLoading) {
     return <Loading />;
   }

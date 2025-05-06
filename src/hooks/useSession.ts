@@ -1,3 +1,4 @@
+import { SessionData } from "@/config/session";
 import { getSession } from "@/services/session";
 import { useQuery } from "@tanstack/react-query";
 
@@ -6,7 +7,7 @@ const useSession = () => {
     data: session,
     isLoading: sessionLoading,
     error: sessionError,
-  } = useQuery({
+  } = useQuery<SessionData>({
     queryKey: ["session"],
     queryFn: getSession,
   });

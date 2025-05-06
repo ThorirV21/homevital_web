@@ -1,16 +1,13 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { WorkerDTO } from "@/types/types";
+import { WorkerDTO, RawWorker } from "@/types/types";
 
 const useHealthcareWorkers = () => {
-  const { data, error, isLoading, refetch } = useQuery<WorkerDTO[]>({
+  const { data, error, isLoading, refetch } = useQuery<RawWorker>({
     queryKey: ["workers"],
     queryFn: () => api.get("/healthcareworkers"),
     staleTime: 60000,
   });
-  if (error) {
-    return { data: [], error, isLoading };
-  }
 
   return { data, error, isLoading, refetch };
 };

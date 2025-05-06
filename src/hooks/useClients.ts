@@ -1,23 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Client } from "@/types/clientTypes";
+import { Client, RawClient } from "@/types/clientTypes";
 import { PatientMeasurement } from "@/types/types";
 import { api } from "@/lib/api";
 
 const refetchInterval = 1000 * 15;
 
 const useClients = () => {
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery<RawClient>({
     queryKey: ["clients"],
     queryFn: () => api.get("patients"),
     staleTime: 10000,
   });
-  if (error) {
-    return { patients: [], error, isLoading };
-  }
 
-  const patients = data as Client[];
-
-  return { patients, error, isLoading };
+  return { data, error, isLoading };
 };
 
 const useClientMutations = () => {
