@@ -1,6 +1,4 @@
 import { getToken } from "@/services/session";
-import { shouldRefreshToken } from "./utils";
-import { login } from "@/services/api";
 const API_URL = process.env.API_URL;
 
 async function fetchWithAuth<T>(
@@ -11,10 +9,6 @@ async function fetchWithAuth<T>(
 
   if (!token) {
     throw new Error("No token found");
-  }
-
-  if (shouldRefreshToken(token)) {
-    await login({ kennitala: "1234567890" });
   }
 
   const res = await fetch(`${API_URL}/${path}`, {
@@ -28,7 +22,8 @@ async function fetchWithAuth<T>(
 
   if (!res.ok) {
     const error = await res.json();
-    throw new Error(error.message) || "API request failed";
+    console.log(error);
+    //throw new Error(error.message) || "API request failed";
   }
 
   return res.json();

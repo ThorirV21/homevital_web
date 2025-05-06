@@ -64,7 +64,7 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
         ?.filter((team: Team) => staff?.teamIDs.includes(team.id))
         .map((team: Team) => team.name),
       status: staff?.status || "",
-      ssn: staff?.ssn || "",
+      ssn: staff?.kennitala || "",
     });
   }, [staff, form, teams]);
 
@@ -78,7 +78,7 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
           (team: string) => teams?.find((t: Team) => t.name === team)?.id || 0
         ),
         status: values.status,
-        ssn: values.ssn,
+        kennitala: values.ssn,
       });
     } else {
       createMutation.mutate({
@@ -88,8 +88,8 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
         teamIDs: values.team.map(
           (team: string) => teams?.find((t: Team) => t.name === team)?.id || 0
         ),
-        status: values.status,
-        ssn: values.ssn,
+        status: "Active",
+        kennitala: values.ssn,
       });
     }
     form.reset();
