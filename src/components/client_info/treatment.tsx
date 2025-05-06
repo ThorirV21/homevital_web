@@ -35,7 +35,7 @@ const Treatment = ({ id }: { id: string }) => {
   useEffect(() => {
     if (data) {
       setActiveTreatment(
-        data.find((treatment: TreatmentType) => treatment.isActive)
+        data.find((treatment: TreatmentType) => treatment.isActive) ?? null
       );
     }
   }, [data]);

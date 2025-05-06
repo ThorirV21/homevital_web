@@ -96,7 +96,7 @@ const DataTable = <TData extends BaseRow, TValue>({
   });
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex flex-row gap-2 items-center p-4">
         <h2 className="text-xl">{name}</h2>
         <div className="flex flex-row gap-2 items-center">
@@ -116,7 +116,7 @@ const DataTable = <TData extends BaseRow, TValue>({
           onChange={(e) => setGlobalFilter(String(e.target.value))}
         />
       </div>
-      <div className="overflow-auto max-h-[calc(100vh-200px)] px-2">
+      <div className="overflow-auto max-h-[calc(100vh-230px)] px-2">
         <Table className="">
           <TableHeader className="bg-accent sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (

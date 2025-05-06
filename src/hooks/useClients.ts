@@ -1,21 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  fetchClients,
-  fetchClientDetails,
-  fetchClientMeasurements,
-  updateClient,
-  createClient,
-  deleteClient,
-} from "@/services/api";
 import { Client } from "@/types/clientTypes";
 import { PatientMeasurement } from "@/types/types";
+import { api } from "@/lib/api";
 
-const refetchInterval = 2000;
+const refetchInterval = 1000 * 15;
 
 const useClients = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["clients"],
-    queryFn: fetchClients,
+    queryFn: () => api.get("patients"),
     staleTime: 10000,
   });
   if (error) {
@@ -31,21 +24,21 @@ const useClientMutations = () => {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: createClient,
+    mutationFn: (client: Client) => api.post("patients", client),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateClient,
+    mutationFn: (client: Client) => api.patch(`patients/${client.id}`, client),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteClient,
+    mutationFn: (id: string) => api.delete(`patients/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
@@ -63,18 +56,24 @@ const useClientDetails = (id: string) => {
     refetch,
   } = useQuery({
     queryKey: ["clientDetails", id],
-    queryFn: () => (id ? fetchClientDetails(id) : Promise.resolve(null)),
+    queryFn: () => api.get(`patients/${id}`),
+
     staleTime: 60000,
   });
 
-  return { patientDetails, error, isLoading, refetch };
+  return {
+    patientDetails: patientDetails as Client,
+    error,
+    isLoading,
+    refetch,
+  };
 };
 
 const useClientMeasurements = (id: string) => {
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["clientMeasurements", id],
-    queryFn: () => (id ? fetchClientMeasurements(id) : Promise.resolve(null)),
-    staleTime: 0,
+    queryFn: () => api.get(`measurements/${id}`),
+    staleTime: 10000,
     refetchInterval: refetchInterval,
     refetchOnMount: true,
     refetchOnReconnect: true,
