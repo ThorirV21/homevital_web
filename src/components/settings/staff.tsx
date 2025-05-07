@@ -4,18 +4,21 @@ import { WorkerDTO } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import Loading from "../loading";
 import { useMemo, useState } from "react";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import StaffForm from "./staffForm";
 import { useTeams } from "@/hooks/useTeams";
 import { Team } from "@/types/teamTypes";
-
+import DataTable from "../dataTable/dataTable";
+import { workerColumns, WorkerRow } from "../dataTable/workerColumns";
+import { ColumnFiltersState } from "@tanstack/react-table";
+import useSession from "@/hooks/useSession";
 const StaffView = () => {
   const { data: rawWorkers, error, isLoading } = useHealthcareWorkers();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [worker, setWorker] = useState<WorkerDTO | null>(null);
   const { teams, teamsLoading } = useTeams();
-  const [hoveredWorker, setHoveredWorker] = useState<WorkerDTO | null>(null);
-
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [activeButton, setActiveButton] = useState<string>("Allt");
+  const { session } = useSession();
   const data = useMemo(() => {
     return rawWorkers ? rawWorkers.data : [];
   }, [rawWorkers]);
@@ -31,8 +34,9 @@ const StaffView = () => {
     return <div>No staff found</div>;
   }
 
-  const handleClickWorker = (worker: WorkerDTO) => {
-    setWorker(worker);
+  const handleClickWorker = (worker: WorkerRow) => {
+    const workerDTO = data.find((w: WorkerDTO) => w.id === worker.id);
+    setWorker(workerDTO || null);
     setDialogOpen(true);
   };
 
@@ -41,48 +45,56 @@ const StaffView = () => {
     setDialogOpen(true);
   };
 
+  const buttons = [
+    {
+      label: "Allt",
+      selected: activeButton === "Allt",
+      onClick: () => {
+        setActiveButton("Allt");
+        if (columnFilters.length > 0) {
+          setColumnFilters([]);
+        }
+      },
+    },
+    {
+      label: "Mín teymi",
+      selected: activeButton === "Mín teymi",
+      onClick: () => {
+        setActiveButton("Mín teymi");
+        const teamNames = session?.user?.groups.map(
+          (group) => teams?.find((team) => team.id === group)?.name
+        );
+        console.log(teamNames);
+        setColumnFilters([{ id: "teamNames", value: teamNames }]);
+        console.log(columnFilters);
+      },
+    },
+  ];
+
+  const workerRows: WorkerRow[] = data.map((worker: WorkerDTO) => ({
+    ...worker,
+    teamNames: worker.teamIDs.map(
+      (team: number) => teams?.find((t: Team) => t.id === team)?.name || ""
+    ),
+  }));
+
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-row items-center text-left justify-between border-b border-gray-300 p-3">
-        <h3 className="w-1/4 font-bold">Nafn</h3>
-        <h3 className="w-1/4 font-bold">Sími</h3>
-        <h3 className="w-1/4 font-bold">Teymi</h3>
-        <h3 className="w-1/4 font-bold"></h3>
-      </div>
-      <ScrollArea className="overflow-y-auto max-h-[calc(100vh-23rem)] border-b">
-        <table className="w-full border-collapse border border-gray-300">
-          <thead></thead>
-          <tbody>
-            {data.map((worker: WorkerDTO) => (
-              <tr
-                key={worker.id}
-                className={`flex flex-row items-center justify-between border-b border-gray-300 p-3 ${hoveredWorker?.id === worker.id ? "bg-gray-100" : ""}`}
-                onMouseEnter={() => setHoveredWorker(worker)}
-                onMouseLeave={() => setHoveredWorker(null)}
-                onClick={() => handleClickWorker(worker)}
-              >
-                <td className="w-1/4">{worker.name}</td>
-                <td className="w-1/4">{worker.phone}</td>
-                <td className="w-1/4">
-                  {worker.teamIDs
-                    .map(
-                      (team: number) =>
-                        teams?.find((t: Team) => t.id === team)?.name
-                    )
-                    .join(", ")}
-                </td>
-                <td className="w-1/4"></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </ScrollArea>
-      <StaffForm open={dialogOpen} setOpen={setDialogOpen} staff={worker} />
+      <DataTable
+        columns={workerColumns}
+        data={workerRows}
+        name="Starfsfólk"
+        buttons={buttons}
+        setColumnFilters={setColumnFilters}
+        columnFilters={columnFilters}
+        onRowClick={handleClickWorker}
+      />
       <div className="ms-auto mt-auto p-4">
         <Button className="mt-4" onClick={handleClickCreate}>
           Bæta við starfsfólki
         </Button>
       </div>
+      <StaffForm open={dialogOpen} setOpen={setDialogOpen} staff={worker} />
     </div>
   );
 };

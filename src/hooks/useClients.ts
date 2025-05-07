@@ -42,7 +42,6 @@ const useClientMutations = () => {
   return { createMutation, updateMutation, deleteMutation };
 };
 
-// TODO: Check if this is needed
 const useClientDetails = (id: string) => {
   const {
     data: patientDetails,

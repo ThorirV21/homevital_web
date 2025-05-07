@@ -1,26 +1,56 @@
 import { useTeams } from "@/hooks/useTeams";
 import Loading from "@/components/loading";
 import { Team } from "@/types/teamTypes";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import TeamForm from "./teamForm";
-import { ScrollArea } from "../ui/scroll-area";
+
 import { Button } from "../ui/button";
+import DataTable from "../dataTable/dataTable";
+import { teamColumns, TeamRow } from "../dataTable/teamColumns";
+import { useHealthcareWorkers } from "@/hooks/useWorkers";
+import { WorkerDTO } from "@/types/types";
+import { useClients } from "@/hooks/useClients";
+import { Client } from "@/types/clientTypes";
 
 const Teams = () => {
   const { teams, teamsLoading, teamsError } = useTeams();
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const [hoveredTeam, setHoveredTeam] = useState<Team | null>(null);
   const [open, setOpen] = useState(false);
-  if (teamsLoading) {
+  const {
+    data,
+    isLoading: workersLoading,
+    error: workersError,
+  } = useHealthcareWorkers();
+  const {
+    data: clientsData,
+    isLoading: clientsLoading,
+    error: clientsError,
+  } = useClients();
+
+  const workers = useMemo(() => {
+    return data?.data || [];
+  }, [data]);
+
+  const clients = useMemo(() => {
+    return clientsData?.data || [];
+  }, [clientsData]);
+
+  if (teamsLoading || workersLoading || clientsLoading) {
     return <Loading />;
   }
 
-  if (teamsError) {
-    return <div>Error: {teamsError.message}</div>;
+  if (teamsError || workersError || clientsError) {
+    return (
+      <div>
+        Error:{" "}
+        {teamsError?.message || workersError?.message || clientsError?.message}
+      </div>
+    );
   }
 
-  const handleTeamClick = (team: Team) => {
-    setSelectedTeam(team);
+  const handleTeamClick = (team: TeamRow) => {
+    const teamData = teams?.find((t: Team) => t.id === team.id);
+    setSelectedTeam(teamData || null);
     setOpen(true);
   };
 
@@ -29,32 +59,28 @@ const Teams = () => {
     setOpen(true);
   };
 
+  const teamRows: TeamRow[] =
+    teams?.map((team: Team) => ({
+      id: team.id,
+      name: team.name,
+      workers: team.workerIDs.map(
+        (worker: number) =>
+          workers?.find((w: WorkerDTO) => w.id === worker)?.name || ""
+      ),
+      patients: team.patientIDs.map(
+        (patient: number) =>
+          clients?.find((c: Client) => c.id === patient)?.name || ""
+      ),
+    })) || [];
+
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="flex flex-row items-center text-left justify-between border-b border-gray-300 p-3">
-        <h3 className="font-bold w-1/3">Starfsmenn</h3>
-        <h3 className="font-bold w-1/3">Fjöldi starfsmanna</h3>
-        <h3 className="font-bold w-1/3">Fjöldi sjúklinga</h3>
-      </div>
-      <ScrollArea className="overflow-y-auto max-h-[calc(100vh-23rem)] border-b">
-        <table className="w-full border-collapse border border-gray-300">
-          <tbody>
-            {teams?.map((team: Team) => (
-              <tr
-                key={team.id}
-                className={`flex flex-row items-center justify-between border-b border-gray-300 p-3 ${hoveredTeam?.id === team.id ? "bg-gray-100" : ""}`}
-                onMouseEnter={() => setHoveredTeam(team)}
-                onMouseLeave={() => setHoveredTeam(null)}
-                onClick={() => handleTeamClick(team)}
-              >
-                <td className="w-1/3">{team.name}</td>
-                <td className="w-1/3">{team.workerIDs.length}</td>
-                <td className="w-1/3">{team.patientIDs.length}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </ScrollArea>
+      <DataTable
+        columns={teamColumns}
+        data={teamRows}
+        name="Teymi"
+        onRowClick={handleTeamClick}
+      />
       <TeamForm open={open} setOpen={setOpen} team={selectedTeam} />
       <div className="ms-auto mt-auto p-4">
         <Button className="mt-4" onClick={handleClickCreate}>

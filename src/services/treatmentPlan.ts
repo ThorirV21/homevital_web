@@ -39,10 +39,8 @@ const selectedDates = (treatment: TreatmentType) => {
   let endDate = new Date();
   if (!treatment.endDate) {
     endDate = new Date(startDate.getDate() + 365);
-    console.log("no end date", endDate);
   } else {
     endDate = new Date(treatment.endDate);
-    console.log("end date", endDate);
   }
 
   const mergedMeasurementDays = mergeMeasurementDays(

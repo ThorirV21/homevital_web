@@ -11,9 +11,26 @@ import { Team } from "@/types/teamTypes";
 import { ColumnFiltersState } from "@tanstack/react-table";
 import { useState, useMemo } from "react";
 import useSession from "@/hooks/useSession";
+import { PaginationParams } from "@/hooks/useWarnings";
 
 const Alarms = () => {
-  const { data: rawWarnings, isLoading, error } = useWarnings();
+  // Add a key to force re-render when pagination changes
+  const [paginationKey, setPaginationKey] = useState(0);
+
+  const [pagination, setPagination] = useState<PaginationParams>({
+    pageSize: 10,
+    pageNumber: 1,
+  });
+
+  // Log pagination state to track changes
+  console.log("Current pagination state:", pagination);
+
+  const {
+    data: rawWarnings,
+    isLoading,
+    error,
+    refetch,
+  } = useWarnings(pagination);
   const {
     data: rawClients,
     isLoading: isLoadingClients,
@@ -30,6 +47,21 @@ const Alarms = () => {
   const data = useMemo(() => {
     return rawWarnings ? rawWarnings.data : [];
   }, [rawWarnings]);
+
+  // Get the total count from the API response
+  const totalCount = rawWarnings?.totalCount || 0;
+
+  // Calculate the total number of pages
+  const pageCount = Math.ceil(totalCount / (pagination.pageSize || 10));
+
+  console.log(
+    "Page count:",
+    pageCount,
+    "Total count:",
+    totalCount,
+    "Current page:",
+    pagination.pageNumber
+  );
 
   if (isLoading || isLoadingClients || teamsLoading) {
     return <Loading />;
@@ -83,10 +115,31 @@ const Alarms = () => {
     };
   });
 
-  console.log(warnings);
+  // Handle pagination changes from the DataTable
+  const handlePageChange = async (pageIndex: number, pageSize: number) => {
+    console.log(`Page changed to index ${pageIndex}, size ${pageSize}`);
+
+    const newPagination = {
+      pageNumber: pageIndex + 1, // DataTable is 0-indexed, our API is 1-indexed
+      pageSize: pageSize,
+    };
+
+    console.log("Setting new pagination:", newPagination);
+
+    // Update the pagination state
+    setPagination(newPagination);
+
+    // Force a re-render
+    setPaginationKey((prevKey) => prevKey + 1);
+
+    // Explicitly refetch data with the new pagination
+    setTimeout(() => {
+      refetch();
+    }, 0);
+  };
 
   return (
-    <div className="flex flex-row bg-background p-4 h-full">
+    <div className="flex flex-row bg-background p-4 h-full" key={paginationKey}>
       <DataTable
         columns={warningColumns}
         data={warnings}
@@ -94,6 +147,13 @@ const Alarms = () => {
         buttons={buttons}
         setColumnFilters={setColumnFilters}
         columnFilters={columnFilters}
+        usePagination={true}
+        onPageChange={handlePageChange}
+        totalCount={totalCount}
+        initialPage={(pagination.pageNumber || 1) - 1} // Convert 1-indexed to 0-indexed
+        initialPageSize={pagination.pageSize || 10}
+        manualPagination={true} // Use manual pagination
+        pageCount={pageCount} // Provide the explicit page count
       />
     </div>
   );

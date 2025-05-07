@@ -46,6 +46,13 @@ export type BodyTemperature = {
   date: string;
 };
 
+export interface RawPatientMeasurements {
+  data: PatientMeasurement[];
+  totalCount: number;
+  pageSize: number;
+  pageNumber: number;
+}
+
 export type PatientMeasurement = {
   id: number;
   uid: number;

@@ -17,7 +17,6 @@ const useHealthcareWorkerMutations = () => {
 
   const createMutation = useMutation({
     mutationFn: (worker: WorkerDTO) => {
-      console.log(worker);
       return api.post("healthcareworkers", worker);
     },
     onSuccess: () => {

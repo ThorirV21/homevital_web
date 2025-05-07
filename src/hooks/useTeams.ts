@@ -40,7 +40,6 @@ const useTeamMutation = () => {
     mutationFn: (id: string) => api.delete(`teams/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
-      console.log("Team deleted");
     },
   });
 
