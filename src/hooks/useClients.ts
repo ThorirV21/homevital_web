@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Client, RawClient } from "@/types/clientTypes";
-import { PatientMeasurement } from "@/types/types";
 import { api } from "@/lib/api";
+import { RawPatientMeasurements } from "@/types/types";
 
 const refetchInterval = 1000 * 15;
 
@@ -65,7 +65,7 @@ const useClientDetails = (id: string) => {
 };
 
 const useClientMeasurements = (id: string) => {
-  const { data, error, isLoading, refetch } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery<RawPatientMeasurements>({
     queryKey: ["clientMeasurements", id],
     queryFn: () => api.get(`measurements/${id}`),
     staleTime: 10000,
@@ -75,13 +75,7 @@ const useClientMeasurements = (id: string) => {
     refetchOnWindowFocus: true,
   });
 
-  const measurements = data as PatientMeasurement[];
-
-  if (error) {
-    return { measurements: null, error, isLoading, refetch };
-  }
-
-  return { measurements, error, isLoading, refetch };
+  return { data, error, isLoading, refetch };
 };
 
 export {
