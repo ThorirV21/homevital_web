@@ -17,6 +17,7 @@ import { Button } from "../ui/button";
 import BodyTemp from "../icons/bodyTemp";
 import { arrayIncludesFilter } from "./multiSelectFilter";
 import { getStatusText } from "@/lib/utils";
+import { sorting } from "@/components/dataTable/sorting";
 
 export interface Warning {
   id: number;
@@ -49,6 +50,7 @@ export const warningColumns: ColumnDef<Warning>[] = [
   },
   {
     accessorKey: "name",
+    sortingFn: sorting,
     header: ({ column }) => {
       return (
         <Button

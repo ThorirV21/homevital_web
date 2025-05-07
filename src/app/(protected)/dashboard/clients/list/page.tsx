@@ -30,8 +30,6 @@ const ClientListContent = () => {
   const searchParams = useSearchParams();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  console.log(columnFilters);
-
   useEffect(() => {
     const id = searchParams.get("id");
     if (id) {
@@ -56,23 +54,39 @@ const ClientListContent = () => {
       label: "Allt",
       selected: false,
       className: "bg-accent",
-      onClick: () => setColumnFilters([]),
+      onClick: () => {
+        if (columnFilters.length === 0) return;
+        setColumnFilters([]);
+      },
     },
     {
       label: "Mín teymi",
       selected: false,
       className: "bg-accent",
-      onClick: () =>
+      onClick: () => {
+        const teamValues =
+          session?.user?.groups.map(
+            (groupID: number) =>
+              teams?.find((team: Team) => team.id === groupID)?.name
+          ) || [];
+
+        const currentTeamFilter = columnFilters.find(
+          (filter) => filter.id === "team"
+        );
+        if (
+          currentTeamFilter &&
+          JSON.stringify(currentTeamFilter.value) === JSON.stringify(teamValues)
+        ) {
+          return;
+        }
+
         setColumnFilters([
           {
             id: "team",
-            value:
-              session?.user?.groups.map(
-                (groupID: number) =>
-                  teams?.find((team: Team) => team.id === groupID)?.name
-              ) || [],
+            value: teamValues,
           },
-        ]),
+        ]);
+      },
     },
   ];
 

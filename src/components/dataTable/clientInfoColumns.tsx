@@ -1,18 +1,26 @@
-import { Client } from "@/types/clientTypes";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
-import { Button } from "../ui/button";
-import { arrayIncludesFilter } from "./multiSelectFilter";
-import { Badge } from "../ui/badge";
-import { sorting } from "./sorting";
+"use client";
 
-export interface ClientRow extends Client {
+import { ColumnDef } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown } from "lucide-react";
+import { sorting } from "@/components/dataTable/sorting";
+import formatPhoneNumber from "@/services/phoneNumberFormatter";
+import { Badge } from "@/components/ui/badge";
+import { arrayIncludesFilter } from "./multiSelectFilter";
+
+export interface ClientInfoRow {
+  id: number;
+  name: string;
+  address: string;
+  phone: string;
+  status: string;
   team: string;
 }
 
-export const clientColumns: ColumnDef<ClientRow>[] = [
+export const clientInfoColumns: ColumnDef<ClientInfoRow>[] = [
   {
     accessorKey: "name",
+    sortingFn: sorting,
     header: ({ column }) => {
       return (
         <Button
@@ -24,32 +32,17 @@ export const clientColumns: ColumnDef<ClientRow>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => row.original.name,
-    sortingFn: sorting,
+    cell: ({ row }) => <p>{row.original.name}</p>,
   },
   {
     accessorKey: "address",
     header: "Heimilisfang",
-    cell: ({ row }) => row.original.address,
+    cell: ({ row }) => <p>{row.original.address}</p>,
   },
   {
-    accessorKey: "team",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Teymi
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.original.team,
-    filterFn: arrayIncludesFilter,
-    meta: {
-      filterVariant: "multi-select",
-    },
+    accessorKey: "phone",
+    header: "Sími",
+    cell: ({ row }) => <p>{formatPhoneNumber(row.original.phone)}</p>,
   },
   {
     accessorKey: "status",
@@ -69,6 +62,25 @@ export const clientColumns: ColumnDef<ClientRow>[] = [
           {status}
         </Badge>
       );
+    },
+  },
+  {
+    accessorKey: "team",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Teymi
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <p>{row.original.team}</p>,
+    filterFn: arrayIncludesFilter,
+    meta: {
+      filterVariant: "multi-select",
     },
   },
 ];

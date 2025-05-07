@@ -18,6 +18,7 @@ export default async function middleware(request: NextRequest) {
     isTokenValid(session.token) &&
     request.nextUrl.pathname === "/login"
   ) {
+    console.log("Redirecting to dashboard");
     return NextResponse.redirect(new URL("/dashboard/clients", request.url));
   }
 
@@ -27,11 +28,11 @@ export default async function middleware(request: NextRequest) {
     request.nextUrl.pathname !== "/login"
   ) {
     cookieStore.delete(sessionOptions.cookieName);
-    session.token = undefined;
     session.isLoggedIn = false;
     session.user = undefined;
     session.userId = undefined;
     await session.save();
+    console.log("Redirecting to login");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 

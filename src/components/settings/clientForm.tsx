@@ -85,7 +85,6 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
   }, [client, form, teams]);
 
   const onSubmit = (values: FormShape) => {
-    console.log(values);
     if (client) {
       updateMutation.mutate({
         id: client.id,

@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import { Button } from "../ui/button";
 import { arrayIncludesFilter } from "./multiSelectFilter";
@@ -43,28 +43,59 @@ interface DataTableProps<TData extends BaseRow, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   name: string;
+  usePagination?: boolean | false;
   onRowClick?: (row: TData) => void;
   selectedRow?: TData | null;
   setColumnFilters?: (columnFilters: ColumnFiltersState) => void;
   columnFilters?: ColumnFiltersState;
   buttons?: ButtonProps[];
+  onPageChange?: (pageIndex: number, pageSize: number) => void;
+  totalCount?: number;
+  initialPage?: number;
+  initialPageSize?: number;
+  manualPagination?: boolean;
+  pageCount?: number;
 }
 
 const DataTable = <TData extends BaseRow, TValue>({
   columns,
   data,
   name,
+  usePagination = false,
   onRowClick,
   selectedRow,
   setColumnFilters,
   columnFilters = [],
   buttons,
+  onPageChange,
+  totalCount,
+  initialPage = 0,
+  initialPageSize = 10,
+  manualPagination = false,
+  pageCount,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  //const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const debouncedGlobalFilter = useDebounce(globalFilter, 300);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [pagination, setPagination] = useState({
+    pageIndex: initialPage,
+    pageSize: initialPageSize,
+  });
+
+  console.log("DataTable pagination state:", pagination);
+
+  // Synchronize pagination state with initialPage/initialPageSize when they change
+  useEffect(() => {
+    console.log("DataTable initialPage/initialPageSize changed:", {
+      initialPage,
+      initialPageSize,
+    });
+    setPagination({
+      pageIndex: initialPage,
+      pageSize: initialPageSize,
+    });
+  }, [initialPage, initialPageSize]);
 
   const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (
     updater
@@ -76,16 +107,51 @@ const DataTable = <TData extends BaseRow, TValue>({
     }
   };
 
+  const handlePaginationChange: OnChangeFn<{
+    pageIndex: number;
+    pageSize: number;
+  }> = (updaterOrValue) => {
+    console.log("DataTable pagination change triggered");
+
+    setPagination((oldPagination) => {
+      const newPagination =
+        typeof updaterOrValue === "function"
+          ? updaterOrValue(oldPagination)
+          : updaterOrValue;
+
+      console.log("New pagination in DataTable:", newPagination);
+
+      if (onPageChange) {
+        console.log("Calling parent onPageChange callback");
+        onPageChange(newPagination.pageIndex, newPagination.pageSize);
+      }
+
+      return newPagination;
+    });
+  };
+
+  const calculatedPageCount =
+    pageCount ||
+    (totalCount ? Math.ceil(totalCount / pagination.pageSize) : undefined);
+
   const table = useReactTable({
     data,
     columns,
+    autoResetPageIndex: false,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: handleColumnFiltersChange,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
-    getPaginationRowModel: getPaginationRowModel(),
+    ...(usePagination && {
+      getPaginationRowModel: manualPagination
+        ? undefined
+        : getPaginationRowModel(),
+      onPaginationChange: handlePaginationChange,
+      manualPagination: manualPagination,
+      pageCount: manualPagination ? calculatedPageCount : undefined,
+    }),
     filterFns: {
       arrayIncludesFilter,
     },
@@ -94,6 +160,7 @@ const DataTable = <TData extends BaseRow, TValue>({
       sorting,
       columnFilters,
       globalFilter: debouncedGlobalFilter,
+      ...(usePagination && { pagination }),
     },
     onGlobalFilterChange: setGlobalFilter,
   });
@@ -106,7 +173,7 @@ const DataTable = <TData extends BaseRow, TValue>({
           {buttons?.map((button) => (
             <Button
               key={button.label}
-              variant="outline"
+              variant={button.selected ? "default" : "outline"}
               onClick={button.onClick}
             >
               {button.label}
@@ -177,9 +244,11 @@ const DataTable = <TData extends BaseRow, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex flex-row justify-end p-4">
-        <DataTablePagination table={table} />
-      </div>
+      {usePagination && (
+        <div className="flex flex-row justify-end p-4">
+          <DataTablePagination table={table} totalCount={totalCount} />
+        </div>
+      )}
     </div>
   );
 };

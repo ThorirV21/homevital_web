@@ -72,7 +72,6 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
   }
 
   const onSubmit = (values: FormShape) => {
-    console.log("Submitting", values);
     createMutation.mutate({
       name: values.name,
       startDate: values.startDate.toISOString(),

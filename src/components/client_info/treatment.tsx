@@ -10,13 +10,11 @@ import formatDateIS from "@/services/dateFormatter";
 
 const Treatment = ({ id }: { id: string }) => {
   const [activeTab, setActiveTab] = useState("current");
-  const [createNew, setCreateNew] = useState(true);
+  const [createNew, setCreateNew] = useState(false);
   const { data, error, isLoading } = usePatientTreatments(id);
   const [activeTreatment, setActiveTreatment] = useState<TreatmentType | null>(
     null
   );
-
-  console.log(data);
 
   useEffect(() => {
     if (data) {
