@@ -13,11 +13,15 @@ import Sitting from "../icons/sitting";
 import InBed from "../icons/inBed";
 import Hand from "../icons/hand";
 import { Percent } from "lucide-react";
-
+import { useMemo } from "react";
 import TooltipInfo from "../tooltipInfo";
 
 const Warnings = ({ id }: { id: string }) => {
-  const { measurements, isLoading, error } = useClientMeasurements(id);
+  const { data, isLoading, error } = useClientMeasurements(id);
+
+  const measurements = useMemo(() => {
+    return data ? data.data : [];
+  }, [data]);
 
   if (isLoading) return <Loading />;
 

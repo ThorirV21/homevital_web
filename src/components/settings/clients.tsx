@@ -37,6 +37,8 @@ const ClientsView = () => {
     setOpen(true);
   };
 
+  console.log(patients);
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex flex-row items-center text-left justify-between border-b border-gray-300 p-3">

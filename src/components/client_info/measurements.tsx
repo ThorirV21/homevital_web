@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useClientMeasurements } from "@/hooks/useClients";
 import { PatientMeasurement } from "@/types/types";
 import { Circle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import BloodSugar from "../icons/bloodSugar";
 import Scale from "../icons/scale";
@@ -54,11 +54,15 @@ const items: FilterProps = {
 };
 
 const Measurements = ({ id }: { id: string }) => {
-  const { measurements, error, isLoading } = useClientMeasurements(id);
+  const { data, error, isLoading } = useClientMeasurements(id);
   //const [view, setView] = useState("registered");
   const [currentData, setCurrentData] = useState<PatientMeasurement[]>([]);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [filters, setFilters] = useState<FilterProps>(items);
+
+  const measurements = useMemo(() => {
+    return data ? data.data : [];
+  }, [data]);
 
   useEffect(() => {
     setCurrentData(

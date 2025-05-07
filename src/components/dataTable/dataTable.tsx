@@ -11,6 +11,7 @@ import {
   getFilteredRowModel,
   RowSelectionState,
   OnChangeFn,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 
@@ -26,6 +27,7 @@ import { useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import { Button } from "../ui/button";
 import { arrayIncludesFilter } from "./multiSelectFilter";
+import { DataTablePagination } from "./pagination";
 
 interface BaseRow {
   id: number | string;
@@ -83,6 +85,7 @@ const DataTable = <TData extends BaseRow, TValue>({
     onColumnFiltersChange: handleColumnFiltersChange,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
+    getPaginationRowModel: getPaginationRowModel(),
     filterFns: {
       arrayIncludesFilter,
     },
@@ -173,6 +176,9 @@ const DataTable = <TData extends BaseRow, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+      <div className="flex flex-row justify-end p-4">
+        <DataTablePagination table={table} />
       </div>
     </div>
   );

@@ -13,39 +13,15 @@ import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/forms/datePicker";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-const knownForms = [
-  {
-    id: 1,
-    name: "Grunnáætlun",
-  },
-  {
-    id: 2,
-    name: "Súrefnismettun",
-  },
-  {
-    id: 3,
-    name: "Blóðsykur",
-  },
-  {
-    id: 4,
-    name: "Hiti",
-  },
-];
 
 import IntervalPicker from "@/components/forms/intervalPicker";
 import { useTeams } from "@/hooks/useTeams";
+import { useClientDetails } from "@/hooks/useClients";
 import { Team } from "@/types/teamTypes";
 import { Button } from "../ui/button";
 import { useTreatmentMutations } from "@/hooks/useTreatments";
 import { selectDays } from "@/services/treatmentPlan";
+
 const formSchema = z.object({
   name: z.string().min(1, "Nafn áætlunar er nauðsynlegt"),
   startDate: z.date({
@@ -69,9 +45,15 @@ const formSchema = z.object({
 
 export type FormShape = z.infer<typeof formSchema>;
 
-const TreatmentForm = ({ id }: { id: string }) => {
-  const { createMutation } = useTreatmentMutations();
+export type TreatmentFormProps = {
+  id: string;
+  setCreateNew: (createNew: boolean) => void;
+};
+
+const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
+  const { createMutation } = useTreatmentMutations(id);
   const { teams, teamsLoading, teamsError } = useTeams();
+  const { patientDetails } = useClientDetails(id);
   const form = useForm<FormShape>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -90,13 +72,14 @@ const TreatmentForm = ({ id }: { id: string }) => {
   }
 
   const onSubmit = (values: FormShape) => {
+    console.log("Submitting", values);
     createMutation.mutate({
       name: values.name,
       startDate: values.startDate.toISOString(),
       endDate: values.endDate?.toISOString() || "",
       patientID: Number(id),
       instructions: values.notes || "",
-      teamID: teams?.find((team: Team) => team.name === values.team)?.id || 0,
+      teamID: patientDetails?.teamID || 0,
       weightMeasurementDays: selectDays(Number(values.weightInterval)),
       bloodSugarMeasurementDays: selectDays(Number(values.bloodSugarInterval)),
       bloodPressureMeasurementDays: selectDays(
@@ -316,65 +299,28 @@ const TreatmentForm = ({ id }: { id: string }) => {
             </div>
           </div>
           <div className="col-2 flex flex-col">
-            <FormField
-              control={form.control}
-              name="knownForm"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Velja þekkt form</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value?.toString() || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Velja þekkt form" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {knownForms.map((form) => (
-                          <SelectItem key={form.id} value={form.id.toString()}>
-                            {form.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="team"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Velja teymi</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value?.toString() || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Velja teymi" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {teams?.map((team: Team) => (
-                          <SelectItem key={team.id} value={team.id.toString()}>
-                            {team.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="pt-4">
+              <h3 className="text-sm">Teymi</h3>
+              <p className="text-md text-muted-foreground ps-2 pt-2">
+                {
+                  teams?.find(
+                    (team: Team) => team.id === patientDetails?.teamID
+                  )?.name
+                }
+              </p>
+            </div>
             <div className="mt-auto ml-auto flex gap-2">
-              <Button className="bg-background" variant="outline" type="button">
+              <Button
+                className="bg-background"
+                variant="outline"
+                type="button"
+                onClick={() => setCreateNew(false)}
+              >
                 Hætta við
               </Button>
-              <Button type="submit">Vista</Button>
+              <Button type="submit" onClick={() => onSubmit(form.getValues())}>
+                Vista
+              </Button>
             </div>
           </div>
         </div>

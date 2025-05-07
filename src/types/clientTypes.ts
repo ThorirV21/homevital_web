@@ -12,7 +12,7 @@ export interface Client {
   status: string;
   address: string;
   teamID: number;
-  ssn: string;
+  kennitala: string;
 }
 
 export interface MeasurementValue {

@@ -6,31 +6,17 @@ import Loading from "@/components/loading";
 import Error from "@/components/error";
 import { TreatmentType } from "@/types/treatmentTypes";
 import TreatmentDisplay from "../treatments/treatmentDisplay";
+import formatDateIS from "@/services/dateFormatter";
+
 const Treatment = ({ id }: { id: string }) => {
   const [activeTab, setActiveTab] = useState("current");
-  const [createNew, setCreateNew] = useState(false);
+  const [createNew, setCreateNew] = useState(true);
   const { data, error, isLoading } = usePatientTreatments(id);
   const [activeTreatment, setActiveTreatment] = useState<TreatmentType | null>(
     null
   );
 
-  /*   useEffect(() => {
-    setActiveTreatment({
-      id: 1,
-      name: "Framhalds eftirlit",
-      startDate: new Date(),
-      endDate: new Date(new Date().setDate(new Date().getDate() + 5)),
-      patientID: 1,
-      isActive: true,
-      instructions:
-        "Skráðu súrefnismettun, þyngd og blóðþrýsting einu sinni í viku.  Fínt að gera það að morgni til þegar þú vaknar.",
-      weightMeasurementFrequency: 0,
-      bloodSugarMeasurementFrequency: 1,
-      bloodPressureMeasurementFrequency: 2,
-      oxygenSaturationMeasurementFrequency: 3,
-      bodyTemperatureMeasurementFrequency: 4,
-    });
-  }, []); */
+  console.log(data);
 
   useEffect(() => {
     if (data) {
@@ -40,6 +26,14 @@ const Treatment = ({ id }: { id: string }) => {
     }
   }, [data]);
 
+  useEffect(() => {
+    if (activeTreatment) {
+      setActiveTab("current");
+    } else {
+      setActiveTab("previous");
+    }
+  }, [activeTreatment]);
+
   if (isLoading) {
     return <Loading />;
   }
@@ -47,12 +41,6 @@ const Treatment = ({ id }: { id: string }) => {
   if (error) {
     return <Error />;
   }
-
-  const currentTreatment = data?.find(
-    (treatment: TreatmentType) => treatment.isActive
-  );
-
-  console.log("Current treatment", currentTreatment);
 
   const buttonClasses = "h-7";
   return (
@@ -76,11 +64,36 @@ const Treatment = ({ id }: { id: string }) => {
       </div>
       <div className="h-[calc(100vh-21rem)] border border-primary overflow-scroll">
         {createNew ? (
-          <TreatmentForm id={id} />
-        ) : activeTreatment ? (
+          <TreatmentForm id={id} setCreateNew={setCreateNew} />
+        ) : activeTreatment && activeTab === "current" ? (
           <TreatmentDisplay treatment={activeTreatment} />
         ) : (
-          <></>
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-primary">
+                <th className="p-2 text-left">Nafn</th>
+                <th className="p-2 text-left">Upphafsdagur</th>
+                <th className="p-2 text-left">Lokadagur</th>
+                <th className="p-2 text-left">Virk</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.map((treatment: TreatmentType) => {
+                const startDate = formatDateIS(treatment.startDate);
+                const endDate = formatDateIS(treatment.endDate);
+                return (
+                  <tr key={treatment.id} className="border-b border-primary">
+                    <td className="p-2 text-left">{treatment.name}</td>
+                    <td className="p-2 text-left">{startDate}</td>
+                    <td className="p-2 text-left">{endDate}</td>
+                    <td className="p-2 text-left">
+                      {treatment.isActive ? "Já" : "Nei"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         )}
       </div>
     </div>
