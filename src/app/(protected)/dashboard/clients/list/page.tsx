@@ -24,10 +24,6 @@ const ClientListContent = () => {
     return rawClients ? rawClients.data : [];
   }, [rawClients]);
 
-  const patients = useMemo(() => {
-    return rawClients ? rawClients.data : [];
-  }, [rawClients]);
-
   const [selectedPatient, setSelectedPatient] = useState<ClientRow | null>(
     null
   );
