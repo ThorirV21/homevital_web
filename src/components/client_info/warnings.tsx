@@ -15,6 +15,7 @@ import Hand from "../icons/hand";
 import { Percent } from "lucide-react";
 import { useMemo } from "react";
 import TooltipInfo from "../tooltipInfo";
+import { useMemo } from "react";
 
 const Warnings = ({ id }: { id: string }) => {
   const { data, isLoading, error } = useClientMeasurements(id);

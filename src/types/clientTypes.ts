@@ -31,6 +31,7 @@ export interface MeasurementValue {
 export interface ClientMeasurements {
   uid: number;
   id: number;
+  patientID: number;
   measurementType: string;
   measurementDate: string;
   measurementValues: MeasurementValue[];
