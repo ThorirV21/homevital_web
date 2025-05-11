@@ -54,6 +54,7 @@ export interface RawPatientMeasurements {
 }
 
 export type PatientMeasurement = {
+  isAcknowledged: boolean;
   id: number;
   uid: number;
   measurementType: string;
