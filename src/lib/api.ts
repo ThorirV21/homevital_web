@@ -46,6 +46,8 @@ async function fetchWithAuth<T>(
   if (!res.ok) {
     const error = await res.json();
     console.log(error);
+    console.log("Error response:", res);
+    console.log("body", res.body);
     //throw new Error(error.message) || "API request failed";
   }
 

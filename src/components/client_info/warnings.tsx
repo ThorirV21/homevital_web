@@ -2,24 +2,28 @@ import { useState, useMemo } from "react";
 import { useClientMeasurements } from "@/hooks/useClients";
 import Loading from "@/components/loading";
 import Error from "@/components/error";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { ColumnDef } from "@tanstack/react-table"; // Ensure this matches your import
 import { PatientMeasurement } from "@/types/types";
-import { Circle } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
-import BloodSugar from "../icons/bloodSugar";
-import Scale from "../icons/scale";
-import Heart from "../icons/heart";
-import BodyTemp from "../icons/bodyTemp";
-import TooltipInfo from "../tooltipInfo";
-import React from "react";
 import useSession from "@/hooks/useSession";
+import DataTable from "../dataTable/dataTable";
+import {
+  MeasurementColumns,
+  MeasurementRow,
+} from "../dataTable/measurementsColumns";
+import Modal from "../ui/modal"; // Import the Modal component
+import { Textarea } from "../ui/textarea"; // Import the Textarea component
+import { useClientWarningAcknowledge } from "@/hooks/useClients";
 
 const Warnings = ({ id }: { id: string }) => {
   const { data, isLoading, error } = useClientMeasurements(id);
   const [selectedMeasurement, setSelectedMeasurement] =
     useState<PatientMeasurement | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [resolutionNotes, setResolutionNotes] = useState<string>("");
   const { session } = useSession();
+  const { acknowledgeMutation } = useClientWarningAcknowledge(id);
+
   const measurements = useMemo(() => {
     return data ? data.data : [];
   }, [data]);
@@ -30,162 +34,130 @@ const Warnings = ({ id }: { id: string }) => {
   const warnings: PatientMeasurement[] = measurements.filter(
     (measurement: PatientMeasurement) =>
       measurement.measurementValues.status.toLowerCase() !== "normal" &&
-      !measurement.isAcknowledged
+      !measurement.measurementValues.isAcknowledged
   );
 
   const handleSelectClick = (measurement: PatientMeasurement) => {
-    if (selectedMeasurement?.id === measurement.id) {
-      setSelectedMeasurement(null); // Toggle off if already selected
-    } else {
-      setSelectedMeasurement(measurement);
-      setResolutionNotes(""); // Clear notes when selecting a new measurement
-    }
+    console.log("Selected measurement:", measurement);
+    setSelectedMeasurement(measurement);
+    setResolutionNotes(""); // Clear notes when opening the modal
+    setIsModalOpen(true); // Open the modal
   };
 
-  //   const handleSubmit = (id: number) => {
-  //     console.log(`Submitting resolution notes for measurement ${id}:`, resolutionNotes);
-  //     setSelectedMeasurement(null);
-  //   };
   const handleSubmit = async () => {
     if (!selectedMeasurement || !resolutionNotes.trim() || !session?.user)
       return;
-
+    console.log("the measurement:", selectedMeasurement);
     const requestData = {
       measurementType: selectedMeasurement.measurementType,
       measurementID: selectedMeasurement.id,
-      workerID: session.user.id, // Get the worker ID from session context
+      workerID: parseInt(session?.user?.id),
       resolutionNotes: resolutionNotes,
     };
+    console.log("Request data:", requestData);
 
-    try {
-      const response = await fetch(
-        "https://homevitaldev-app.azurewebsites.net/api/measurements/acknowledge",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        }
-      );
+    acknowledgeMutation(requestData);
 
-      console.log("Response status:", response.status);
-      console.log("Response status text:", response.statusText);
+    // Optionally, you can handle the response here
+    console.log("Acknowledgment request sent");
 
-      if (response.ok) {
-        // Success
-        console.log("Measurement acknowledged successfully");
-        setSelectedMeasurement(null);
-        setResolutionNotes("");
-        await response.json(); // Await the response to ensure it's fully processed
-      } else {
-        // Handle error
-        console.error("Failed to acknowledge measurement");
-        // Try to get error details from response
-        try {
-          const errorData = await response.json();
-          console.error("Error details:", errorData);
-        } catch (error) {
-          console.error("Could not parse error response", error);
-        }
-      }
-    } catch (error) {
-      console.error("Error acknowledging measurement:", error);
-    }
+    // Close the modal
+    setIsModalOpen(false);
   };
+
+  //     try {
+  //       const response = await fetch(
+  //         "https://homevitaldev-app.azurewebsites.net/api/measurements/acknowledge",
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify(requestData),
+  //         }
+  //       );
+
+  //       if (response.ok) {
+  //         console.log("Measurement acknowledged successfully");
+  //         setSelectedMeasurement(null);
+  //         setResolutionNotes("");
+  //         setIsModalOpen(false); // Close the modal
+  //         await response.json();
+  //       } else {
+  //         console.error("Failed to acknowledge measurement");
+  //         try {
+  //           const errorData = await response.json();
+  //           console.error("Error details:", errorData);
+  //         } catch (error) {
+  //           console.error("Could not parse error response", error);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error acknowledging measurement:", error);
+  //     }
+  //   };
+
+  const rows: MeasurementRow[] = warnings.map((item) => ({
+    id: item.id,
+    measurementDate: item.measurementDate,
+    measurementType: item.measurementType,
+    measurementValues: item.measurementValues,
+    date: new Date(item.measurementDate).toLocaleDateString(),
+    type: item.measurementType,
+    values: item.measurementValues,
+    status: item.measurementValues.status,
+    isAcknowledged: item.isAcknowledged,
+    onSelect: () => handleSelectClick(item),
+    isSelected: selectedMeasurement?.id === item.id,
+  }));
+
+  const updatedColumns: ColumnDef<MeasurementRow, unknown>[] = [
+    ...MeasurementColumns,
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const item = row.original as unknown as PatientMeasurement;
+        return (
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded"
+            onClick={() => handleSelectClick(item)}
+          >
+            Resolve
+          </button>
+        );
+      },
+    },
+  ];
 
   return (
     <div className="flex flex-col">
-      <div>
-        <ScrollArea className="w-full h-full max-h-[calc(100vh-23rem)] border border-primary rounded-md">
-          <Table>
-            <TableBody>
-              {warnings.map((item) => {
-                const type = item.measurementType;
-                const values = item.measurementValues;
-                const date = new Date(item.measurementDate);
-                const dateString = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-                const icon =
-                  type === "BodyTemperature" ? (
-                    <BodyTemp />
-                  ) : type === "BodyWeight" ? (
-                    <Scale />
-                  ) : type === "BloodSugar" ? (
-                    <BloodSugar />
-                  ) : type === "BloodPressure" ? (
-                    <Heart />
-                  ) : null;
+      <ScrollArea className="w-full h-full max-h-[calc(100vh-23rem)] border border-primary rounded-md">
+        <DataTable columns={updatedColumns} data={rows} name={""} />
+      </ScrollArea>
 
-                const isSelected = selectedMeasurement?.id === item.id;
-
-                return (
-                  <React.Fragment key={`${item.id}-${type}`}>
-                    {/* Measurement Row */}
-                    <TableRow>
-                      <TableCell>{dateString}</TableCell>
-                      <TableCell>{icon}</TableCell>
-                      <TableCell>
-                        {type === "BodyTemperature" ? (
-                          `${values.temperature} °C`
-                        ) : type === "BodyWeight" ? (
-                          `${values.weight} Kg`
-                        ) : type === "BloodSugar" ? (
-                          `${values.bloodSugar} mmól/L`
-                        ) : type === "BloodPressure" ? (
-                          <div className="flex gap-6">
-                            <p>SYS {values.systolic}</p>
-                            <p>DIA {values.diastolic}</p>
-                            <p>Púls {values.bpm}</p>
-                          </div>
-                        ) : null}
-                      </TableCell>
-                      {values.status !== "" && values.status !== "Invalid" ? (
-                        <TableCell className="p-0">
-                          <TooltipInfo info={values.status}>
-                            <Circle className={values.status} />
-                          </TooltipInfo>
-                        </TableCell>
-                      ) : null}
-                      <TableCell>
-                        <button
-                          className="px-8 py-1 bg-primary text-white rounded-md"
-                          onClick={() => handleSelectClick(item)}
-                        >
-                          {isSelected ? "Loka" : "Skrá Meðhöndlun"}
-                        </button>
-                      </TableCell>
-                    </TableRow>
-
-                    {/* Input Field and Submit Button Row */}
-                    {isSelected && (
-                      <TableRow>
-                        <TableCell colSpan={5}>
-                          <div className="flex flex-col gap-2">
-                            <textarea
-                              className="w-full p-2 border rounded-md"
-                              placeholder="Skráning höndlunar"
-                              value={resolutionNotes}
-                              onChange={(e) =>
-                                setResolutionNotes(e.target.value)
-                              }
-                            />
-                            <button
-                              className="self-end px-4 py-2 bg-primary text-white rounded-md"
-                              onClick={() => handleSubmit()}
-                            >
-                              Skrá
-                            </button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </ScrollArea>
-      </div>
+      {/* Modal for resolution notes */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Add Resolution Notes"
+      >
+        <div className="flex flex-col space-y-4">
+          <Textarea
+            value={resolutionNotes}
+            onChange={(e) => setResolutionNotes(e.target.value)}
+            placeholder="Enter resolution notes here..."
+            className="w-full h-32 border border-gray-300 rounded-md p-2"
+          />
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded"
+            onClick={handleSubmit}
+            disabled={!resolutionNotes.trim()}
+          >
+            Submit
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };

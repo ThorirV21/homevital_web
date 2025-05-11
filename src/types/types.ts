@@ -78,6 +78,7 @@ export type WorkerDTO = {
   kennitala: string;
 };
 export type SingleMeasurement = {
+  isAcknowledged: boolean;
   systolic: number;
   diastolic: number;
   bpm: number;
