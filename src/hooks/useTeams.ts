@@ -1,7 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { api } from "@/lib/api";
-import { Team, TeamPost } from "@/types/teamTypes";
+import { Team } from "@/types/teamTypes";
+
+export interface TeamPatch {
+  id: number;
+  name?: string;
+  teamLeaderID?: number;
+}
 
 const useTeams = () => {
   const {
@@ -22,21 +28,40 @@ const useTeams = () => {
 const useTeamMutation = () => {
   const queryClient = useQueryClient();
 
-  const { mutate: createTeam, isPending: isCreatingTeam } = useMutation({
-    mutationFn: (team: TeamPost) => api.post("teams", team),
+  const {
+    mutate: createTeam,
+    isPending: isCreatingTeam,
+    isSuccess: isSuccessCreateTeam,
+    reset: resetCreateTeam,
+  } = useMutation({
+    mutationFn: (team: TeamPatch) => api.post("teams", team),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
     },
   });
 
-  const { mutate: updateTeam, isPending: isUpdatingTeam } = useMutation({
-    mutationFn: (team: Team) => api.patch(`teams/${team.id}`, team),
-    onSuccess: () => {
+  const {
+    mutate: updateTeam,
+    isPending: isUpdatingTeam,
+    isSuccess: isSuccessUpdateTeam,
+    reset: resetUpdateTeam,
+  } = useMutation({
+    mutationFn: (team: TeamPatch) => {
+      console.log("Updating team:", team);
+      return api.patch(`teams/${team.id}`, team);
+    },
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
+      console.log("Team updated successfully", response);
     },
   });
 
-  const { mutate: deleteTeam, isPending: isDeletingTeam } = useMutation({
+  const {
+    mutate: deleteTeam,
+    isPending: isDeletingTeam,
+    isSuccess: isSuccessDeleteTeam,
+    reset: resetDeleteTeam,
+  } = useMutation({
     mutationFn: (id: string) => api.delete(`teams/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
@@ -46,10 +71,16 @@ const useTeamMutation = () => {
   return {
     createTeam,
     isCreatingTeam,
+    isSuccessCreateTeam,
     updateTeam,
     isUpdatingTeam,
+    isSuccessUpdateTeam,
     deleteTeam,
     isDeletingTeam,
+    isSuccessDeleteTeam,
+    resetCreateTeam,
+    resetUpdateTeam,
+    resetDeleteTeam,
   };
 };
 

@@ -4,7 +4,7 @@ import { WorkerDTO } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import Loading from "../loading";
 import { useMemo, useState } from "react";
-import StaffForm from "./staffForm";
+import StaffForm, { DialogConfig } from "./staffForm";
 import { useTeams } from "@/hooks/useTeams";
 import { Team } from "@/types/teamTypes";
 import DataTable from "../dataTable/dataTable";
@@ -14,11 +14,17 @@ import useSession from "@/hooks/useSession";
 const StaffView = () => {
   const { data: rawWorkers, error, isLoading } = useHealthcareWorkers();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [worker, setWorker] = useState<WorkerDTO | null>(null);
   const { teams, teamsLoading } = useTeams();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [activeButton, setActiveButton] = useState<string>("Allt");
   const { session } = useSession();
+  const [dialogConfig, setDialogConfig] = useState<DialogConfig>({
+    showSsn: true,
+    staff: null,
+    header: "Bæta við starfsfólki",
+    infoText: "Breyta upplýsingum og vistaðu breytingar.",
+  });
+
   const data = useMemo(() => {
     return rawWorkers ? rawWorkers.data : [];
   }, [rawWorkers]);
@@ -36,12 +42,22 @@ const StaffView = () => {
 
   const handleClickWorker = (worker: WorkerRow) => {
     const workerDTO = data.find((w: WorkerDTO) => w.id === worker.id);
-    setWorker(workerDTO || null);
+    setDialogConfig({
+      showSsn: false,
+      staff: workerDTO || null,
+      header: "Breyta starfsfólki",
+      infoText: "Breyttu upplýsingum starfsmannsins og vistaðu.",
+    });
     setDialogOpen(true);
   };
 
   const handleClickCreate = () => {
-    setWorker(null);
+    setDialogConfig({
+      showSsn: true,
+      staff: null,
+      header: "Bæta við starfsfólki",
+      infoText: "Breyttu upplýsingum starfsmannsins og vistaðu.",
+    });
     setDialogOpen(true);
   };
 
@@ -94,7 +110,11 @@ const StaffView = () => {
           Bæta við starfsfólki
         </Button>
       </div>
-      <StaffForm open={dialogOpen} setOpen={setDialogOpen} staff={worker} />
+      <StaffForm
+        config={dialogConfig}
+        open={dialogOpen}
+        setOpen={setDialogOpen}
+      />
     </div>
   );
 };

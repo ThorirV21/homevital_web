@@ -7,6 +7,8 @@ export interface TeamPost {
 export interface Team {
   id: number;
   name: string;
+  teamLeaderID: number;
+  teamLeaderName: string;
   workerIDs: number[];
   patientIDs: number[];
 }

@@ -18,63 +18,109 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { useTeamMutation } from "@/hooks/useTeams";
+import { TeamPatch, useTeamMutation } from "@/hooks/useTeams";
+import {
+  Select,
+  SelectValue,
+  SelectTrigger,
+  SelectItem,
+  SelectContent,
+} from "../ui/select";
+import { WorkerDTO } from "@/types/types";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(4, "Nafn er nauðsynlegt"),
+  teamLeaderID: z.string().min(1, "Veldu teymis stjóra"),
 });
 
 type FormShape = z.infer<typeof formSchema>;
 
-interface TeamFormProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
+export interface TeamConfig {
+  header: string;
+  infoText: string;
   team: Team | null;
+  workers: WorkerDTO[];
 }
 
-const TeamForm = ({ open, setOpen, team }: TeamFormProps) => {
-  const { createTeam, updateTeam, deleteTeam } = useTeamMutation();
+interface TeamFormProps {
+  config: TeamConfig;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+const TeamForm = ({ config, open, setOpen }: TeamFormProps) => {
+  const {
+    createTeam,
+    updateTeam,
+    deleteTeam,
+    isSuccessCreateTeam,
+    isSuccessUpdateTeam,
+    isSuccessDeleteTeam,
+    isUpdatingTeam,
+    isCreatingTeam,
+    isDeletingTeam,
+    resetCreateTeam,
+    resetUpdateTeam,
+    resetDeleteTeam,
+  } = useTeamMutation();
+  const [selectedTeamLeader, setSelectedTeamLeader] = useState<string>(
+    config.team?.teamLeaderID?.toString() || ""
+  );
 
   const form = useForm<FormShape>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: team?.name || "",
+      name: config.team?.name || "",
+      teamLeaderID: config.team?.teamLeaderID?.toString() || "",
     },
   });
 
   useEffect(() => {
+    if (isSuccessCreateTeam || isSuccessUpdateTeam || isSuccessDeleteTeam) {
+      setOpen(false);
+    }
+  }, [isSuccessCreateTeam, isSuccessUpdateTeam, isSuccessDeleteTeam, setOpen]);
+
+  useEffect(() => {
+    setSelectedTeamLeader(config.team?.teamLeaderID?.toString() || "");
+
     form.reset({
-      name: team?.name || "",
+      name: config.team?.name || "",
+      teamLeaderID: config.team?.teamLeaderID?.toString() || "",
     });
-  }, [team, form]);
+  }, [config.team, form]);
 
   const onSubmit = (values: FormShape) => {
-    if (team) {
-      updateTeam({
-        id: team.id,
+    console.log("Submitting form:", values);
+    if (config.team) {
+      const patchTeam: TeamPatch = {
+        id: config.team.id,
         name: values.name,
-        workerIDs: team.workerIDs,
-        patientIDs: team.patientIDs,
-      });
+        teamLeaderID: parseInt(values.teamLeaderID),
+      };
+      updateTeam(patchTeam);
     } else {
       createTeam({
+        id: 0,
         name: values.name,
-        workerIDs: [],
-        patientIDs: [],
+        teamLeaderID: parseInt(values.teamLeaderID),
       });
     }
-    setOpen(false);
   };
 
   const handleClose = () => {
     setOpen(false);
     form.reset();
+    resetCreateTeam();
+    resetUpdateTeam();
+    resetDeleteTeam();
   };
 
   const handleDelete = () => {
-    deleteTeam(team?.id.toString() || "");
+    deleteTeam(config.team?.id.toString() || "");
     setOpen(false);
   };
 
@@ -84,10 +130,8 @@ const TeamForm = ({ open, setOpen, team }: TeamFormProps) => {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Teymi</DialogTitle>
-          <DialogDescription>
-            Settu inn upplýsingar teymis og vistaðu.
-          </DialogDescription>
+          <DialogTitle>{config.header}</DialogTitle>
+          <DialogDescription>{config.infoText}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2" inert={!open}>
           <Form {...form}>
@@ -105,9 +149,49 @@ const TeamForm = ({ open, setOpen, team }: TeamFormProps) => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="teamLeaderID"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Teymis stjóri</FormLabel>
+                    <Select
+                      defaultValue={selectedTeamLeader}
+                      value={selectedTeamLeader}
+                      onValueChange={(value) => {
+                        setSelectedTeamLeader(value);
+                        field.onChange(value);
+                      }}
+                    >
+                      <SelectTrigger className={inputClasses}>
+                        <SelectValue placeholder="Velja teymis stjóra" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {config.workers.map((worker) => (
+                          <SelectItem
+                            key={worker.id}
+                            value={worker.id.toString()}
+                          >
+                            {worker.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="flex flex-row gap-2">
-                <Button className="mt-6 ml-auto" type="submit">
-                  Vista
+                <Button
+                  className="mt-6 ml-auto"
+                  type="submit"
+                  disabled={isUpdatingTeam || isCreatingTeam || isDeletingTeam}
+                >
+                  {isUpdatingTeam || isCreatingTeam || isDeletingTeam ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    "Vista"
+                  )}
                 </Button>
                 <Button
                   className="mt-6 bg-destructive"

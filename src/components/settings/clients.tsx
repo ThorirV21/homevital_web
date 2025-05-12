@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import ClientForm from "./clientForm";
+import ClientForm, { DialogConfig } from "./clientForm";
 import { useClients } from "@/hooks/useClients";
 import Loading from "../loading";
 import { useTeams } from "@/hooks/useTeams";
-import { Client } from "@/types/clientTypes";
 import { Button } from "../ui/button";
 import {
   clientInfoColumns,
@@ -18,9 +17,14 @@ const ClientsView = () => {
   const { data: rawClients, isLoading, error } = useClients();
   const { teams, teamsLoading, teamsError } = useTeams();
   const [activeButton, setActiveButton] = useState<string>("Allt");
-  const [currentClient, setCurrentClient] = useState<Client | null>(null);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { session } = useSession();
+  const [dialogConfig, setDialogConfig] = useState<DialogConfig>({
+    showSsn: true,
+    client: null,
+    header: "Bæta við sjúklingi",
+    infoText: "Breyta upplýsingum og vistaðu breytingar.",
+  });
 
   const patients = useMemo(() => {
     return rawClients ? rawClients.data : [];
@@ -36,12 +40,22 @@ const ClientsView = () => {
 
   const handleClickClient = (client: ClientInfoRow) => {
     const clientDTO = patients.find((p) => p.id === client.id);
-    setCurrentClient(clientDTO || null);
+    setDialogConfig({
+      showSsn: false,
+      client: clientDTO || null,
+      header: "Breyta sjúklingi",
+      infoText: "Breyttu upplýsingum um sjúklinginn og vistaðu.",
+    });
     setOpen(true);
   };
 
   const handleClickCreate = () => {
-    setCurrentClient(null);
+    setDialogConfig({
+      showSsn: true,
+      client: null,
+      header: "Bæta við sjúklingi",
+      infoText: "Skráðu inn upplýsingar um sjúklinginn og vistaðu.",
+    });
     setOpen(true);
   };
 
@@ -88,7 +102,7 @@ const ClientsView = () => {
       <div className="flex flex-row w-full justify-end py-4 px-4 mt-auto">
         <Button onClick={handleClickCreate}>Bæta við</Button>
       </div>
-      <ClientForm open={open} setOpen={setOpen} client={currentClient} />
+      <ClientForm config={dialogConfig} open={open} setOpen={setOpen} />
     </div>
   );
 };

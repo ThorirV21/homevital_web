@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/services/session";
+import { Badge } from "./ui/badge";
+import { useWarnings } from "@/hooks/useWarnings";
 //import React from 'react';
 
 interface navButtonProps {
@@ -18,6 +20,7 @@ const NavButton: React.FC<navButtonProps> = ({
   dashboard_path,
 }) => {
   const pathname = usePathname();
+  const { data: warnings } = useWarnings();
 
   return (
     <li
@@ -42,6 +45,9 @@ const NavButton: React.FC<navButtonProps> = ({
             <Image src={logo_path} alt={title} fill={true} />
           </div>
           {title}
+          {title === "Viðvaranir" && (
+            <Badge className="ml-auto text-sm">{warnings?.totalCount}</Badge>
+          )}
         </Link>
       )}
     </li>
