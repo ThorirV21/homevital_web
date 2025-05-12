@@ -12,11 +12,13 @@ import { Team } from "@/types/teamTypes";
 import { clientColumns, ClientRow } from "@/components/dataTable/clientColumns";
 import DataTable from "@/components/dataTable/dataTable";
 import { ColumnFiltersState } from "@tanstack/react-table";
+import useSession from "@/hooks/useSession";
 
 const ClientListContent = () => {
   const router = useRouter();
   const { data: rawClients, error, isLoading } = useClients();
   const { teams, teamsLoading, teamsError } = useTeams();
+  const { session } = useSession();
 
   const patients = useMemo(() => {
     return rawClients ? rawClients.data : [];
@@ -27,24 +29,6 @@ const ClientListContent = () => {
   );
   const searchParams = useSearchParams();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  const buttons = [
-    {
-      label: "Allt",
-      selected: false,
-      className: "bg-accent",
-      onClick: () => setColumnFilters([]),
-    },
-    {
-      label: "Mín teymi",
-      selected: false,
-      className: "bg-accent",
-      onClick: () =>
-        setColumnFilters([{ id: "team", value: ["Team A", "Team B"] }]),
-    },
-  ];
-
-  console.log(columnFilters);
 
   useEffect(() => {
     const id = searchParams.get("id");
@@ -64,6 +48,47 @@ const ClientListContent = () => {
   if (error || teamsError) {
     return <Error />;
   }
+
+  const buttons = [
+    {
+      label: "Allt",
+      selected: false,
+      className: "bg-accent",
+      onClick: () => {
+        if (columnFilters.length === 0) return;
+        setColumnFilters([]);
+      },
+    },
+    {
+      label: "Mín teymi",
+      selected: false,
+      className: "bg-accent",
+      onClick: () => {
+        const teamValues =
+          session?.user?.groups.map(
+            (groupID: number) =>
+              teams?.find((team: Team) => team.id === groupID)?.name
+          ) || [];
+
+        const currentTeamFilter = columnFilters.find(
+          (filter) => filter.id === "team"
+        );
+        if (
+          currentTeamFilter &&
+          JSON.stringify(currentTeamFilter.value) === JSON.stringify(teamValues)
+        ) {
+          return;
+        }
+
+        setColumnFilters([
+          {
+            id: "team",
+            value: teamValues,
+          },
+        ]);
+      },
+    },
+  ];
 
   const handleClickPatient = (patient: ClientRow) => {
     setSelectedPatient(patient);

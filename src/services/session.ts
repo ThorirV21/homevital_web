@@ -44,7 +44,5 @@ export const logout = async () => {
 export const getToken = async () => {
   const session = await getSession();
 
-  console.log("Getting token from session", session);
-
   return session.token;
 };

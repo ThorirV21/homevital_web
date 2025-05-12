@@ -12,7 +12,7 @@ export interface Client {
   status: string;
   address: string;
   teamID: number;
-  ssn: string;
+  kennitala: string;
 }
 
 export interface MeasurementValue {
@@ -31,13 +31,22 @@ export interface MeasurementValue {
 export interface ClientMeasurements {
   uid: number;
   id: number;
+  patientID: number;
   measurementType: string;
   measurementDate: string;
   measurementValues: MeasurementValue[];
 }
 
+export interface PaginationMeta {
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+}
+
 export interface RawWarning {
   data: WarningList[];
+  meta?: PaginationMeta;
   totalCount: number;
   pageSize: number;
   pageNumber: number;

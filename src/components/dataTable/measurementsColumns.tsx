@@ -17,19 +17,16 @@ import { Button } from "../ui/button";
 import BodyTemp from "../icons/bodyTemp";
 import { arrayIncludesFilter } from "./multiSelectFilter";
 import { getStatusText } from "@/lib/utils";
-import { sorting } from "@/components/dataTable/sorting";
 
-export interface Warning {
+export interface MeasurementRow {
   id: number;
   measurementDate: string;
-  name: string;
   measurementType: string;
   measurementValues: MeasurementValue;
-  team: string;
   status: string;
 }
 
-export const warningColumns: ColumnDef<Warning>[] = [
+export const MeasurementColumns: ColumnDef<MeasurementRow>[] = [
   {
     accessorKey: "measurementDate",
     header: ({ column }) => {
@@ -46,25 +43,6 @@ export const warningColumns: ColumnDef<Warning>[] = [
     cell: ({ row }) => {
       const date = new Date(row.original.measurementDate);
       return formatDateIS(date.toLocaleDateString("is-IS"));
-    },
-  },
-  {
-    accessorKey: "name",
-    sortingFn: sorting,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Nafn
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const client = row.original.name;
-      return client;
     },
   },
   {
@@ -173,28 +151,6 @@ export const warningColumns: ColumnDef<Warning>[] = [
           </div>
         );
       }
-    },
-  },
-  {
-    accessorKey: "team",
-    filterFn: arrayIncludesFilter,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Teymi
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const team = row.original.team;
-      return team;
-    },
-    meta: {
-      filterVariant: "multi-select",
     },
   },
   {

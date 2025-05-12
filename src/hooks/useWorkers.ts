@@ -16,7 +16,9 @@ const useHealthcareWorkerMutations = () => {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: (worker: WorkerDTO) => api.post("healthcareworkers", worker),
+    mutationFn: (worker: WorkerDTO) => {
+      return api.post("healthcareworkers", worker);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workers"] });
     },

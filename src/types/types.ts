@@ -46,6 +46,13 @@ export type BodyTemperature = {
   date: string;
 };
 
+export interface RawPatientMeasurements {
+  data: PatientMeasurement[];
+  totalCount: number;
+  pageSize: number;
+  pageNumber: number;
+}
+
 export type PatientMeasurement = {
   id: number;
   uid: number;
@@ -67,7 +74,7 @@ export type WorkerDTO = {
   phone: string;
   teamIDs: number[];
   status: string;
-  ssn: string;
+  kennitala: string;
 };
 export type SingleMeasurement = {
   systolic: number;
@@ -81,3 +88,10 @@ export type SingleMeasurement = {
   oxygenSaturation: number;
   status: string;
 };
+
+export interface RawPatientMeasurements {
+  data: PatientMeasurement[];
+  totalCount: number;
+  pageSize: number;
+  pageNumber: number;
+}

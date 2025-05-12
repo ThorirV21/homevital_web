@@ -1,7 +1,28 @@
 import { getToken } from "@/services/session";
-import { shouldRefreshToken } from "./utils";
-import { login } from "@/services/api";
 const API_URL = process.env.API_URL;
+
+interface QueryParams {
+  [key: string]: string | number | boolean | undefined;
+}
+
+function buildUrl(path: string, params?: QueryParams): string {
+  if (!params) return path;
+
+  console.log("Building URL with params:", params);
+
+  const queryString = Object.entries(params)
+    .filter(([, value]) => value !== undefined)
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
+    )
+    .join("&");
+
+  const url = queryString ? `${path}?${queryString}` : path;
+  console.log("Final URL:", url);
+
+  return url;
+}
 
 async function fetchWithAuth<T>(
   path: string,
@@ -11,10 +32,6 @@ async function fetchWithAuth<T>(
 
   if (!token) {
     throw new Error("No token found");
-  }
-
-  if (shouldRefreshToken(token)) {
-    await login({ kennitala: "1234567890" });
   }
 
   const res = await fetch(`${API_URL}/${path}`, {
@@ -28,7 +45,8 @@ async function fetchWithAuth<T>(
 
   if (!res.ok) {
     const error = await res.json();
-    throw new Error(error.message) || "API request failed";
+    console.log(error);
+    //throw new Error(error.message) || "API request failed";
   }
 
   return res.json();
@@ -36,7 +54,8 @@ async function fetchWithAuth<T>(
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const api = {
-  get: <T>(url: string) => fetchWithAuth<T>(url, { method: "GET" }),
+  get: <T>(url: string, params?: QueryParams) =>
+    fetchWithAuth<T>(buildUrl(url, params), { method: "GET" }),
   post: <T>(url: string, body: any) =>
     fetchWithAuth<T>(url, { method: "POST", body: JSON.stringify(body) }),
   patch: <T>(url: string, body: any) =>

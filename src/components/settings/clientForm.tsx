@@ -80,12 +80,11 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
       address: client?.address || "",
       phone: client?.phone || "",
       team: teams?.find((team: Team) => team.id === client?.teamID)?.name || "",
-      ssn: client?.ssn || "",
+      ssn: client?.kennitala || "",
     });
   }, [client, form, teams]);
 
   const onSubmit = (values: FormShape) => {
-    console.log(values);
     if (client) {
       updateMutation.mutate({
         id: client.id,
@@ -93,7 +92,7 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
         address: values.address,
         phone: values.phone,
         teamID: teams?.find((team: Team) => team.name === values.team)?.id || 0,
-        ssn: values.ssn,
+        kennitala: values.ssn,
         status: "",
       });
     } else {
@@ -103,7 +102,7 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
         address: values.address,
         phone: values.phone,
         teamID: teams?.find((team: Team) => team.name === values.team)?.id || 0,
-        ssn: values.ssn,
+        kennitala: values.ssn,
         status: "",
       });
     }
