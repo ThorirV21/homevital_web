@@ -57,6 +57,24 @@ interface DataTableProps<TData extends BaseRow, TValue> {
   pageCount?: number;
 }
 
+/**
+ *
+ * @param columns is an array of column definitions - ColumnDef<TData, TValue>[]
+ * @param data is an array of data - TData[]
+ * @param name is the name of the table - string
+ * @param usePagination is a boolean that determines if pagination is used - boolean | false
+ * @param onRowClick is a function that is called when a row is clicked - (row: TData) => void
+ * @param selectedRow is the selected row - TData | null
+ * @param setColumnFilters is a function that is called when the column filters change - (columnFilters: ColumnFiltersState) => void
+ * @param columnFilters is an array of column filters - ColumnFiltersState
+ * @param buttons is an array of filter buttons - ButtonProps[]
+ * @param onPageChange is a function that is called when the page changes - (pageIndex: number, pageSize: number) => void | undefined
+ * @param totalCount is the total number of rows - number | undefined
+ * @param initialPage is the initial page - number
+ * @param initialPageSize is the initial page size - number
+ * @param manualPagination is a boolean that determines if manual pagination is used - boolean
+ * @param pageCount is the total number of pages - number | undefined
+ */
 const DataTable = <TData extends BaseRow, TValue>({
   columns,
   data,
@@ -111,18 +129,13 @@ const DataTable = <TData extends BaseRow, TValue>({
     pageIndex: number;
     pageSize: number;
   }> = (updaterOrValue) => {
-    console.log("DataTable pagination change triggered");
-
     setPagination((oldPagination) => {
       const newPagination =
         typeof updaterOrValue === "function"
           ? updaterOrValue(oldPagination)
           : updaterOrValue;
 
-      console.log("New pagination in DataTable:", newPagination);
-
       if (onPageChange) {
-        console.log("Calling parent onPageChange callback");
         onPageChange(newPagination.pageIndex, newPagination.pageSize);
       }
 

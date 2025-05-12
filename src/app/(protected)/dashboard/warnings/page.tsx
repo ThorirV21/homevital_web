@@ -22,9 +22,6 @@ const Alarms = () => {
     pageNumber: 1,
   });
 
-  // Log pagination state to track changes
-  console.log("Current pagination state:", pagination);
-
   const {
     data: rawWarnings,
     isLoading,
@@ -54,17 +51,12 @@ const Alarms = () => {
   // Calculate the total number of pages
   const pageCount = Math.ceil(totalCount / (pagination.pageSize || 10));
 
-  console.log(
-    "Page count:",
-    pageCount,
-    "Total count:",
-    totalCount,
-    "Current page:",
-    pagination.pageNumber
-  );
-
   if (isLoading || isLoadingClients || teamsLoading) {
-    return <Loading />;
+    return (
+      <div className="flex flex-row bg-background p-4 h-full w-full justify-center items-center">
+        <Loading />
+      </div>
+    );
   }
 
   if (error || errorClients || teamsError) {
@@ -117,14 +109,10 @@ const Alarms = () => {
 
   // Handle pagination changes from the DataTable
   const handlePageChange = async (pageIndex: number, pageSize: number) => {
-    console.log(`Page changed to index ${pageIndex}, size ${pageSize}`);
-
     const newPagination = {
       pageNumber: pageIndex + 1, // DataTable is 0-indexed, our API is 1-indexed
       pageSize: pageSize,
     };
-
-    console.log("Setting new pagination:", newPagination);
 
     // Update the pagination state
     setPagination(newPagination);

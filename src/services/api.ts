@@ -15,7 +15,7 @@ const login = async (form: z.infer<typeof loginSchema>) => {
     body: JSON.stringify(form),
   });
   if (!response.ok) {
-    throw new Error("Failed to login");
+    return null;
   }
 
   const data = await response.json();
@@ -71,7 +71,7 @@ const mockLogin = async (form: z.infer<typeof loginSchema>) => {
     body: JSON.stringify(form),
   });
   if (!response.ok) {
-    throw new Error("Failed to login");
+    return null;
   }
   return await response.json();
 };

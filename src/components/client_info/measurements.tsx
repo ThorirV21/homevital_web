@@ -42,6 +42,8 @@ const Measurements = ({ id }: { id: string }) => {
     setCurrentData(measurements);
   }
 
+  console.table(rows);
+
   return (
     <div className="flex flex-col h-full">
       <DataTable columns={MeasurementColumns} data={rows} name="Mælingar" />

@@ -8,8 +8,6 @@ interface QueryParams {
 function buildUrl(path: string, params?: QueryParams): string {
   if (!params) return path;
 
-  console.log("Building URL with params:", params);
-
   const queryString = Object.entries(params)
     .filter(([, value]) => value !== undefined)
     .map(
@@ -19,7 +17,6 @@ function buildUrl(path: string, params?: QueryParams): string {
     .join("&");
 
   const url = queryString ? `${path}?${queryString}` : path;
-  console.log("Final URL:", url);
 
   return url;
 }
@@ -45,8 +42,7 @@ async function fetchWithAuth<T>(
 
   if (!res.ok) {
     const error = await res.json();
-    console.log(error);
-    //throw new Error(error.message) || "API request failed";
+    throw new Error(error.message) || "API request failed";
   }
 
   return res.json();

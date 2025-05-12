@@ -11,11 +11,17 @@ import { useHealthcareWorkers } from "@/hooks/useWorkers";
 import { WorkerDTO } from "@/types/types";
 import { useClients } from "@/hooks/useClients";
 import { Client } from "@/types/clientTypes";
+import { TeamConfig } from "@/components/settings/teamForm";
 
 const Teams = () => {
   const { teams, teamsLoading, teamsError } = useTeams();
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [open, setOpen] = useState(false);
+  const [dialogConfig, setDialogConfig] = useState<TeamConfig>({
+    header: "Teymi",
+    infoText: "Breyta upplýsingum og vistaðu breytingar.",
+    team: null,
+    workers: [],
+  });
   const {
     data,
     isLoading: workersLoading,
@@ -50,12 +56,23 @@ const Teams = () => {
 
   const handleTeamClick = (team: TeamRow) => {
     const teamData = teams?.find((t: Team) => t.id === team.id);
-    setSelectedTeam(teamData || null);
+
+    setDialogConfig({
+      header: "Breyta teymi",
+      infoText: "Breyttu upplýsingum um teymið og vistaðu.",
+      team: teamData || null,
+      workers: workers.sort((a, b) => a.name.localeCompare(b.name)),
+    });
     setOpen(true);
   };
 
   const handleClickCreate = () => {
-    setSelectedTeam(null);
+    setDialogConfig({
+      header: "Teymi",
+      infoText: "Skráðu inn upplýsingar um teymið og vistaðu.",
+      team: null,
+      workers: workers.sort((a, b) => a.name.localeCompare(b.name)),
+    });
     setOpen(true);
   };
 
@@ -81,7 +98,7 @@ const Teams = () => {
         name="Teymi"
         onRowClick={handleTeamClick}
       />
-      <TeamForm open={open} setOpen={setOpen} team={selectedTeam} />
+      <TeamForm open={open} setOpen={setOpen} config={dialogConfig} />
       <div className="ms-auto mt-auto p-4">
         <Button className="mt-4" onClick={handleClickCreate}>
           Bæta við teymi
