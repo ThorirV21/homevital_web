@@ -77,9 +77,35 @@ const useClientMeasurements = (id: string) => {
   return { data, error, isLoading, refetch };
 };
 
+const useClientWarningAcknowledge = (id: string) => {
+  const queryClient = useQueryClient();
+
+  const { mutate: acknowledgeMutation, isSuccess } = useMutation({
+    mutationFn: (data: {
+      measurementType: string;
+      measurementID: number;
+      workerID: number;
+      resolutionNotes: string;
+    }) => {
+      console.log("Data sent:", data);
+      return api.post("measurements/acknowledge", data).then((response) => {
+        console.log("API response:", response);
+        return response;
+      });
+    },
+    onSuccess: () => {
+      console.log("Acknowledgment successful", isSuccess);
+      queryClient.invalidateQueries({ queryKey: ["clientMeasurements", id] });
+    },
+  });
+
+  return { acknowledgeMutation };
+};
+
 export {
   useClients,
   useClientDetails,
   useClientMeasurements,
   useClientMutations,
+  useClientWarningAcknowledge,
 };

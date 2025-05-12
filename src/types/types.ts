@@ -54,11 +54,13 @@ export interface RawPatientMeasurements {
 }
 
 export type PatientMeasurement = {
+  isAcknowledged: boolean;
   id: number;
   uid: number;
   measurementType: string;
   measurementDate: string;
   measurementValues: SingleMeasurement;
+  resolutionNotes: string;
 };
 
 export type RawWorker = {
@@ -77,6 +79,8 @@ export type WorkerDTO = {
   kennitala: string;
 };
 export type SingleMeasurement = {
+  resolutionNotes: string;
+  isAcknowledged: boolean;
   systolic: number;
   diastolic: number;
   bpm: number;

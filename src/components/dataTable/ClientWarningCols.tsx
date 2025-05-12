@@ -24,8 +24,8 @@ export interface MeasurementRow {
   measurementType: string;
   measurementValues: MeasurementValue;
   status: string;
-  resolutionNotes: string | boolean;
   isAcknowledged: boolean;
+  uid: string;
 }
 
 export const MeasurementColumns: ColumnDef<MeasurementRow>[] = [
