@@ -60,6 +60,7 @@ export type PatientMeasurement = {
   measurementType: string;
   measurementDate: string;
   measurementValues: SingleMeasurement;
+  resolutionNotes: string;
 };
 
 export type RawWorker = {
@@ -78,6 +79,7 @@ export type WorkerDTO = {
   kennitala: string;
 };
 export type SingleMeasurement = {
+  resolutionNotes: string;
   isAcknowledged: boolean;
   systolic: number;
   diastolic: number;

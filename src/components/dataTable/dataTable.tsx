@@ -212,6 +212,11 @@ const DataTable = <TData extends BaseRow, TValue>({
                 <TableRow
                   key={row.id}
                   className={
+                    // Status == "Raised" or "High" and is not acknowledged color it red
+                    // row.original.status === "Raised"
+                    // row.original.isAcknowledged === false
+                    // row.original.status === "High"
+
                     row.original.id === selectedRow?.id ? "bg-muted" : ""
                   }
                   data-state={rowSelection[row.id] && "selected"}
