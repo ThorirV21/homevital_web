@@ -51,15 +51,22 @@ const formSchema = z.object({
 
 type FormShape = z.infer<typeof formSchema>;
 
+export type DialogConfig = {
+  showSsn: boolean;
+  client: Client | null;
+  header: string;
+  infoText: string;
+};
+
 interface ClientFormProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  client: Client | null;
+  config: DialogConfig;
 }
 
 const inputClasses = "bg-background";
 
-const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
+const ClientForm = ({ config, open, setOpen }: ClientFormProps) => {
   const { teams } = useTeams();
   const { updateMutation, deleteMutation, createMutation } =
     useClientMutations();
@@ -76,18 +83,20 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
 
   useEffect(() => {
     form.reset({
-      name: client?.name || "",
-      address: client?.address || "",
-      phone: client?.phone || "",
-      team: teams?.find((team: Team) => team.id === client?.teamID)?.name || "",
-      ssn: client?.kennitala || "",
+      name: config.client?.name || "",
+      address: config.client?.address || "",
+      phone: config.client?.phone || "",
+      team:
+        teams?.find((team: Team) => team.id === config.client?.teamID)?.name ||
+        "",
+      ssn: config.client?.kennitala || "",
     });
-  }, [client, form, teams]);
+  }, [config.client, form, teams]);
 
   const onSubmit = (values: FormShape) => {
-    if (client) {
+    if (config.client) {
       updateMutation.mutate({
-        id: client.id,
+        id: config.client.id,
         name: values.name,
         address: values.address,
         phone: values.phone,
@@ -116,7 +125,7 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
   };
 
   const handleDelete = () => {
-    deleteMutation.mutate(client?.id.toString() || "");
+    deleteMutation.mutate(config.client?.id.toString() || "");
     setOpen(false);
   };
 
@@ -124,10 +133,8 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Breyta skjólstæðing</DialogTitle>
-          <DialogDescription>
-            Breyttu upplýsingum og vistaðu breytingar.
-          </DialogDescription>
+          <DialogTitle>{config.header}</DialogTitle>
+          <DialogDescription>{config.infoText}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2" inert={!open}>
           <Form {...form}>
@@ -145,19 +152,21 @@ const ClientForm = ({ open, setOpen, client }: ClientFormProps) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="ssn"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kennitala</FormLabel>
-                    <FormControl>
-                      <Input className={inputClasses} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {config.showSsn && (
+                <FormField
+                  control={form.control}
+                  name="ssn"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Kennitala</FormLabel>
+                      <FormControl>
+                        <Input className={inputClasses} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="address"

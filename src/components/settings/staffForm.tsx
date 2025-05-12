@@ -35,13 +35,20 @@ const formSchema = z.object({
 
 type FormShape = z.infer<typeof formSchema>;
 
-interface StaffFormProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
+export type DialogConfig = {
   staff: WorkerDTO | null;
+  showSsn?: boolean;
+  header: string;
+  infoText: string;
+};
+
+interface StaffFormProps {
+  config: DialogConfig;
+  setOpen: (open: boolean) => void;
+  open: boolean;
 }
 
-const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
+const StaffForm = ({ config, open, setOpen }: StaffFormProps) => {
   const { teams } = useTeams();
   const { updateMutation, deleteMutation, createMutation } =
     useHealthcareWorkerMutations();
@@ -58,20 +65,20 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
 
   useEffect(() => {
     form.reset({
-      name: staff?.name || "",
-      phone: staff?.phone || "",
+      name: config.staff?.name || "",
+      phone: config.staff?.phone || "",
       team: teams
-        ?.filter((team: Team) => staff?.teamIDs.includes(team.id))
+        ?.filter((team: Team) => config.staff?.teamIDs.includes(team.id))
         .map((team: Team) => team.name),
-      status: staff?.status || "",
-      ssn: staff?.kennitala || "",
+      status: config.staff?.status || "",
+      ssn: config.staff?.kennitala || "",
     });
-  }, [staff, form, teams]);
+  }, [config.staff, form, teams]);
 
   const onSubmit = (values: FormShape) => {
-    if (staff) {
+    if (config.staff) {
       updateMutation.mutate({
-        id: staff?.id || 0,
+        id: config.staff?.id || 0,
         name: values.name,
         phone: values.phone,
         teamIDs: values.team.map(
@@ -101,7 +108,7 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
   };
 
   const handleDelete = () => {
-    deleteMutation.mutate(staff?.id.toString() || "");
+    deleteMutation.mutate(config.staff?.id.toString() || "");
     setOpen(false);
   };
 
@@ -110,10 +117,8 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Starfsmaður</DialogTitle>
-          <DialogDescription>
-            Settu inn upplýsingar starfsmannsins og vistaðu.
-          </DialogDescription>
+          <DialogTitle>{config.header}</DialogTitle>
+          <DialogDescription>{config.infoText}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2" inert={!open}>
           <Form {...form}>
@@ -131,19 +136,21 @@ const StaffForm = ({ open, setOpen, staff }: StaffFormProps) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="ssn"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kennitala</FormLabel>
-                    <FormControl>
-                      <Input className={inputClasses} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {config.showSsn && (
+                <FormField
+                  control={form.control}
+                  name="ssn"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Kennitala</FormLabel>
+                      <FormControl>
+                        <Input className={inputClasses} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="phone"

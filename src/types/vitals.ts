@@ -1,4 +1,4 @@
-export interface SingleRange {
+export interface SingleRange2 {
   name: string | undefined;
   min?: string | undefined;
   max?: string | undefined;
@@ -14,7 +14,7 @@ export interface VitalCategory {
   distolicRanges?: SingleRange[];
 }
 
-export interface RawVitalRanges {
+export interface RawVitalRanges2 {
   bloodPressureRange: {
     id: number;
     patientID: number;
@@ -105,3 +105,81 @@ export type vitalSettings = {
   min: number;
   max: number;
 };
+
+// New vital range types
+export type BodyTemperatureRange = {
+  id: number;
+  patientID: number;
+  temperatureUnderAverage: number;
+  temperatureGood: number;
+  temperatureNotOk: number;
+  temperatureCritical: number;
+};
+
+export type BloodPressureRange = {
+  id: number;
+  patientID: number;
+  systolicLowered: number;
+  systolicGood: number;
+  systolicRaised: number;
+  systolicHigh: number;
+  diastolicLowered: number;
+  diastolicGood: number;
+  diastolicRaised: number;
+  diastolicHigh: number;
+};
+
+export type BloodSugarRange = {
+  id: number;
+  patientID: number;
+  bloodSugarLowered: number;
+  bloodSugarGood: number;
+  bloodSugarRaised: number;
+  bloodSugarHigh: number;
+};
+
+export type BodyWeightRange = {
+  id: number;
+  patientID: number;
+  weightLossFluctuationPercentageGood: number;
+  weightGainPercentageGoodMax: number;
+  weightGainFluctuationPercentageGood: number;
+};
+
+export type OxygenSaturationRange = {
+  id: number;
+  patientID: number;
+  oxygenSaturationGood: number;
+  oxygenSaturationRaised: number;
+  oxygenSaturationHigh: number;
+};
+
+export type RawVitalRanges = {
+  bodyTemperatureRange: BodyTemperatureRange;
+  bloodPressureRange: BloodPressureRange;
+  bloodSugarRange: BloodSugarRange;
+  bodyWeightRange: BodyWeightRange;
+  oxygenSaturationRange: OxygenSaturationRange;
+};
+
+export type VitalType =
+  | BodyTemperatureRange
+  | BloodPressureRange
+  | BloodSugarRange
+  | BodyWeightRange
+  | OxygenSaturationRange;
+
+export type SingleRange = {
+  name: string;
+  prefix: string;
+  displayText: string;
+  [key: string]: number | string | undefined;
+};
+
+export interface FixedRange {
+  id: number | undefined;
+  patientID: number | undefined;
+  name: string;
+  unit: string;
+  ranges: SingleRange[];
+}
