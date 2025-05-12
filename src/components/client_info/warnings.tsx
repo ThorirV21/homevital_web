@@ -89,7 +89,7 @@ const Warnings = ({ id }: { id: string }) => {
         const item = row.original as unknown as PatientMeasurement;
         return (
           <button
-            className="px-4 py-2 bg-primary text-white rounded"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded"
             onClick={() => handleSelectClick(item)}
           >
             Skrá meðhöndlun

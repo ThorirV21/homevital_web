@@ -67,10 +67,10 @@ const Measurements = ({ id }: { id: string }) => {
           <button
             className={`px-2 py-1 rounded ${
               isNotAcked && isWarning
-                ? "bg-destructive text-white"
+                ? "bg-destructive text-destructive-foreground"
                 : hasNotes
-                  ? "bg-primary text-white"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground cursor-not-allowed"
             }`}
             onClick={() => handleOpenModal(item)}
             disabled={!hasNotes}
