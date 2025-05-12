@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "/Users/thorir/Desktop/HomeVital/homevital_web/playwright.config.ts",
-    "rootDir": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__",
+    "configFile": "C:\\Users\\sindr\\Desktop\\Forritun\\LokaVerkefni\\homevital_web\\playwright.config.ts",
+    "rootDir": "C:/Users/sindr/Desktop/Forritun/LokaVerkefni/homevital_web/src/__tests__",
     "forbidOnly": false,
     "fullyParallel": true,
     "globalSetup": null,
@@ -37,7 +37,7 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "/Users/thorir/Desktop/HomeVital/homevital_web/test-results",
+        "outputDir": "C:/Users/sindr/Desktop/Forritun/LokaVerkefni/homevital_web/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -45,7 +45,7 @@
         },
         "id": "chromium",
         "name": "chromium",
-        "testDir": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__",
+        "testDir": "C:/Users/sindr/Desktop/Forritun/LokaVerkefni/homevital_web/src/__tests__",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -53,7 +53,7 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/Users/thorir/Desktop/HomeVital/homevital_web/test-results",
+        "outputDir": "C:/Users/sindr/Desktop/Forritun/LokaVerkefni/homevital_web/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -61,7 +61,7 @@
         },
         "id": "firefox",
         "name": "firefox",
-        "testDir": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__",
+        "testDir": "C:/Users/sindr/Desktop/Forritun/LokaVerkefni/homevital_web/src/__tests__",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -69,7 +69,7 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/Users/thorir/Desktop/HomeVital/homevital_web/test-results",
+        "outputDir": "C:/Users/sindr/Desktop/Forritun/LokaVerkefni/homevital_web/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -77,7 +77,7 @@
         },
         "id": "webkit",
         "name": "webkit",
-        "testDir": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__",
+        "testDir": "C:/Users/sindr/Desktop/Forritun/LokaVerkefni/homevital_web/src/__tests__",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -98,14 +98,14 @@
   },
   "suites": [
     {
-      "title": "test-3.spec.ts",
-      "file": "test-3.spec.ts",
+      "title": "test-1.spec.ts",
+      "file": "test-1.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [
         {
           "title": "test",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
@@ -116,54 +116,24 @@
               "projectName": "chromium",
               "results": [
                 {
-                  "workerIndex": 25,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 9240,
-                  "error": {
-                    "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('row', { name: 'Gunnar Gunnarsson 8454656' }) resolved to 2 elements:\n    1) <tr class=\"flex flex-row items-center justify-between border-b border-gray-300 p-3 \">…</tr> aka getByRole('row', { name: 'Gunnar Gunnarsson 8454656' }).first()\n    2) <tr class=\"flex flex-row items-center justify-between border-b border-gray-300 p-3 \">…</tr> aka getByRole('row', { name: 'Gunnar Gunnarsson 8454656' }).nth(1)\n\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('row', { name: 'Gunnar Gunnarsson 8454656' })\u001b[22m\n",
-                    "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('row', { name: 'Gunnar Gunnarsson 8454656' }) resolved to 2 elements:\n    1) <tr class=\"flex flex-row items-center justify-between border-b border-gray-300 p-3 \">…</tr> aka getByRole('row', { name: 'Gunnar Gunnarsson 8454656' }).first()\n    2) <tr class=\"flex flex-row items-center justify-between border-b border-gray-300 p-3 \">…</tr> aka getByRole('row', { name: 'Gunnar Gunnarsson 8454656' }).nth(1)\n\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('row', { name: 'Gunnar Gunnarsson 8454656' })\u001b[22m\n\n    at /Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__/test-3.spec.ts:48:5",
-                    "location": {
-                      "file": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__/test-3.spec.ts",
-                      "column": 5,
-                      "line": 48
-                    },
-                    "snippet": "\u001b[0m \u001b[90m 46 |\u001b[39m   \u001b[36mawait\u001b[39m expect(\n \u001b[90m 47 |\u001b[39m     page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"row\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Gunnar Gunnarsson 8454656\"\u001b[39m })\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 48 |\u001b[39m   )\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 49 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m\u001b[0m"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__/test-3.spec.ts",
-                        "column": 5,
-                        "line": 48
-                      },
-                      "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('row', { name: 'Gunnar Gunnarsson 8454656' }) resolved to 2 elements:\n    1) <tr class=\"flex flex-row items-center justify-between border-b border-gray-300 p-3 \">…</tr> aka getByRole('row', { name: 'Gunnar Gunnarsson 8454656' }).first()\n    2) <tr class=\"flex flex-row items-center justify-between border-b border-gray-300 p-3 \">…</tr> aka getByRole('row', { name: 'Gunnar Gunnarsson 8454656' }).nth(1)\n\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('row', { name: 'Gunnar Gunnarsson 8454656' })\u001b[22m\n\n\n\u001b[0m \u001b[90m 46 |\u001b[39m   \u001b[36mawait\u001b[39m expect(\n \u001b[90m 47 |\u001b[39m     page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"row\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Gunnar Gunnarsson 8454656\"\u001b[39m })\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 48 |\u001b[39m   )\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 49 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m\u001b[0m\n\u001b[2m    at /Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__/test-3.spec.ts:48:5\u001b[22m"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 831,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-04-27T22:23:45.255Z",
+                  "startTime": "2025-05-07T09:58:12.222Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "_error-context-0",
-                      "contentType": "text/markdown",
-                      "path": "/Users/thorir/Desktop/HomeVital/homevital_web/test-results/test-3-test-chromium/error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "/Users/thorir/Desktop/HomeVital/homevital_web/src/__tests__/test-3.spec.ts",
-                    "column": 5,
-                    "line": 48
-                  }
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
-          "id": "4b583dfcc6c9ec3b088b-5929935458c5de967028",
-          "file": "test-3.spec.ts",
+          "id": "492d4a3e7e76c4aacf4a-34ab2a399aed0b8eb826",
+          "file": "test-1.spec.ts",
           "line": 3,
           "column": 5
         }
@@ -172,11 +142,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-04-27T22:23:44.479Z",
-    "duration": 10513.964999999851,
-    "expected": 0,
+    "startTime": "2025-05-07T09:58:09.884Z",
+    "duration": 4359.78199999989,
+    "expected": 1,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }
