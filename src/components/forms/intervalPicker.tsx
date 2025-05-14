@@ -35,13 +35,15 @@ interface IntervalPickerProps {
     | "temperature"
   >;
   label: string;
+  disabled?: boolean;
 }
 
-const IntervalPicker = ({ field }: IntervalPickerProps) => {
+const IntervalPicker = ({ field, disabled = false }: IntervalPickerProps) => {
   return (
     <Select
       onValueChange={field.onChange}
-      defaultValue={field.value?.toString() || ""}
+      value={field.value?.toString() || ""}
+      disabled={disabled}
     >
       <FormControl>
         <SelectTrigger className="bg-background">

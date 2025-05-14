@@ -16,14 +16,19 @@ const useTreatment = (id: string) => {
 const useTreatmentMutations = (id: string) => {
   const queryClient = useQueryClient();
 
-  const createMutation = useMutation({
+  const {
+    mutate: createMutation,
+    isPending: isCreating,
+    isSuccess: isCreated,
+  } = useMutation({
     mutationFn: (data: TreatmentPost) => api.post("patientplans", data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["treatments", id] });
+      queryClient.invalidateQueries({ queryKey: ["patientTreatments", id] });
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
   });
 
-  return { createMutation };
+  return { createMutation, isCreating, isCreated };
 };
 
 const usePatientTreatments = (id: string) => {

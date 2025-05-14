@@ -7,6 +7,8 @@ import {
   MeasurementRow,
 } from "../dataTable/measurementsColumns";
 import Modal from "../ui/modal"; // Import the Modal component
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 const Measurements = ({ id }: { id: string }) => {
   const { data, error, isLoading } = useClientMeasurements(id);
@@ -59,24 +61,26 @@ const Measurements = ({ id }: { id: string }) => {
       header: "Meðhöndlun",
       cell: ({ row }: { row: { original: MeasurementRow } }) => {
         const item = row.original;
-        const hasNotes = item.resolutionNotes;
+        const hasNotes = !!item.resolutionNotes;
         const isWarning = item.status === "High" || item.status === "Raised";
         const isNotAcked = !item.isAcknowledged;
 
         return (
-          <button
-            className={`px-2 py-1 rounded ${
-              isNotAcked && isWarning
-                ? "bg-destructive text-destructive-foreground"
-                : hasNotes
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground cursor-not-allowed"
-            }`}
-            onClick={() => handleOpenModal(item)}
-            disabled={!hasNotes}
-          >
-            {hasNotes ? "Meðhöndlun" : "Meðhöndlun"}
-          </button>
+          <>
+            {!isWarning ? (
+              <></>
+            ) : isNotAcked && !hasNotes ? (
+              <Badge variant="outline">Óskráð</Badge>
+            ) : (
+              <Button
+                style={{ height: "1.5rem" }}
+                size={"sm"}
+                onClick={() => handleOpenModal(item)}
+              >
+                Sýna
+              </Button>
+            )}
+          </>
         );
       },
     },
@@ -86,7 +90,15 @@ const Measurements = ({ id }: { id: string }) => {
 
   return (
     <div className="flex flex-col h-full">
-      <DataTable columns={columns} data={rows} name={""} />
+      <div className="h-[calc(100vh-18rem)] overflow-auto border border-muted rounded-md">
+        <DataTable
+          columns={columns}
+          data={rows}
+          name={""}
+          showHeader={false}
+          maxTableHeight=""
+        />
+      </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Meðhöndlun">
         <p>{selectedNotes}</p>
       </Modal>

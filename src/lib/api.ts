@@ -1,4 +1,4 @@
-import { getToken } from "@/services/session";
+import { getToken, logout } from "@/services/session";
 const API_URL = process.env.API_URL;
 
 interface QueryParams {
@@ -28,8 +28,11 @@ async function fetchWithAuth<T>(
   const token = await getToken();
 
   if (!token) {
-    throw new Error("No token found");
+    // log out user
+    logout();
   }
+
+  console.log(path);
 
   const res = await fetch(`${API_URL}/${path}`, {
     ...options,

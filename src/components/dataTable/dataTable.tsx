@@ -55,6 +55,8 @@ interface DataTableProps<TData extends BaseRow, TValue> {
   initialPageSize?: number;
   manualPagination?: boolean;
   pageCount?: number;
+  showHeader?: boolean;
+  maxTableHeight?: string;
 }
 
 /**
@@ -74,6 +76,8 @@ interface DataTableProps<TData extends BaseRow, TValue> {
  * @param initialPageSize is the initial page size - number
  * @param manualPagination is a boolean that determines if manual pagination is used - boolean
  * @param pageCount is the total number of pages - number | undefined
+ * @param showHeader is a boolean that determines if the header is shown, default is true - boolean
+ * @param maxTableHeight is the height of the table, default is "max-h-[calc(100vh-230px)]" - string
  */
 const DataTable = <TData extends BaseRow, TValue>({
   columns,
@@ -91,6 +95,8 @@ const DataTable = <TData extends BaseRow, TValue>({
   initialPageSize = 10,
   manualPagination = false,
   pageCount,
+  showHeader = true,
+  maxTableHeight = "max-h-[calc(100vh-230px)]",
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -180,26 +186,30 @@ const DataTable = <TData extends BaseRow, TValue>({
 
   return (
     <div className="w-full">
-      <div className="flex flex-row gap-2 items-center p-4">
-        <h2 className="text-xl">{name}</h2>
-        <div className="flex flex-row gap-2 items-center">
-          {buttons?.map((button) => (
-            <Button
-              key={button.label}
-              variant={button.selected ? "default" : "outline"}
-              onClick={button.onClick}
-            >
-              {button.label}
-            </Button>
-          ))}
+      {showHeader && (
+        <div className="flex flex-row gap-2 items-center p-4">
+          <h2 className="text-xl">{name}</h2>
+          <div className="flex flex-row gap-2 items-center">
+            {buttons?.map((button) => (
+              <Button
+                key={button.label}
+                variant={button.selected ? "default" : "outline"}
+                onClick={button.onClick}
+              >
+                {button.label}
+              </Button>
+            ))}
+          </div>
+          <Input
+            placeholder="Leita..."
+            value={globalFilter}
+            onChange={(e) => setGlobalFilter(String(e.target.value))}
+          />
         </div>
-        <Input
-          placeholder="Leita..."
-          value={globalFilter}
-          onChange={(e) => setGlobalFilter(String(e.target.value))}
-        />
-      </div>
-      <div className="overflow-auto max-h-[calc(100vh-230px)] px-2">
+      )}
+      <div
+        className={`${maxTableHeight ? `overflow-auto ${maxTableHeight}` : ""} px-2`}
+      >
         <Table className="">
           <TableHeader className="bg-accent sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -219,7 +229,7 @@ const DataTable = <TData extends BaseRow, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className="max-h-[calc(100vh-400px)] overflow-y-auto">
+          <TableBody className={maxTableHeight ? "" : "h-full"}>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

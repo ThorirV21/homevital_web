@@ -8,7 +8,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/forms/datePicker";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,6 +21,9 @@ import { Team } from "@/types/teamTypes";
 import { Button } from "../ui/button";
 import { useTreatmentMutations } from "@/hooks/useTreatments";
 import { selectDays } from "@/services/treatmentPlan";
+import { TreatmentPost } from "@/types/treatmentTypes";
+import { useCallback, useEffect, useRef } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nafn áætlunar er nauðsynlegt"),
@@ -51,7 +54,7 @@ export type TreatmentFormProps = {
 };
 
 const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
-  const { createMutation } = useTreatmentMutations(id);
+  const { createMutation, isCreating, isCreated } = useTreatmentMutations(id);
   const { teams, teamsLoading, teamsError } = useTeams();
   const { patientDetails } = useClientDetails(id);
   const form = useForm<FormShape>({
@@ -60,8 +63,154 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
       name: "",
       startDate: undefined,
       endDate: undefined,
+      bloodPressure: false,
+      weight: false,
+      bloodOxygen: false,
+      bloodSugar: false,
+      temperature: false,
+      bloodPressureInterval: "",
+      weightInterval: "",
+      bloodOxygenInterval: "",
+      bloodSugarInterval: "",
+      temperatureInterval: "",
     },
   });
+
+  const bloodPressureWatch = useWatch({
+    control: form.control,
+    name: "bloodPressure",
+  });
+
+  const weightWatch = useWatch({
+    control: form.control,
+    name: "weight",
+  });
+
+  const bloodOxygenWatch = useWatch({
+    control: form.control,
+    name: "bloodOxygen",
+  });
+
+  const bloodSugarWatch = useWatch({
+    control: form.control,
+    name: "bloodSugar",
+  });
+
+  const temperatureWatch = useWatch({
+    control: form.control,
+    name: "temperature",
+  });
+
+  const bloodPressureIntervalWatch = useWatch({
+    control: form.control,
+    name: "bloodPressureInterval",
+  });
+
+  const weightIntervalWatch = useWatch({
+    control: form.control,
+    name: "weightInterval",
+  });
+
+  const bloodOxygenIntervalWatch = useWatch({
+    control: form.control,
+    name: "bloodOxygenInterval",
+  });
+
+  const bloodSugarIntervalWatch = useWatch({
+    control: form.control,
+    name: "bloodSugarInterval",
+  });
+
+  const temperatureIntervalWatch = useWatch({
+    control: form.control,
+    name: "temperatureInterval",
+  });
+
+  const setValue = useCallback(
+    (
+      name: keyof FormShape,
+      value: string | number | boolean,
+      options: { [key: string]: boolean }
+    ) => form.setValue(name, value, options),
+    [form]
+  );
+
+  const isUpdatingRef = useRef(false);
+
+  useEffect(() => {
+    if (isUpdatingRef.current) {
+      isUpdatingRef.current = false;
+      return;
+    }
+
+    if (bloodPressureWatch && !bloodPressureIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("bloodPressureInterval", "1", { shouldValidate: false });
+    }
+
+    if (!bloodPressureWatch && bloodPressureIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("bloodPressureInterval", "", { shouldValidate: false });
+    }
+
+    if (weightWatch && !weightIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("weightInterval", "1", { shouldValidate: false });
+    }
+
+    if (!weightWatch && weightIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("weightInterval", "", { shouldValidate: false });
+    }
+
+    if (bloodOxygenWatch && !bloodOxygenIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("bloodOxygenInterval", "1", { shouldValidate: false });
+    }
+
+    if (!bloodOxygenWatch && bloodOxygenIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("bloodOxygenInterval", "", { shouldValidate: false });
+    }
+
+    if (bloodSugarWatch && !bloodSugarIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("bloodSugarInterval", "1", { shouldValidate: false });
+    }
+
+    if (!bloodSugarWatch && bloodSugarIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("bloodSugarInterval", "", { shouldValidate: false });
+    }
+
+    if (temperatureWatch && !temperatureIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("temperatureInterval", "1", { shouldValidate: false });
+    }
+
+    if (!temperatureWatch && temperatureIntervalWatch) {
+      isUpdatingRef.current = true;
+      setValue("temperatureInterval", "", { shouldValidate: false });
+    }
+  }, [
+    bloodPressureWatch,
+    bloodPressureIntervalWatch,
+    weightWatch,
+    weightIntervalWatch,
+    bloodOxygenWatch,
+    bloodOxygenIntervalWatch,
+    bloodSugarWatch,
+    bloodSugarIntervalWatch,
+    temperatureWatch,
+    temperatureIntervalWatch,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    if (isCreated) {
+      setCreateNew(false);
+    }
+  }, [isCreated, setCreateNew]);
 
   if (teamsLoading) {
     return <div>Loading...</div>;
@@ -72,7 +221,7 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
   }
 
   const onSubmit = (values: FormShape) => {
-    createMutation.mutate({
+    const plan: TreatmentPost = {
       name: values.name,
       startDate: values.startDate.toISOString(),
       endDate: values.endDate?.toISOString() || "",
@@ -90,7 +239,11 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
       bodyTemperatureMeasurementDays: selectDays(
         Number(values.temperatureInterval)
       ),
-    });
+    };
+
+    console.log(plan);
+
+    createMutation(plan);
   };
 
   const inputClasses = "";
@@ -156,7 +309,11 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
                   name="bloodPressureInterval"
                   render={({ field }) => (
                     <FormItem>
-                      <IntervalPicker field={field} label="Tími" />
+                      <IntervalPicker
+                        field={field}
+                        label="Tími"
+                        disabled={!bloodPressureWatch}
+                      />
                     </FormItem>
                   )}
                 />
@@ -186,7 +343,11 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
                   name="weightInterval"
                   render={({ field }) => (
                     <FormItem>
-                      <IntervalPicker field={field} label="Tími" />
+                      <IntervalPicker
+                        field={field}
+                        label="Tími"
+                        disabled={!weightWatch}
+                      />
                     </FormItem>
                   )}
                 />
@@ -216,7 +377,11 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
                   name="bloodOxygenInterval"
                   render={({ field }) => (
                     <FormItem>
-                      <IntervalPicker field={field} label="Tími" />
+                      <IntervalPicker
+                        field={field}
+                        label="Tími"
+                        disabled={!bloodOxygenWatch}
+                      />
                     </FormItem>
                   )}
                 />
@@ -246,7 +411,11 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
                   name="bloodSugarInterval"
                   render={({ field }) => (
                     <FormItem>
-                      <IntervalPicker field={field} label="Tími" />
+                      <IntervalPicker
+                        field={field}
+                        label="Tími"
+                        disabled={!bloodSugarWatch}
+                      />
                     </FormItem>
                   )}
                 />
@@ -276,7 +445,11 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
                   name="temperatureInterval"
                   render={({ field }) => (
                     <FormItem>
-                      <IntervalPicker field={field} label="Tími" />
+                      <IntervalPicker
+                        field={field}
+                        label="Tími"
+                        disabled={!temperatureWatch}
+                      />
                     </FormItem>
                   )}
                 />
@@ -318,7 +491,7 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
                 Hætta við
               </Button>
               <Button type="submit" onClick={() => onSubmit(form.getValues())}>
-                Vista
+                {isCreating ? <Loader2 className="animate-spin" /> : "Vista"}
               </Button>
             </div>
           </div>
