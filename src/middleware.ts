@@ -7,7 +7,11 @@ import { isTokenValid, shouldRefreshToken } from "./lib/utils";
 import { login } from "./services/api";
 import { loginSchema } from "./services/schemas";
 import { z } from "zod";
+
 export default async function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+  response.cookies.set("NEXT_LOCALE", "is");
+
   const cookieStore = await cookies();
   const session = await getIronSession<SessionData>(
     cookieStore,
@@ -35,9 +39,15 @@ export default async function middleware(request: NextRequest) {
       const data: z.infer<typeof loginSchema> = {
         kennitala: session.user?.ssn || "",
       };
+      if (data.kennitala === "") {
+        console.log("Kennitala is empty, deleting cookie");
+        cookieStore.delete(sessionOptions.cookieName);
+        await session.save();
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
       const newSession = await login(data);
       if (newSession) {
-        return NextResponse.next();
+        return response;
       } else {
         cookieStore.delete(sessionOptions.cookieName);
         await session.save();
@@ -54,7 +64,7 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

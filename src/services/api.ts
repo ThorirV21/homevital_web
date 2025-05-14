@@ -1,7 +1,7 @@
 import { loginSchema } from "@/services/schemas";
 import { z } from "zod";
 import { parseJwt } from "@/lib/utils";
-import { getSession, saveSession } from "@/services/session";
+import { getSession, logout, saveSession } from "@/services/session";
 
 export const API_URL = process.env.API_URL;
 
@@ -14,6 +14,10 @@ const login = async (form: z.infer<typeof loginSchema>) => {
     },
     body: JSON.stringify(form),
   });
+  if (response.status === 401) {
+    logout();
+    return null;
+  }
   if (!response.ok) {
     return null;
   }
