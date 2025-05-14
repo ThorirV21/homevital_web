@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("test", async ({ browser }) => {
+test("createWorker", async ({ browser }) => {
   const context = await browser.newContext({
     bypassCSP: true,
     ignoreHTTPSErrors: true,
