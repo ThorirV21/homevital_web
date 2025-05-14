@@ -44,8 +44,7 @@ export const warningColumns: ColumnDef<Warning>[] = [
       );
     },
     cell: ({ row }) => {
-      const date = new Date(row.original.measurementDate);
-      return formatDateIS(date.toLocaleDateString("is-IS"));
+      return formatDateIS(row.original.measurementDate);
     },
   },
   {

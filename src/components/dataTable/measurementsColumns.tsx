@@ -43,8 +43,7 @@ export const MeasurementColumns: ColumnDef<MeasurementRow>[] = [
       );
     },
     cell: ({ row }) => {
-      const date = new Date(row.original.measurementDate);
-      return formatDateIS(date.toLocaleDateString("is-IS"));
+      return formatDateIS(row.original.measurementDate);
     },
   },
   {
