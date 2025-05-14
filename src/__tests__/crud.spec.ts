@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("test", async ({ browser }) => {
+test("createWorker", async ({ browser }) => {
   const context = await browser.newContext({
     bypassCSP: true,
     ignoreHTTPSErrors: true,
@@ -40,16 +40,17 @@ test("test", async ({ browser }) => {
   await page.waitForTimeout(300);
   await page.getByPlaceholder("Veldu teymi").click();
   await page.waitForTimeout(300);
-  await page.getByRole("option", { name: "Team A" }).click();
+  await page.getByRole("option", { name: "Sárateymi" }).click();
 
   await page.waitForTimeout(100);
-  await page.getByRole("option", { name: "Team B" }).click();
+  await page.getByRole("option", { name: "Lungnateymi" }).click();
   await page.waitForTimeout(100);
 
+  await page.getByRole("dialog", { name: "Bæta við starfsfólki" }).click();
   await page.waitForTimeout(2000);
   await page.getByRole("button", { name: "Vista" }).click();
 
   await expect(
-    page.getByRole("row", { name: "Gunnar Gunnarsson 8454656" })
+    page.getByRole("row", { name: "Gunnar Gunnarsson 845-4656" })
   ).toBeVisible();
 });
