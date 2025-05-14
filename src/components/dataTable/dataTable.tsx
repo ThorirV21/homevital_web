@@ -23,11 +23,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import { Button } from "../ui/button";
 import { arrayIncludesFilter } from "./multiSelectFilter";
 import { DataTablePagination } from "./pagination";
+
+// Set to false in production to disable debug logging
+const DEBUG = false;
 
 interface BaseRow {
   id: number | string;
@@ -102,56 +105,88 @@ const DataTable = <TData extends BaseRow, TValue>({
   const [globalFilter, setGlobalFilter] = useState("");
   const debouncedGlobalFilter = useDebounce(globalFilter, 300);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [pagination, setPagination] = useState({
+  const [paginationState, setPaginationState] = useState({
     pageIndex: initialPage,
     pageSize: initialPageSize,
   });
 
-  console.log("DataTable pagination state:", pagination);
+  // Track if we're in the middle of a pagination update
+  const isUpdatingPagination = useRef(false);
+
+  // Memoize pagination to prevent unnecessary re-renders
+  const pagination = useMemo(() => paginationState, [paginationState]);
+
+  if (DEBUG) {
+    console.log("DataTable pagination state:", pagination);
+  }
 
   // Synchronize pagination state with initialPage/initialPageSize when they change
   useEffect(() => {
-    console.log("DataTable initialPage/initialPageSize changed:", {
-      initialPage,
-      initialPageSize,
-    });
-    setPagination({
+    if (DEBUG) {
+      console.log("DataTable initialPage/initialPageSize changed:", {
+        initialPage,
+        initialPageSize,
+      });
+    }
+    setPaginationState({
       pageIndex: initialPage,
       pageSize: initialPageSize,
     });
   }, [initialPage, initialPageSize]);
 
-  const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (
-    updater
-  ) => {
-    if (setColumnFilters) {
-      const newValue =
-        typeof updater === "function" ? updater(columnFilters) : updater;
-      setColumnFilters(newValue);
-    }
-  };
+  const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> = useCallback(
+    (updater) => {
+      if (setColumnFilters) {
+        const newValue =
+          typeof updater === "function" ? updater(columnFilters) : updater;
+        setColumnFilters(newValue);
+      }
+    },
+    [setColumnFilters, columnFilters]
+  );
 
   const handlePaginationChange: OnChangeFn<{
     pageIndex: number;
     pageSize: number;
-  }> = (updaterOrValue) => {
-    setPagination((oldPagination) => {
-      const newPagination =
-        typeof updaterOrValue === "function"
-          ? updaterOrValue(oldPagination)
-          : updaterOrValue;
+  }> = useCallback(
+    (updaterOrValue) => {
+      // Skip if we're already in the middle of a pagination update
+      if (isUpdatingPagination.current) return;
 
-      if (onPageChange) {
-        onPageChange(newPagination.pageIndex, newPagination.pageSize);
-      }
+      isUpdatingPagination.current = true;
 
-      return newPagination;
-    });
-  };
+      setPaginationState((oldPagination) => {
+        const newPagination =
+          typeof updaterOrValue === "function"
+            ? updaterOrValue(oldPagination)
+            : updaterOrValue;
 
-  const calculatedPageCount =
-    pageCount ||
-    (totalCount ? Math.ceil(totalCount / pagination.pageSize) : undefined);
+        // Only call onPageChange if something actually changed
+        if (
+          onPageChange &&
+          (oldPagination.pageIndex !== newPagination.pageIndex ||
+            oldPagination.pageSize !== newPagination.pageSize)
+        ) {
+          onPageChange(newPagination.pageIndex, newPagination.pageSize);
+        }
+
+        return newPagination;
+      });
+
+      // Reset the flag after a short delay
+      setTimeout(() => {
+        isUpdatingPagination.current = false;
+      }, 100);
+    },
+    [onPageChange]
+  );
+
+  const calculatedPageCount = useMemo(
+    () =>
+      pageCount ||
+      (totalCount ? Math.ceil(totalCount / pagination.pageSize) : undefined),
+    [pageCount, totalCount, pagination.pageSize]
+  );
 
   const table = useReactTable({
     data,
@@ -235,11 +270,6 @@ const DataTable = <TData extends BaseRow, TValue>({
                 <TableRow
                   key={row.id}
                   className={
-                    // Status == "Raised" or "High" and is not acknowledged color it red
-                    // row.original.status === "Raised"
-                    // row.original.isAcknowledged === false
-                    // row.original.status === "High"
-
                     row.original.id === selectedRow?.id ? "bg-muted" : ""
                   }
                   data-state={rowSelection[row.id] && "selected"}

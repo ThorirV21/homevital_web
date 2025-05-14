@@ -39,12 +39,15 @@ const ClientDetailsContent: React.FC = () => {
 
   const { name, address, teamID } = patientDetails;
 
+  // Optimize team name lookup
+  const teamName = teams?.find((team: Team) => team.id === teamID)?.name || "";
+
   const handleExit = () => {
     redirect("/dashboard/clients/list");
   };
 
   return (
-    <div className="flex flex-col h-full" key={patientDetails?.id || "default"}>
+    <div className="flex flex-col h-full">
       <div className="flex flex-shrink-0">
         <div className="p-4 w-1/3">
           <h1 className="font-bold">Nafn:</h1>
@@ -57,9 +60,7 @@ const ClientDetailsContent: React.FC = () => {
         <div className="p-4 w-1/3 flex with-auto justify-between">
           <div className="w-full">
             <Badge className="bg-background text-foreground border-foreground">
-              <p className="text-base">
-                {teams?.find((team: Team) => team.id === teamID)?.name}
-              </p>
+              <p className="text-base">{teamName}</p>
             </Badge>
           </div>
           <div className="flex flex-col w-full items-end">
