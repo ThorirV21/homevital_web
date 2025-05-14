@@ -2,7 +2,7 @@ import { getToken, logout } from "@/services/session";
 const API_URL = process.env.API_URL;
 
 interface QueryParams {
-  [key: string]: string | number | boolean | undefined;
+  [key: string]: string | number | boolean | undefined | number[];
 }
 
 function buildUrl(path: string, params?: QueryParams): string {
