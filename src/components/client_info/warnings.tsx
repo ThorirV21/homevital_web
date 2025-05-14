@@ -1,10 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useClientMeasurements } from "@/hooks/useClients";
 import Loading from "@/components/loading";
 import Error from "@/components/error";
 import { ColumnDef } from "@tanstack/react-table"; // Ensure this matches your import
 import { PatientMeasurement } from "@/types/types";
-import { ScrollArea } from "../ui/scroll-area";
 import useSession from "@/hooks/useSession";
 import DataTable from "../dataTable/dataTable";
 import {
@@ -14,6 +13,8 @@ import {
 import Modal from "../ui/modal"; // Import the Modal component
 import { Textarea } from "../ui/textarea"; // Import the Textarea component
 import { useClientWarningAcknowledge } from "@/hooks/useClients";
+import { Button } from "../ui/button";
+import { Loader2 } from "lucide-react";
 
 const Warnings = ({ id }: { id: string }) => {
   const { data, isLoading, error } = useClientMeasurements(id);
@@ -22,7 +23,14 @@ const Warnings = ({ id }: { id: string }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [resolutionNotes, setResolutionNotes] = useState<string>("");
   const { session } = useSession();
-  const { acknowledgeMutation } = useClientWarningAcknowledge(id);
+  const { acknowledgeMutation, isAcknowledging, isAcknowledged } =
+    useClientWarningAcknowledge(id);
+
+  useEffect(() => {
+    if (isAcknowledged) {
+      setIsModalOpen(false);
+    }
+  }, [isAcknowledged]);
 
   const measurements = useMemo(() => {
     return data ? data.data : [];
@@ -60,9 +68,6 @@ const Warnings = ({ id }: { id: string }) => {
 
     // Optionally, you can handle the response here
     // console.log("Acknowledgment request sent");
-
-    // Close the modal
-    setIsModalOpen(false);
   };
 
   const rows: MeasurementRow[] = warnings.map((item) => ({
@@ -88,22 +93,30 @@ const Warnings = ({ id }: { id: string }) => {
       cell: ({ row }) => {
         const item = row.original as unknown as PatientMeasurement;
         return (
-          <button
-            className="px-4 py-2 bg-primary text-primary-foreground rounded"
-            onClick={() => handleSelectClick(item)}
-          >
-            Skrá meðhöndlun
-          </button>
+          <div className="">
+            <Button
+              style={{ height: "1.5rem" }}
+              size={"sm"}
+              onClick={() => handleSelectClick(item)}
+            >
+              Skrá
+            </Button>
+          </div>
         );
       },
     },
   ];
 
   return (
-    <div className="flex flex-col">
-      <ScrollArea className="w-full h-full max-h-[calc(100vh-23rem)] border border-primary rounded-md">
-        <DataTable columns={updatedColumns} data={rows} name={""} />
-      </ScrollArea>
+    <div className="flex flex-col h-full">
+      <div className="h-[calc(100vh-18rem)] overflow-auto border border-muted rounded-md">
+        <DataTable
+          columns={updatedColumns}
+          data={rows}
+          name={""}
+          showHeader={false}
+        />
+      </div>
 
       {/* Modal for resolution notes */}
       <Modal
@@ -118,13 +131,13 @@ const Warnings = ({ id }: { id: string }) => {
             placeholder="Skrifaðu meðhöndlun hér..."
             className="w-full h-32 border border-gray-300 rounded-md p-2"
           />
-          <button
+          <Button
             className="px-4 py-2 bg-primary text-white rounded"
             onClick={handleSubmit}
             disabled={!resolutionNotes.trim()}
           >
-            Skrá
-          </button>
+            {isAcknowledging ? <Loader2 className="animate-spin" /> : "Skrá"}
+          </Button>
         </div>
       </Modal>
     </div>

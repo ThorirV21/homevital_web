@@ -22,7 +22,7 @@ const ClientDetailsContent: React.FC = () => {
   const clientId = searchParams.get("id");
   const idString = clientId ? clientId : "";
   const { patientDetails, isLoading, error } = useClientDetails(idString);
-  const [currentView, setCurrentView] = useState("measurements");
+  const [currentView, setCurrentView] = useState("treatment"); // TODO: change to measurements
   const { teams, teamsLoading, teamsError } = useTeams();
 
   if (!clientId) {
@@ -74,13 +74,6 @@ const ClientDetailsContent: React.FC = () => {
                 height={25}
               />
             </Button>
-            {/*             <Image
-              src="/alarm_icons/Bell.svg"
-              alt="alarm"
-              width={25}
-              height={25}
-              className="fill-current"
-            /> */}
             <Bell className="w-7 h-7" />
           </div>
         </div>
