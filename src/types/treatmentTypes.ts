@@ -6,6 +6,7 @@ export interface TreatmentType {
   patientID: number;
   instructions: string;
   isActive: boolean;
+  teamID: number;
   weightMeasurementDays: number[];
   bloodSugarMeasurementDays: number[];
   bloodPressureMeasurementDays: number[];

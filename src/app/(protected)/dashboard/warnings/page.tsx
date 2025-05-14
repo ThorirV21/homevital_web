@@ -21,13 +21,14 @@ const Alarms = () => {
     pageSize: 10,
     pageNumber: 1,
   });
+  const [teamFilter, setTeamFilter] = useState<number[]>([]);
 
   const {
     data: rawWarnings,
     isLoading,
     error,
     refetch,
-  } = useWarnings(pagination);
+  } = useWarnings(pagination, teamFilter);
   const {
     data: rawClients,
     isLoading: isLoadingClients,
@@ -67,31 +68,12 @@ const Alarms = () => {
     {
       label: "Allt",
       selected: false,
-      onClick: () => setColumnFilters([]),
+      onClick: () => setTeamFilter([]),
     },
     {
       label: "Mín teymi",
       selected: false,
-      onClick: () =>
-        setColumnFilters([
-          {
-            id: "team",
-            value: session?.user?.groups.map(
-              (group) => teams?.find((team) => team.id === group)?.name
-            ),
-          },
-        ]),
-    },
-    {
-      label: "Rétt yfir mörkum",
-      selected: false,
-      onClick: () => setColumnFilters([{ id: "status", value: ["Raised"] }]),
-    },
-    {
-      label: "Utan marka",
-      selected: false,
-      onClick: () =>
-        setColumnFilters([{ id: "status", value: ["High", "Critical"] }]),
+      onClick: () => setTeamFilter(session?.user?.groups || []),
     },
   ];
 
