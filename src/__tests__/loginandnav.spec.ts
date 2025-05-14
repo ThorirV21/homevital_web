@@ -50,7 +50,7 @@ test("Logout", async ({ page }) => {
   await page.goto("http://localhost:3000/login");
   await page
     .locator("div")
-    .filter({ hasText: "KennitalaSláðu inn kennitö" })
+    .filter({ hasText: "KennitalaSláðu inn kennitölu" })
     .first()
     .click();
   await page.getByText("KennitalaSláðu inn kennitölu").click();
@@ -63,7 +63,7 @@ test("Logout", async ({ page }) => {
   //Expect error message to be visible
 
   await page.goto("http://localhost:3000/dashboard/clients/list");
-  await expect(page.getByText("Error: No token found")).toBeVisible({
+  await expect(page.getByText("Innskrá")).toBeVisible({
     timeout: 10_000,
   });
 });
