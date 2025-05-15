@@ -25,7 +25,7 @@ const ClientsLayoutContent = ({ children }: { children: React.ReactNode }) => {
       <div
         className={
           hasPatient
-            ? "w-[calc(100vh-20rem)] overflow-hidden"
+            ? "w-[calc(100vh-10rem)] overflow-hidden"
             : "w-0 overflow-hidden"
         }
       >
