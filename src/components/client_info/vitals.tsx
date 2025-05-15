@@ -69,11 +69,11 @@ const Vitals = () => {
 
   return (
     <div className="flex p-4 flex-col gap-4">
-      <div className="flex w-full">
+      <div className="flex w-full bg-buttoncontainer rounded-md p-1">
         {viewSettings.map((measurement, index) => (
-          <div key={index} className="w-1/5">
+          <div key={index} className="flex-1 justify-center align-center">
             <Button
-              className={`text-xs w-full h-6 place-content-center ${view.type === measurement.type ? "bg-primary" : "opacity-50"}`}
+              className={`text-xs w-full h-7 shadow-none ${view.type === measurement.type ? "bg-primary" : "bg-opacity-100"}`}
               onClick={() => handleChangeView(measurement)}
             >
               {measurement.name}
