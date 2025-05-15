@@ -82,25 +82,25 @@ const ClientDetailsContent: React.FC = () => {
 
       <div className="flex overflow-hidden justify-between bg-banner">
         <button
-          className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "measurements" ? "shadow-inner" : "hover:shadow-md"}`}
+          className={`border border-black flex-1 h-full p-1 shadow-black ${currentView === "measurements" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("measurements")}
         >
           Mælingar
         </button>
         <button
-          className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "treatment" ? "shadow-inner" : "hover:shadow-md"}`}
+          className={`border border-black flex-1 h-full p-1 shadow-black ${currentView === "treatment" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("treatment")}
         >
           Meðferðaráætlun
         </button>
         <button
-          className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "warnings" ? "shadow-inner" : "hover:shadow-md"}`}
+          className={`border border-black flex-1 h-full p-1 shadow-black ${currentView === "warnings" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("warnings")}
         >
           Viðvaranir
         </button>
         <button
-          className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "vitals" ? "shadow-inner" : "hover:shadow-md"}`}
+          className={`border border-black flex-1 h-full p-1 shadow-black ${currentView === "vitals" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("vitals")}
         >
           Lífsmörk

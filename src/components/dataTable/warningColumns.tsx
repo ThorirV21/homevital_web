@@ -31,7 +31,7 @@ export const warningColumns: ColumnDef<Warning>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Mælingardagur
+          Dags.
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -174,7 +174,7 @@ export const warningColumns: ColumnDef<Warning>[] = [
             <p>Púls {measurementValues.bpm}</p>
             <div className="ml-auto flex">
               {measurementValues.bodyPosition === "Sitting" ? (
-                <TooltipInfo info="Sitjandi" className="text-md w-5 h-5">
+                <TooltipInfo info="Sitjandi" className="text-md">
                   {/* <Sitting className="" /> */}
                   <Image
                     src="/assets/icons/sitting.png"
@@ -186,7 +186,7 @@ export const warningColumns: ColumnDef<Warning>[] = [
                   />
                 </TooltipInfo>
               ) : measurementValues.bodyPosition === "Laying" ? (
-                <TooltipInfo info="Liggjandi" className="text-md w-5 h-5">
+                <TooltipInfo info="Liggjandi" className="text-md">
                   {/* <InBed className="" /> */}
                   <Image
                     src="/assets/icons/laying.png"
@@ -199,7 +199,7 @@ export const warningColumns: ColumnDef<Warning>[] = [
                 </TooltipInfo>
               ) : null}
               {measurementValues.measuredHand === "Left" ? (
-                <TooltipInfo info="Vinstri hönd" className="text-md w-5 h-5">
+                <TooltipInfo info="Vinstri hönd" className="text-md">
                   <Image
                     src={"/assets/icons/handLeftArrow.png"}
                     alt="Left Arrow Icon"
@@ -209,7 +209,7 @@ export const warningColumns: ColumnDef<Warning>[] = [
                   />
                 </TooltipInfo>
               ) : measurementValues.measuredHand === "Right" ? (
-                <TooltipInfo info="Hægri hönd" className="text-md w-5 h-5">
+                <TooltipInfo info="Hægri hönd" className="text-md">
                   <Image
                     src={"/assets/icons/handRightArrow.png"}
                     alt="Right Arrow Icon"
