@@ -236,7 +236,7 @@ const DataTable = <TData extends BaseRow, TValue>({
             ))}
             <Input
               placeholder="Leita..."
-              className="w-16"
+              className="w-48"
               value={globalFilter}
               onChange={(e) => setGlobalFilter(String(e.target.value))}
             />
@@ -244,15 +244,15 @@ const DataTable = <TData extends BaseRow, TValue>({
         </div>
       )}
       <div
-        className={`${maxTableHeight ? `overflow-auto ${maxTableHeight}` : ""} px-2`}
+        className={`${maxTableHeight ? `overflow-auto ${maxTableHeight}` : ""}`}
       >
-        <Table className="">
+        <Table>
           <TableHeader className="bg-accent sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="flex-1">
                       {header.isPlaceholder
                         ? null
                         : flexRender(

@@ -47,7 +47,7 @@ const ClientDetailsContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full">
       <div className="flex flex-shrink-0">
         <div className="p-4 w-1/3">
           <h1 className="font-bold">Nafn:</h1>

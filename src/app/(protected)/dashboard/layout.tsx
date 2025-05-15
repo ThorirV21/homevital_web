@@ -8,14 +8,14 @@ export default function DashboardLayout({
 }) {
   return (
     <>
-      <div className="">
+      <div className="overflow-hidden">
         <Header />
       </div>
-      <section className="flex flex-row flex-grow">
-        <div className="border-r border-black w-1/6 min-w-fit">
+      <section className="flex flex-row flex-1 overflow-hidden">
+        <div className="border-r border-black w-1/6 min-w-fit overflow-hidden">
           <Navigation />
         </div>
-        <div className=" w-5/6">{children}</div>
+        <div className="w-5/6 overflow-hidden">{children}</div>
       </section>
     </>
   );

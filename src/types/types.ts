@@ -84,7 +84,7 @@ export type SingleMeasurement = {
   systolic: number;
   diastolic: number;
   bpm: number;
-  measureHand: string;
+  measuredHand: string;
   bodyPosition: string;
   bloodSugar: number;
   weight: number;

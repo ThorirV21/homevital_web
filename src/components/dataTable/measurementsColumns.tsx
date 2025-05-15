@@ -148,10 +148,19 @@ export const MeasurementColumns: ColumnDef<MeasurementRow>[] = [
         return `${measurementValues.bloodSugar} mmól/L`;
       } else if (row.original.measurementType === "BloodPressure") {
         return (
-          <div className="flex gap-6">
-            <p>SYS {measurementValues.systolic}</p>
-            <p>DIA {measurementValues.diastolic}</p>
-            <p>Púls {measurementValues.bpm}</p>
+          <div className="flex gap-2">
+            <p>
+              SYS <br />
+              {measurementValues.systolic}
+            </p>
+            <p>
+              DIA <br />
+              {measurementValues.diastolic}
+            </p>
+            <p>
+              Púls <br />
+              {measurementValues.bpm}
+            </p>
             <div className="ml-auto flex">
               {measurementValues.bodyPosition === "Sitting" ? (
                 <TooltipInfo info="Sitjandi" className="text-md">
