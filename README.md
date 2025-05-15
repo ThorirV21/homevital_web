@@ -49,4 +49,21 @@ npm run dev
 
 You should have the web page running on localhost, port 3000
 
+We have a running demo of the project at: https://homevital-web.vercel.app/
+
+Allowed login ssn's are
+
+|                       |                       |
+|:---------------------:|:---------------------:|
+| 1234123412            | 4321432143            |
+| 1234567890            | 1234561234            |
+| 6543214321            | 0987654321            |
+| 9090909090            | 1010101011            |
+| 1111111113            | 1212121213            |
+| 1313131314            | 1414141415            |
+| 1515151516            | 1616161617            |
+| 1717171718            | 1818181819            |
+| 1919191920            | 2020202021            |
+| 2121212122            | 2222222223            |
+
 If you run into any trouble, please contact us and let us know of the trouble.
