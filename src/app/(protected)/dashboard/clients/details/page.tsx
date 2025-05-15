@@ -1,5 +1,5 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useClientDetails } from "@/hooks/useClients";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
@@ -13,12 +13,12 @@ import Warnings from "@/components/client_info/warnings";
 import Vitals from "@/components/client_info/vitals";
 import Bell from "@/components/icons/bell";
 import Loading from "@/components/loading";
-import { redirect } from "next/navigation";
 import { useTeams } from "@/hooks/useTeams";
 import { Team } from "@/types/teamTypes";
 
 const ClientDetailsContent: React.FC = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const clientId = searchParams.get("id");
   const idString = clientId ? clientId : "";
   const { patientDetails, isLoading, error } = useClientDetails(idString);
@@ -47,7 +47,7 @@ const ClientDetailsContent: React.FC = () => {
   const teamName = teams?.find((team: Team) => team.id === teamID)?.name || "";
 
   const handleExit = () => {
-    redirect("/dashboard/clients/list");
+    router.push("/dashboard/clients/list");
   };
 
   return (
