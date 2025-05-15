@@ -21,6 +21,9 @@ Sindri Guðmundsson  |   sindrig23@ru.is
 
 Þórir Gunnar Valgeirsson    |   thorirv21@ru.is |   Guarantor for Web application
 
+## Prerequisites
+- node ^v22.13.0
+
 ## Installation for progress view
 1. Fork the repository to your machine
 
@@ -34,9 +37,14 @@ SESSION_SECRET=[Your-random-session-secret]
 > We have a running API on https://homevitaldev-app.azurewebsites.net/api but there are no guranties that the service is working at all times. 
 For stable local setup fork the repository for the API and run it on your local machine.
 
-3. Run `npm install`
+3. Run 
+``` bash
+npm install
+# and then
+npm run dev
+```
 
-4. Run `npm run dev``
+
 
 You should have the web page running on localhost, port 3000
 
