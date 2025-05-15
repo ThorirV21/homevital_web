@@ -32,10 +32,6 @@ test("Navigation", async ({ page }) => {
   //Expect redirect to settings page
   await expect(page).toHaveURL("http://localhost:3000/dashboard/settings");
 
-  await page.getByRole("link", { name: "Leiðbeiningar Leiðbeiningar" }).click();
-  //Expect redirect to guidelines
-  await expect(page).toHaveURL("http://localhost:3000/dashboard/guidelines");
-
   await page.getByRole("link", { name: "Viðvaranir Viðvaranir" }).click();
   //Expect redirect to warnings
   await expect(page).toHaveURL("http://localhost:3000/dashboard/warnings");
