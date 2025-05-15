@@ -222,9 +222,9 @@ const DataTable = <TData extends BaseRow, TValue>({
   return (
     <div className="w-full">
       {showHeader && (
-        <div className="flex flex-row gap-2 items-center p-4">
+        <div className="flex flex-row flex-wrap gap-2 items-center p-4">
           <h2 className="text-xl">{name}</h2>
-          <div className="flex flex-row gap-2 items-center">
+          <div className="flex flex-row gap-2 items-center flex-wrap">
             {buttons?.map((button) => (
               <Button
                 key={button.label}
@@ -234,12 +234,13 @@ const DataTable = <TData extends BaseRow, TValue>({
                 {button.label}
               </Button>
             ))}
+            <Input
+              placeholder="Leita..."
+              className="w-16"
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(String(e.target.value))}
+            />
           </div>
-          <Input
-            placeholder="Leita..."
-            value={globalFilter}
-            onChange={(e) => setGlobalFilter(String(e.target.value))}
-          />
         </div>
       )}
       <div
