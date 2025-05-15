@@ -137,15 +137,15 @@ export const MeasurementColumns: ColumnDef<MeasurementRow>[] = [
               <TooltipInfo
                 className="text-md"
                 info={
-                  measurementValues.measureHand === "Right"
+                  measurementValues.measuredHand === "Right"
                     ? "Vinstri hönd"
-                    : measurementValues.measureHand === "Left"
+                    : measurementValues.measuredHand === "Left"
                       ? "Hægri hönd"
                       : ""
                 }
               >
                 <Hand
-                  className={`mx-2 ${measurementValues.measureHand === "Right" ? "flip-horizontal" : ""}`}
+                  className={`mx-2 ${measurementValues.measuredHand === "Right" ? "flip-horizontal" : ""}`}
                 />
               </TooltipInfo>
             </div>

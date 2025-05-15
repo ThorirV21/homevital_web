@@ -42,9 +42,6 @@ const login = async (form: z.infer<typeof loginSchema>) => {
       Authorization: `Bearer ${data.token}`,
     },
   });
-  if (!user.ok) {
-    console.error("Failed to fetch healthcare worker data");
-  }
   const userData = await user.json();
 
   session.isLoggedIn = true;

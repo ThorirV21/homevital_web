@@ -47,12 +47,10 @@ const useTeamMutation = () => {
     reset: resetUpdateTeam,
   } = useMutation({
     mutationFn: (team: TeamPatch) => {
-      console.log("Updating team:", team);
       return api.patch(`teams/${team.id}`, team);
     },
-    onSuccess: (response) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
-      console.log("Team updated successfully", response);
     },
   });
 

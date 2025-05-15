@@ -29,17 +29,6 @@ export function DataTablePagination<TData>({
   const displayedCount = totalCount !== undefined ? totalCount : filteredCount;
   const pageCount = table.getPageCount();
 
-  //
-  /*console.log("Pagination component:", {
-    pageIndex,
-    pageSize,
-    pageCount,
-    totalCount,
-    displayedCount,
-    canPreviousPage: table.getCanPreviousPage(),
-    canNextPage: table.getCanNextPage(),
-  });*/
-
   // Calculate the range of items to display
   const from = pageIndex * pageSize + 1;
   const to = Math.min((pageIndex + 1) * pageSize, displayedCount);

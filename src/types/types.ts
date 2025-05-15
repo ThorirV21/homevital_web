@@ -16,7 +16,7 @@ export type { navProps, clientListProps };
 export type BloodPressure = {
   id: number;
   patientID: number;
-  measureHand: string;
+  measuredHand: string;
   bodyPosition: string;
   systolic: number;
   diastolic: number;

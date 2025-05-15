@@ -52,7 +52,6 @@ const Warnings = ({ id }: { id: string }) => {
   );
 
   const handleSelectClick = (measurement: PatientMeasurement) => {
-    // console.log("Selected measurement:", measurement);
     setSelectedMeasurement(measurement);
     setResolutionNotes(""); // Clear notes when opening the modal
     setIsModalOpen(true); // Open the modal
@@ -61,19 +60,13 @@ const Warnings = ({ id }: { id: string }) => {
   const handleSubmit = async () => {
     if (!selectedMeasurement || !resolutionNotes.trim() || !session?.user)
       return;
-    // console.log("the measurement:", selectedMeasurement);
     const requestData = {
       measurementType: selectedMeasurement.measurementType,
       measurementID: selectedMeasurement.id,
       workerID: parseInt(session?.user?.id),
       resolutionNotes: resolutionNotes,
     };
-    // console.log("Request data:", requestData);
-
     acknowledgeMutation(requestData);
-
-    // Optionally, you can handle the response here
-    // console.log("Acknowledgment request sent");
   };
 
   const rows: MeasurementRow[] = warnings.map((item) => ({

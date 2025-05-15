@@ -30,9 +30,6 @@ const useHealthcareWorkerMutations = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workers"] });
     },
-    onError: (error) => {
-      console.error("Error updating worker:", error);
-    },
   });
 
   const deleteMutation = useMutation({

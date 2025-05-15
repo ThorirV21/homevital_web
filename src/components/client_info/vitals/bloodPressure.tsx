@@ -103,7 +103,7 @@ const BloodPressure = ({ data, clientId }: BloodPressureProps) => {
     mode: "onChange", // Enable real-time validation
   });
 
-  const [editing, setEditing] = useState(true);
+  const [editing, setEditing] = useState(false);
   const { updateMutation, isPending, isSuccess } = useVitalRangeMutations(
     Number(clientId)
   );
@@ -113,8 +113,6 @@ const BloodPressure = ({ data, clientId }: BloodPressureProps) => {
 
   // Log errors for debugging
   useEffect(() => {
-    console.log("Form errors:", formErrors);
-    // Extract error message from form errors
     if (formErrors.systolic?.message) {
       setErrorMessage(formErrors.systolic.message as string);
     }
@@ -168,8 +166,6 @@ const BloodPressure = ({ data, clientId }: BloodPressureProps) => {
     const systolicNotOk = parseBloodPressureValues(formData.systolic[1]);
     const systolicHigh = parseBloodPressureValues(formData.systolic[2]);
 
-    console.log(systolicUnderAverage, "<", systolicNotOk, "<", systolicHigh);
-
     if (!(systolicUnderAverage <= systolicNotOk)) {
       setErrorMessage(
         "Lágþrýstingur verður að vera lægri en hækkaður blóðþrýstingur"
@@ -189,8 +185,6 @@ const BloodPressure = ({ data, clientId }: BloodPressureProps) => {
     );
     const diastolicNotOk = parseBloodPressureValues(formData.diastolic[1]);
     const diastolicHigh = parseBloodPressureValues(formData.diastolic[2]);
-
-    console.log(diastolicUnderAverage, "<", diastolicNotOk, "<", diastolicHigh);
 
     if (!(diastolicUnderAverage <= diastolicNotOk)) {
       setErrorMessage(
@@ -258,13 +252,11 @@ const BloodPressure = ({ data, clientId }: BloodPressureProps) => {
   };
 
   const handleSystolicChange = (index: number, value: string) => {
-    console.log(index, value);
     form.setValue(`systolic.${index}`, value);
     validateForm();
   };
 
   const handleDiastolicChange = (index: number, value: string) => {
-    console.log(index, value);
     form.setValue(`diastolic.${index}`, value);
     validateForm();
   };
@@ -296,8 +288,6 @@ const BloodPressure = ({ data, clientId }: BloodPressureProps) => {
     const diastolicUnderAverage = parseBloodPressureValues(values.diastolic[0]);
     const diastolicNotOk = parseBloodPressureValues(values.diastolic[1]);
     const diastolicHigh = parseBloodPressureValues(values.diastolic[2]);
-
-    console.log(diastolicUnderAverage, "<", diastolicNotOk, "<", diastolicHigh);
 
     if (!(diastolicUnderAverage <= diastolicNotOk)) {
       setErrorMessage(

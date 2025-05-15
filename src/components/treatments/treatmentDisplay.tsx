@@ -93,7 +93,7 @@ const TreatmentDisplay = ({ treatment }: TreatmentDisplayProps) => {
             <Calendar
               mode="multiple"
               locale={is}
-              className="h-80 min-w-full flex bg-white"
+              className="h-80 min-w-full flex bg-white shadow-lg"
               selected={selectedDates(treatment)}
               classNames={{
                 months:

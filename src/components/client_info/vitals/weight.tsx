@@ -61,7 +61,6 @@ const BodyWeight = ({ data, clientId }: BodyWeightProps) => {
 
   // Log errors for debugging
   useEffect(() => {
-    console.log("Form errors:", formErrors);
     // Extract error message from form errors
     if (formErrors.ranges?.message) {
       setErrorMessage(formErrors.ranges.message as string);
@@ -104,8 +103,6 @@ const BodyWeight = ({ data, clientId }: BodyWeightProps) => {
   };
 
   const saveData = (formData: FormShape) => {
-    console.log("Saving form data:", formData);
-
     // Validate each value is between 0-100
     for (const value of formData.ranges) {
       const num = parseWeightValue(value);

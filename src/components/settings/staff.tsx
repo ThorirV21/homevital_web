@@ -80,9 +80,7 @@ const StaffView = () => {
         const teamNames = session?.user?.groups.map(
           (group) => teams?.find((team) => team.id === group)?.name
         );
-        console.log(teamNames);
         setColumnFilters([{ id: "teamNames", value: teamNames }]);
-        console.log(columnFilters);
       },
     },
   ];

@@ -28,8 +28,6 @@ const bodyTemperatureSchema = z
     const good = parseTemperatureValue(data.ranges[1]);
     const notOk = parseTemperatureValue(data.ranges[2]);
 
-    console.log("Validating values:", { underAverage, good, notOk });
-
     // Check if values are in ascending order
     if (!(underAverage <= good)) {
       ctx.addIssue({
@@ -84,7 +82,6 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
 
   // Log errors for debugging
   useEffect(() => {
-    console.log("Form errors:", formErrors);
     // Extract error message from form errors
     if (formErrors.ranges?.message) {
       setErrorMessage(formErrors.ranges.message as string);
@@ -139,7 +136,6 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
   };
 
   const saveData = (formData: FormShape) => {
-    console.log("Saving form data:", formData);
     // Final validation check
     const underAverage = parseTemperatureValue(formData.ranges[0]);
     const good = parseTemperatureValue(formData.ranges[1]);

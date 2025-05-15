@@ -32,8 +32,6 @@ async function fetchWithAuth<T>(
     logout();
   }
 
-  console.log(path);
-
   const res = await fetch(`${API_URL}/${path}`, {
     ...options,
     headers: {

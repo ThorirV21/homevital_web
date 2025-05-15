@@ -29,9 +29,6 @@ import { Button } from "../ui/button";
 import { arrayIncludesFilter } from "./multiSelectFilter";
 import { DataTablePagination } from "./pagination";
 
-// Set to false in production to disable debug logging
-const DEBUG = false;
-
 interface BaseRow {
   id: number | string;
 }
@@ -116,18 +113,8 @@ const DataTable = <TData extends BaseRow, TValue>({
   // Memoize pagination to prevent unnecessary re-renders
   const pagination = useMemo(() => paginationState, [paginationState]);
 
-  if (DEBUG) {
-    console.log("DataTable pagination state:", pagination);
-  }
-
   // Synchronize pagination state with initialPage/initialPageSize when they change
   useEffect(() => {
-    if (DEBUG) {
-      console.log("DataTable initialPage/initialPageSize changed:", {
-        initialPage,
-        initialPageSize,
-      });
-    }
     setPaginationState({
       pageIndex: initialPage,
       pageSize: initialPageSize,

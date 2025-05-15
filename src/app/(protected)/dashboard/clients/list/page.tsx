@@ -100,8 +100,6 @@ const ClientListContent = () => {
     team: teams?.find((team: Team) => team.id === patient.teamID)?.name || "",
   }));
 
-  console.table(clientRows);
-
   return (
     <div className="flex flex-row bg-background h-full">
       <DataTable

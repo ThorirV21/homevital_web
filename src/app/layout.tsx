@@ -21,7 +21,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // TODO: Change min-w-[1340px] and fix the layout for small screens
   return (
     <html lang="en">
       <head>

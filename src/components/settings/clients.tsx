@@ -78,9 +78,7 @@ const ClientsView = () => {
         const teamNames = session?.user?.groups.map(
           (group) => teams?.find((team) => team.id === group)?.name
         );
-        console.log(teamNames);
         setColumnFilters([{ id: "team", value: teamNames }]);
-        console.log(columnFilters);
       },
     },
   ];
@@ -99,6 +97,8 @@ const ClientsView = () => {
           name="Sjúklingar"
           buttons={buttons}
           onRowClick={handleClickClient}
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
         />
       </div>
       <div className="flex flex-row w-full justify-end py-4 px-4 mt-auto">
