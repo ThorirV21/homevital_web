@@ -78,9 +78,7 @@ const ClientsView = () => {
         const teamNames = session?.user?.groups.map(
           (group) => teams?.find((team) => team.id === group)?.name
         );
-        console.log(teamNames);
         setColumnFilters([{ id: "team", value: teamNames }]);
-        console.log(columnFilters);
       },
     },
   ];
@@ -92,13 +90,17 @@ const ClientsView = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <DataTable
-        columns={clientInfoColumns}
-        data={clientRows}
-        name="Sjúklingar"
-        buttons={buttons}
-        onRowClick={handleClickClient}
-      />
+      <div className="h-[calc(100vh-17rem)] overflow-scroll">
+        <DataTable
+          columns={clientInfoColumns}
+          data={clientRows}
+          name="Sjúklingar"
+          buttons={buttons}
+          onRowClick={handleClickClient}
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+        />
+      </div>
       <div className="flex flex-row w-full justify-end py-4 px-4 mt-auto">
         <Button onClick={handleClickCreate}>Bæta við</Button>
       </div>

@@ -22,7 +22,7 @@ const ClientDetailsContent: React.FC = () => {
   const clientId = searchParams.get("id");
   const idString = clientId ? clientId : "";
   const { patientDetails, isLoading, error } = useClientDetails(idString);
-  const [currentView, setCurrentView] = useState("treatment"); // TODO: change to measurements
+  const [currentView, setCurrentView] = useState("measurements");
   const { teams, teamsLoading, teamsError } = useTeams();
 
   if (!clientId) {
@@ -30,7 +30,11 @@ const ClientDetailsContent: React.FC = () => {
   }
 
   if (isLoading || teamsLoading) {
-    return <Loading />;
+    return (
+      <div className="flex items-center justify-center h-full w-[calc(50vh-2rem)]">
+        <Loading />
+      </div>
+    );
   }
 
   if (error || teamsError) {
@@ -47,7 +51,7 @@ const ClientDetailsContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col max-h-full w-full">
       <div className="flex flex-shrink-0">
         <div className="p-4 w-1/3">
           <h1 className="font-bold">Nafn:</h1>
@@ -82,25 +86,25 @@ const ClientDetailsContent: React.FC = () => {
 
       <div className="flex overflow-hidden justify-between bg-banner">
         <button
-          className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "measurements" ? "shadow-inner" : "hover:shadow-md"}`}
+          className={`border border-black flex-1 h-full p-1 shadow-black ${currentView === "measurements" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("measurements")}
         >
           Mælingar
         </button>
         <button
-          className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "treatment" ? "shadow-inner" : "hover:shadow-md"}`}
+          className={`border border-black flex-1 h-full p-1 shadow-black ${currentView === "treatment" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("treatment")}
         >
           Meðferðaráætlun
         </button>
         <button
-          className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "warnings" ? "shadow-inner" : "hover:shadow-md"}`}
+          className={`border border-black flex-1 h-full p-1 shadow-black ${currentView === "warnings" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("warnings")}
         >
           Viðvaranir
         </button>
         <button
-          className={`border border-black w-1/4 h-full p-1 shadow-black ${currentView === "vitals" ? "shadow-inner" : "hover:shadow-md"}`}
+          className={`border border-black flex-1 h-full p-1 shadow-black ${currentView === "vitals" ? "shadow-inner" : "hover:shadow-md"}`}
           onClick={() => setCurrentView("vitals")}
         >
           Lífsmörk

@@ -80,9 +80,7 @@ const StaffView = () => {
         const teamNames = session?.user?.groups.map(
           (group) => teams?.find((team) => team.id === group)?.name
         );
-        console.log(teamNames);
         setColumnFilters([{ id: "teamNames", value: teamNames }]);
-        console.log(columnFilters);
       },
     },
   ];
@@ -96,19 +94,19 @@ const StaffView = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <DataTable
-        columns={workerColumns}
-        data={workerRows}
-        name="Starfsfólk"
-        buttons={buttons}
-        setColumnFilters={setColumnFilters}
-        columnFilters={columnFilters}
-        onRowClick={handleClickWorker}
-      />
-      <div className="ms-auto mt-auto p-4">
-        <Button className="mt-4" onClick={handleClickCreate}>
-          Bæta við starfsfólki
-        </Button>
+      <div className="h-[calc(100vh-17rem)] overflow-scroll">
+        <DataTable
+          columns={workerColumns}
+          data={workerRows}
+          name="Starfsfólk"
+          buttons={buttons}
+          setColumnFilters={setColumnFilters}
+          columnFilters={columnFilters}
+          onRowClick={handleClickWorker}
+        />
+      </div>
+      <div className="flex flex-row w-full justify-end py-4 px-4 mt-auto">
+        <Button onClick={handleClickCreate}>Bæta við starfsfólki</Button>
       </div>
       <StaffForm
         config={dialogConfig}

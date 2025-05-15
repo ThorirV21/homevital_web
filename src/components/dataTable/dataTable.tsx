@@ -29,9 +29,6 @@ import { Button } from "../ui/button";
 import { arrayIncludesFilter } from "./multiSelectFilter";
 import { DataTablePagination } from "./pagination";
 
-// Set to false in production to disable debug logging
-const DEBUG = false;
-
 interface BaseRow {
   id: number | string;
 }
@@ -116,18 +113,8 @@ const DataTable = <TData extends BaseRow, TValue>({
   // Memoize pagination to prevent unnecessary re-renders
   const pagination = useMemo(() => paginationState, [paginationState]);
 
-  if (DEBUG) {
-    console.log("DataTable pagination state:", pagination);
-  }
-
   // Synchronize pagination state with initialPage/initialPageSize when they change
   useEffect(() => {
-    if (DEBUG) {
-      console.log("DataTable initialPage/initialPageSize changed:", {
-        initialPage,
-        initialPageSize,
-      });
-    }
     setPaginationState({
       pageIndex: initialPage,
       pageSize: initialPageSize,
@@ -222,9 +209,9 @@ const DataTable = <TData extends BaseRow, TValue>({
   return (
     <div className="w-full">
       {showHeader && (
-        <div className="flex flex-row gap-2 items-center p-4">
+        <div className="flex flex-row flex-wrap gap-2 items-center p-4">
           <h2 className="text-xl">{name}</h2>
-          <div className="flex flex-row gap-2 items-center">
+          <div className="flex flex-row gap-2 items-center flex-wrap">
             {buttons?.map((button) => (
               <Button
                 key={button.label}
@@ -234,16 +221,17 @@ const DataTable = <TData extends BaseRow, TValue>({
                 {button.label}
               </Button>
             ))}
+            <Input
+              placeholder="Leita..."
+              className="w-48"
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(String(e.target.value))}
+            />
           </div>
-          <Input
-            placeholder="Leita..."
-            value={globalFilter}
-            onChange={(e) => setGlobalFilter(String(e.target.value))}
-          />
         </div>
       )}
       <div
-        className={`${maxTableHeight ? `overflow-auto ${maxTableHeight}` : ""} px-2`}
+        className={`${maxTableHeight ? `overflow-auto ${maxTableHeight}` : ""}`}
       >
         <Table className="">
           <TableHeader className="bg-accent sticky top-0 z-10">

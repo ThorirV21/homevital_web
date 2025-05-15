@@ -2,22 +2,15 @@
 
 import { MeasurementValue } from "@/types/clientTypes";
 import { ColumnDef } from "@tanstack/react-table";
-import Sitting from "../icons/sitting";
-import InBed from "../icons/inBed";
 import TooltipInfo from "../tooltipInfo";
-import Hand from "../icons/hand";
 import { Circle } from "lucide-react";
-import Lungs from "../icons/lungs";
-import Scale from "../icons/scale";
-import BloodSugar from "../icons/bloodSugar";
-import Heart from "../icons/heart";
 import formatDateIS from "@/services/dateFormatter";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
-import BodyTemp from "../icons/bodyTemp";
 import { arrayIncludesFilter } from "./multiSelectFilter";
 import { getStatusText } from "@/lib/utils";
 import { sorting } from "@/components/dataTable/sorting";
+import Image from "next/image";
 
 export interface Warning {
   id: number;
@@ -38,7 +31,7 @@ export const warningColumns: ColumnDef<Warning>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Mælingardagur
+          Dags.
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -85,7 +78,14 @@ export const warningColumns: ColumnDef<Warning>[] = [
         return (
           <div className="flex items-center justify-center">
             <TooltipInfo info="Hitamæling" className="text-md">
-              <BodyTemp className="w-5 h-5" />
+              {/* <BodyTemp className="w-5 h-5" /> */}
+              <Image
+                src="/assets/icons/warmDark.png"
+                alt="Body Temperature Icon"
+                className="w-5 h-5"
+                width={20}
+                height={20}
+              />
             </TooltipInfo>
           </div>
         );
@@ -93,7 +93,14 @@ export const warningColumns: ColumnDef<Warning>[] = [
         return (
           <div className="flex items-center justify-center">
             <TooltipInfo info="Súrefnismettun" className="text-md">
-              <Lungs className="w-5 h-5" />
+              {/* <Lungs className="w-5 h-5" /> */}
+              <Image
+                src="/assets/icons/lungsDark.png"
+                alt="Lungs Icon"
+                className="w-5 h-5"
+                width={20}
+                height={20}
+              />
             </TooltipInfo>
           </div>
         );
@@ -101,7 +108,14 @@ export const warningColumns: ColumnDef<Warning>[] = [
         return (
           <div className="flex items-center justify-center">
             <TooltipInfo info="Þyngd" className="text-md">
-              <Scale className="w-5 h-5" />
+              {/* <Scale className="w-5 h-5" /> */}
+              <Image
+                src="/assets/icons/scaleDark.png"
+                alt="Scale Icon"
+                className="w-5 h-5"
+                width={20}
+                height={20}
+              />
             </TooltipInfo>
           </div>
         );
@@ -109,7 +123,14 @@ export const warningColumns: ColumnDef<Warning>[] = [
         return (
           <div className="flex items-center justify-center">
             <TooltipInfo info="Blóðsykur" className="text-md">
-              <BloodSugar className="w-5 h-5" />
+              {/* <BloodSugar className="w-5 h-5" /> */}
+              <Image
+                src="/assets/icons/waterDark.png"
+                alt="Blood Sugar Icon"
+                className="w-5 h-5"
+                width={20}
+                height={20}
+              />
             </TooltipInfo>
           </div>
         );
@@ -117,7 +138,14 @@ export const warningColumns: ColumnDef<Warning>[] = [
         return (
           <div className="flex items-center justify-center">
             <TooltipInfo info="Blóðþrýstingur" className="text-md">
-              <Heart className="w-5 h-5" />
+              {/* <Heart className="w-5 h-5" /> */}
+              <Image
+                src="/assets/icons/heartDark.png"
+                alt="Heart Icon"
+                className="w-5 h-5"
+                width={20}
+                height={20}
+              />
             </TooltipInfo>
           </div>
         );
@@ -147,27 +175,50 @@ export const warningColumns: ColumnDef<Warning>[] = [
             <div className="ml-auto flex">
               {measurementValues.bodyPosition === "Sitting" ? (
                 <TooltipInfo info="Sitjandi" className="text-md">
-                  <Sitting className="" />
+                  {/* <Sitting className="" /> */}
+                  <Image
+                    src="/assets/icons/sitting.png"
+                    alt="Sitting Icon"
+                    className="w-5 h-5"
+                    width={20}
+                    height={20}
+                    style={{ width: "20px", height: "20px", minWidth: "20px" }}
+                  />
                 </TooltipInfo>
               ) : measurementValues.bodyPosition === "Laying" ? (
                 <TooltipInfo info="Liggjandi" className="text-md">
-                  <InBed className="" />
+                  {/* <InBed className="" /> */}
+                  <Image
+                    src="/assets/icons/laying.png"
+                    alt="In Bed Icon"
+                    className="w-5 h-5"
+                    width={20}
+                    height={20}
+                    style={{ width: "20px", height: "20px", minWidth: "20px" }}
+                  />
                 </TooltipInfo>
               ) : null}
-              <TooltipInfo
-                className="text-md"
-                info={
-                  measurementValues.measureHand === "Right"
-                    ? "Vinstri hönd"
-                    : measurementValues.measureHand === "Left"
-                      ? "Hægri hönd"
-                      : ""
-                }
-              >
-                <Hand
-                  className={`mx-2 ${measurementValues.measureHand === "Right" ? "flip-horizontal" : ""}`}
-                />
-              </TooltipInfo>
+              {measurementValues.measuredHand === "Left" ? (
+                <TooltipInfo info="Vinstri hönd" className="text-md">
+                  <Image
+                    src={"/assets/icons/handLeftArrow.png"}
+                    alt="Left Arrow Icon"
+                    width={20}
+                    height={20}
+                    style={{ width: "20px", height: "20px", minWidth: "20px" }}
+                  />
+                </TooltipInfo>
+              ) : measurementValues.measuredHand === "Right" ? (
+                <TooltipInfo info="Hægri hönd" className="text-md">
+                  <Image
+                    src={"/assets/icons/handRightArrow.png"}
+                    alt="Right Arrow Icon"
+                    width={20}
+                    height={20}
+                    style={{ width: "20px", height: "20px", minWidth: "20px" }}
+                  />
+                </TooltipInfo>
+              ) : null}
             </div>
           </div>
         );

@@ -17,9 +17,6 @@ const useLoginMutation = () => {
     onSuccess: () => {
       router.push("/dashboard/clients");
     },
-    onError: (error) => {
-      console.error("Login error: ", error);
-    },
   });
 
   return { loginMutation, isPending };

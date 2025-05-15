@@ -36,7 +36,13 @@ const Warnings = ({ id }: { id: string }) => {
     return data ? data.data : [];
   }, [data]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-18rem)] w-full">
+        <Loading />
+      </div>
+    );
+  }
   if (error) return <Error />;
 
   const warnings: PatientMeasurement[] = measurements.filter(
@@ -46,7 +52,6 @@ const Warnings = ({ id }: { id: string }) => {
   );
 
   const handleSelectClick = (measurement: PatientMeasurement) => {
-    // console.log("Selected measurement:", measurement);
     setSelectedMeasurement(measurement);
     setResolutionNotes(""); // Clear notes when opening the modal
     setIsModalOpen(true); // Open the modal
@@ -55,19 +60,13 @@ const Warnings = ({ id }: { id: string }) => {
   const handleSubmit = async () => {
     if (!selectedMeasurement || !resolutionNotes.trim() || !session?.user)
       return;
-    // console.log("the measurement:", selectedMeasurement);
     const requestData = {
       measurementType: selectedMeasurement.measurementType,
       measurementID: selectedMeasurement.id,
       workerID: parseInt(session?.user?.id),
       resolutionNotes: resolutionNotes,
     };
-    // console.log("Request data:", requestData);
-
     acknowledgeMutation(requestData);
-
-    // Optionally, you can handle the response here
-    // console.log("Acknowledgment request sent");
   };
 
   const rows: MeasurementRow[] = warnings.map((item) => ({
@@ -108,8 +107,8 @@ const Warnings = ({ id }: { id: string }) => {
   ];
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="h-[calc(100vh-18rem)] overflow-auto border border-muted rounded-md">
+    <div className="flex flex-col h-full flex-1 overflow-hidden">
+      <div className="h-[calc(100vh-18rem)] overflow-auto border border-muted rounded-md min-w-full">
         <DataTable
           columns={updatedColumns}
           data={rows}

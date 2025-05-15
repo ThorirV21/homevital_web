@@ -42,8 +42,6 @@ const useVitalRangeMutations = (id: number) => {
     isSuccess,
   } = useMutation({
     mutationFn: (data: VitalRangeMutation) => {
-      console.log("Saving This", data);
-      console.log("With this data", data.data);
       return api.patch(`vitalrange/${data.type}/${id}`, data.data);
     },
     onSuccess: () => {

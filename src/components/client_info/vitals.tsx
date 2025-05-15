@@ -56,7 +56,11 @@ const Vitals = () => {
   }, [vitalRanges, view.type]);
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-18rem)] w-full">
+        <Loading />
+      </div>
+    );
   }
 
   if (error) {
@@ -68,12 +72,12 @@ const Vitals = () => {
   };
 
   return (
-    <div className="flex p-4 flex-col gap-4">
-      <div className="flex w-full">
+    <div className="flex p-4 flex-col gap-4 over">
+      <div className="flex w-full bg-buttoncontainer rounded-md p-1 shadow-md">
         {viewSettings.map((measurement, index) => (
-          <div key={index} className="w-1/5">
+          <div key={index} className="flex-1 justify-center align-center">
             <Button
-              className={`text-xs w-full h-6 place-content-center ${view.type === measurement.type ? "bg-primary" : "opacity-50"}`}
+              className={`text-xs w-full h-7 shadow-none ${view.type === measurement.type ? "bg-primary" : "bg-opacity-100"}`}
               onClick={() => handleChangeView(measurement)}
             >
               {measurement.name}
@@ -81,7 +85,7 @@ const Vitals = () => {
           </div>
         ))}
       </div>
-      <div>
+      <div className="overflow-y-scroll h-[calc(100vh-22rem)] border-primary border border-1">
         {view.type === "oxygenSaturationRange" && (
           <OxygenSaturation
             data={currentData as OxygenSaturationRange}

@@ -28,8 +28,6 @@ const bloodSugarSchema = z
     const good = parseBloodSugarValues(data.ranges[1]);
     const notOk = parseBloodSugarValues(data.ranges[2]);
 
-    console.log("Validating values:", { underAverage, good, notOk });
-
     // Check if values are in ascending order
     if (!(underAverage <= good)) {
       ctx.addIssue({
@@ -82,10 +80,7 @@ const BloodSugar = ({ data, clientId }: BloodSugarProps) => {
   // Form errors
   const formErrors = form.formState.errors;
 
-  // Log errors for debugging
   useEffect(() => {
-    console.log("Form errors:", formErrors);
-    // Extract error message from form errors
     if (formErrors.ranges?.message) {
       setErrorMessage(formErrors.ranges.message as string);
     }
@@ -136,7 +131,6 @@ const BloodSugar = ({ data, clientId }: BloodSugarProps) => {
   };
 
   const saveData = (formData: FormShape) => {
-    console.log("Saving form data:", formData);
     // Final validation check
     const underAverage = parseBloodSugarValues(formData.ranges[0]);
     const good = parseBloodSugarValues(formData.ranges[1]);
@@ -205,7 +199,7 @@ const BloodSugar = ({ data, clientId }: BloodSugarProps) => {
   };
 
   return (
-    <div className="flex flex-col h-[92%] w-full border-primary border-2">
+    <div className="flex flex-col h-[92%] w-full">
       <div className="flex flex-row p-6 items-center w-full">
         {editing ? (
           <div className="flex gap-2 items-center pl-14 ">

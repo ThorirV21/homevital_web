@@ -94,7 +94,6 @@ const TeamForm = ({ config, open, setOpen }: TeamFormProps) => {
   }, [config.team, form]);
 
   const onSubmit = (values: FormShape) => {
-    console.log("Submitting form:", values);
     if (config.team) {
       const patchTeam: TeamPatch = {
         id: config.team.id,

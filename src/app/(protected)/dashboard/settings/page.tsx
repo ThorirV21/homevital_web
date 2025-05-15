@@ -19,11 +19,11 @@ export default function Settings() {
   return (
     <div className="flex w-full h-full flex-col bg-background">
       <div className="flex flex-col w-full px-4 pb-4 border-b">
-        <div className="flex flex-row gap-2 pt-3">
+        <div className="flex flex-row mt-3 p-1 rounded-md bg-buttoncontainer max-w-3xl shadow-md">
           {views.map((v) => (
             <Button
               key={v.value}
-              className={`rounded-none ${view === v.value ? "" : "opacity-50"}`}
+              className={`flex-1 shadow-none h-7 ${view === v.value ? "" : "bg-opacity-100"}`}
               onClick={() => setView(v.value)}
             >
               {v.name}

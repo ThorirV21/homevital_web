@@ -35,7 +35,11 @@ const Measurements = ({ id }: { id: string }) => {
   };
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-18rem)] w-full">
+        <Loading />
+      </div>
+    );
   }
 
   if (error) {
@@ -86,11 +90,9 @@ const Measurements = ({ id }: { id: string }) => {
     },
   ];
 
-  console.table(rows);
-
   return (
-    <div className="flex flex-col h-full">
-      <div className="h-[calc(100vh-18rem)] overflow-auto border border-muted rounded-md">
+    <div className="flex-col h-full flex-1 overflow-hidden">
+      <div className="h-[calc(100vh-18rem)] overflow-auto border border-muted rounded-md min-w-full">
         <DataTable
           columns={columns}
           data={rows}

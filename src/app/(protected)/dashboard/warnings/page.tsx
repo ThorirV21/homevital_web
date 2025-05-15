@@ -110,21 +110,23 @@ const Alarms = () => {
 
   return (
     <div className="flex flex-row bg-background p-4 h-full" key={paginationKey}>
-      <DataTable
-        columns={warningColumns}
-        data={warnings}
-        name="Viðvaranir"
-        buttons={buttons}
-        setColumnFilters={setColumnFilters}
-        columnFilters={columnFilters}
-        usePagination={true}
-        onPageChange={handlePageChange}
-        totalCount={totalCount}
-        initialPage={(pagination.pageNumber || 1) - 1} // Convert 1-indexed to 0-indexed
-        initialPageSize={pagination.pageSize || 10}
-        manualPagination={true} // Use manual pagination
-        pageCount={pageCount} // Provide the explicit page count
-      />
+      <div className="h-full overflow-scroll flex-1">
+        <DataTable
+          columns={warningColumns}
+          data={warnings}
+          name="Viðvaranir"
+          buttons={buttons}
+          setColumnFilters={setColumnFilters}
+          columnFilters={columnFilters}
+          usePagination={true}
+          onPageChange={handlePageChange}
+          totalCount={totalCount}
+          initialPage={(pagination.pageNumber || 1) - 1} // Convert 1-indexed to 0-indexed
+          initialPageSize={pagination.pageSize || 10}
+          manualPagination={true} // Use manual pagination
+          pageCount={pageCount} // Provide the explicit page count
+        />
+      </div>
     </div>
   );
 };

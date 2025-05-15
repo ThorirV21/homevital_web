@@ -241,8 +241,6 @@ const TreatmentForm = ({ id, setCreateNew }: TreatmentFormProps) => {
       ),
     };
 
-    console.log(plan);
-
     createMutation(plan);
   };
 
