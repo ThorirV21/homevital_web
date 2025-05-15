@@ -40,23 +40,25 @@ const Treatment = ({ id }: { id: string }) => {
     return <Error />;
   }
 
-  const buttonClasses = "h-7";
+  const buttonClasses = "h-7 text-xs shadow-none";
   return (
     <div className="px-4 flex-1 overflow-hidden">
-      <div className="flex flex-row py-4 items-center">
-        <Button
-          className={`${buttonClasses} rounded-r-none ${activeTab === "current" ? "" : "opacity-50"}`}
-          onClick={() => setActiveTab("current")}
-        >
-          Núverandi
-        </Button>
-        <Button
-          className={`${buttonClasses} rounded-l-none ${activeTab === "previous" ? "" : "opacity-50"}`}
-          onClick={() => setActiveTab("previous")}
-        >
-          Fyrri áætlanir
-        </Button>
-        <Button className=" ml-auto" onClick={() => setCreateNew(true)}>
+      <div className="flex flex-row py-4 w-full items-center justify-between">
+        <div className="bg-buttoncontainer rounded-md p-1 shadow-md">
+          <Button
+            className={` ${buttonClasses} ${activeTab === "current" ? "" : "bg-opacity-100"}`}
+            onClick={() => setActiveTab("current")}
+          >
+            Núverandi
+          </Button>
+          <Button
+            className={`${buttonClasses} ${activeTab === "previous" ? "" : "bg-opacity-100"}`}
+            onClick={() => setActiveTab("previous")}
+          >
+            Fyrri áætlanir
+          </Button>
+        </div>
+        <Button className="" onClick={() => setCreateNew(true)}>
           Skrá nýja
         </Button>
       </div>

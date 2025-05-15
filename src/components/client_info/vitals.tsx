@@ -69,7 +69,7 @@ const Vitals = () => {
 
   return (
     <div className="flex p-4 flex-col gap-4">
-      <div className="flex w-full bg-buttoncontainer rounded-md p-1">
+      <div className="flex w-full bg-buttoncontainer rounded-md p-1 shadow-md">
         {viewSettings.map((measurement, index) => (
           <div key={index} className="flex-1 justify-center align-center">
             <Button
