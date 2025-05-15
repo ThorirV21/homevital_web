@@ -92,13 +92,15 @@ const ClientsView = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <DataTable
-        columns={clientInfoColumns}
-        data={clientRows}
-        name="Sjúklingar"
-        buttons={buttons}
-        onRowClick={handleClickClient}
-      />
+      <div className="h-[calc(100vh-17rem)] overflow-scroll">
+        <DataTable
+          columns={clientInfoColumns}
+          data={clientRows}
+          name="Sjúklingar"
+          buttons={buttons}
+          onRowClick={handleClickClient}
+        />
+      </div>
       <div className="flex flex-row w-full justify-end py-4 px-4 mt-auto">
         <Button onClick={handleClickCreate}>Bæta við</Button>
       </div>

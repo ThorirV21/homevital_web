@@ -92,17 +92,17 @@ const Teams = () => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      <DataTable
-        columns={teamColumns}
-        data={teamRows}
-        name="Teymi"
-        onRowClick={handleTeamClick}
-      />
+      <div className="h-[calc(100vh-17rem)] overflow-scroll">
+        <DataTable
+          columns={teamColumns}
+          data={teamRows}
+          name="Teymi"
+          onRowClick={handleTeamClick}
+        />
+      </div>
       <TeamForm open={open} setOpen={setOpen} config={dialogConfig} />
-      <div className="ms-auto mt-auto p-4">
-        <Button className="mt-4" onClick={handleClickCreate}>
-          Bæta við teymi
-        </Button>
+      <div className="flex flex-row w-full justify-end py-4 px-4 mt-auto">
+        <Button onClick={handleClickCreate}>Bæta við teymi</Button>
       </div>
     </div>
   );

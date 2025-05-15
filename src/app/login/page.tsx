@@ -42,15 +42,15 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="flex flex-col items-center justify-center">
+    <div className="flex h-screen justify-center">
+      <div className="flex flex-col items-center justify-evenly">
         <Image
           src="/homeVital.svg"
           alt="Logo"
           priority
           width={400}
           height={400}
-          className="pb-40"
+          // className="pb-40"
         />
         <div className="flex flex-col items-center justify-center bg-background p-10 rounded-xl">
           {isPending ? (

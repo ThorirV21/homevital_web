@@ -30,7 +30,11 @@ const ClientDetailsContent: React.FC = () => {
   }
 
   if (isLoading || teamsLoading) {
-    return <Loading />;
+    return (
+      <div className="flex items-center justify-center h-full w-[calc(50vh-2rem)]">
+        <Loading />
+      </div>
+    );
   }
 
   if (error || teamsError) {
@@ -47,7 +51,7 @@ const ClientDetailsContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex flex-col max-h-full w-full">
       <div className="flex flex-shrink-0">
         <div className="p-4 w-1/3">
           <h1 className="font-bold">Nafn:</h1>

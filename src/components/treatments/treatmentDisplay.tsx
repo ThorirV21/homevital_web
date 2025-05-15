@@ -78,13 +78,13 @@ const TreatmentDisplay = ({ treatment }: TreatmentDisplayProps) => {
             </h1>
           )}
         </div>
-        <div className="mt-auto">
+        <div className="mt-16">
           <h4 className="text-sm font-bold">Leiðbeiningar</h4>
           <h1 className="text-lg pt-2">{treatment.instructions}</h1>
         </div>
       </div>
       <div className="col-2 flex flex-col gap-6">
-        <div className="pb-32">
+        <div className="">
           <h4 className="text-sm font-bold">Teymi</h4>
           <h1 className="text-lg">{teamName}</h1>
         </div>
@@ -93,7 +93,7 @@ const TreatmentDisplay = ({ treatment }: TreatmentDisplayProps) => {
             <Calendar
               mode="multiple"
               locale={is}
-              className="h-80 w-full flex bg-white"
+              className="h-80 min-w-full flex bg-white"
               selected={selectedDates(treatment)}
               classNames={{
                 months:

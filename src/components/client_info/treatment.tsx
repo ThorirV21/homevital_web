@@ -33,9 +33,12 @@ const Treatment = ({ id }: { id: string }) => {
   }, [activeTreatment]);
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-18rem)] w-full">
+        <Loading />
+      </div>
+    );
   }
-
   if (error) {
     return <Error />;
   }
@@ -62,7 +65,7 @@ const Treatment = ({ id }: { id: string }) => {
           Skrá nýja
         </Button>
       </div>
-      <div className="h-[calc(100vh-21rem)] border border-primary overflow-scroll">
+      <div className="h-[calc(100vh-22rem)] border border-primary overflow-scroll">
         {createNew ? (
           <TreatmentForm id={id} setCreateNew={setCreateNew} />
         ) : activeTreatment && activeTab === "current" ? (

@@ -19,8 +19,8 @@ export default function ClientsLayout({
 }) {
   return (
     <div className="flex h-full bg-background">
-      <div className="flex-1 overflow-hidden min-w-48 border-r">{children}</div>
-      <div className="min-w-[50%] max-w-[100%] overflow-hidden">
+      <div className="flex-1 overflow-hidden min-w-64 border-r">{children}</div>
+      <div className="max-w-[100%] overflow-hidden">
         <Suspense fallback={<Loading />}>
           <DynamicDetails />
         </Suspense>

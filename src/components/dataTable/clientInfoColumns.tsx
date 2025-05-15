@@ -57,7 +57,7 @@ export const clientInfoColumns: ColumnDef<ClientInfoRow>[] = [
       return (
         <Badge
           variant={row.original.status === "Active" ? "default" : "secondary"}
-          className={`capitalize border border-primary ${row.original.status === "Active" ? "text-secondary" : "text-primary"}`}
+          className={`w-20 justify-center capitalize border border-primary whitespace-nowrap ${row.original.status === "Active" ? "text-secondary" : "text-primary"}`}
         >
           {status}
         </Badge>

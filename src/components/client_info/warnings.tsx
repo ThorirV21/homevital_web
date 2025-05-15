@@ -36,7 +36,13 @@ const Warnings = ({ id }: { id: string }) => {
     return data ? data.data : [];
   }, [data]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-18rem)] w-full">
+        <Loading />
+      </div>
+    );
+  }
   if (error) return <Error />;
 
   const warnings: PatientMeasurement[] = measurements.filter(

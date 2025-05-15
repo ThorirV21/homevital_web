@@ -322,7 +322,7 @@ const BloodPressure = ({ data, clientId }: BloodPressureProps) => {
   };
 
   return (
-    <div className="flex flex-col h-[92%] w-full border-primary border-2">
+    <div className="flex flex-col h-[92%] w-full">
       <div className="flex flex-row p-6 items-center w-full">
         {editing ? (
           <div className="flex gap-2 items-center pl-14 ">
