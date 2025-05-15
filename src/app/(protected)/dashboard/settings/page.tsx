@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import StaffView from "@/components/settings/staff";
-import Loading from "@/components/loading";
 import Teams from "@/components/settings/teams";
 import ClientsView from "@/components/settings/clients";
 
@@ -10,7 +9,6 @@ const views = [
   { name: "Starfsmenn", value: "staff" },
   { name: "Teymi", value: "team" },
   { name: "Skjólstæðingar", value: "clients" },
-  { name: "Annað", value: "other" },
 ];
 
 export default function Settings() {
@@ -35,11 +33,6 @@ export default function Settings() {
         {view === "staff" && <StaffView />}
         {view === "team" && <Teams />}
         {view === "clients" && <ClientsView />}
-        {view === "other" && (
-          <div className="flex flex-col w-3/4">
-            <Loading />
-          </div>
-        )}
       </div>
     </div>
   );
