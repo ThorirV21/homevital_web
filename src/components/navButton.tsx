@@ -36,6 +36,18 @@ const NavButton: React.FC<navButtonProps> = ({
           </div>
           {title}
         </button>
+      ) : title === "Leiðbeiningar" ? (
+        <a
+          href="/Notendahandbok.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center w-full h-full px-8 gap-8"
+        >
+          <div className="relative w-8 h-8">
+            <Image src={logo_path} alt={title} fill={true} />
+          </div>
+          {title}
+        </a>
       ) : (
         <Link
           href={dashboard_path}

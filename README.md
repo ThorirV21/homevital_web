@@ -1,5 +1,6 @@
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
-
+[![Lint](https://github.com/ThorirV21/homevital_web/actions/workflows/main.yml/badge.svg)](https://github.com/ThorirV21/homevital_web/actions/workflows/main.yml)
+[![Playwright Tests](https://github.com/ThorirV21/homevital_web/actions/workflows/playwright.yml/badge.svg)](https://github.com/ThorirV21/homevital_web/actions/workflows/playwright.yml)
 
 
 # HomeVital Harmony - Web application
