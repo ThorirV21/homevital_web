@@ -24,7 +24,7 @@ const NavButton: React.FC<navButtonProps> = ({
 
   return (
     <li
-      className={`bg-background h-20 hover:bg-gray-100 shadow items-center ${pathname === dashboard_path ? "shadow-[inset_0px_4px_4px_0px_rgba(0,0,0,0.25),inset_0px_-4px_4px_0px_rgba(0,0,0,0.25)]" : ""} `}
+      className={`bg-background h-20 hover:bg-gray-100 shadow items-center ${pathname.includes(dashboard_path) ? "shadow-[inset_0px_4px_4px_0px_rgba(0,0,0,0.25),inset_0px_-4px_4px_0px_rgba(0,0,0,0.25)]" : ""} `}
     >
       {title === "Útskrá" ? (
         <button

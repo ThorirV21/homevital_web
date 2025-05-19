@@ -16,7 +16,7 @@ import { PaginationParams } from "@/hooks/useWarnings";
 const Alarms = () => {
   // Add a key to force re-render when pagination changes
   const [paginationKey, setPaginationKey] = useState(0);
-
+  const [activeButton, setActiveButton] = useState<string>("Allt");
   const [pagination, setPagination] = useState<PaginationParams>({
     pageSize: 10,
     pageNumber: 1,
@@ -67,13 +67,19 @@ const Alarms = () => {
   const buttons = [
     {
       label: "Allt",
-      selected: false,
-      onClick: () => setTeamFilter([]),
+      selected: activeButton === "Allt",
+      onClick: () => {
+        setActiveButton("Allt");
+        setTeamFilter([]);
+      },
     },
     {
       label: "Mín teymi",
-      selected: false,
-      onClick: () => setTeamFilter(session?.user?.groups || []),
+      selected: activeButton === "Mín teymi",
+      onClick: () => {
+        setActiveButton("Mín teymi");
+        setTeamFilter(session?.user?.groups || []);
+      },
     },
   ];
 
