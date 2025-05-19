@@ -43,7 +43,7 @@ const viewSettings = [
 ];
 
 const Vitals = () => {
-  const [view, setView] = useState(viewSettings[4]);
+  const [view, setView] = useState(viewSettings[0]);
   const searchParams = useSearchParams();
   const clientId = searchParams.get("id");
   const { vitalRanges, error, isLoading } = useClientVitalRanges(

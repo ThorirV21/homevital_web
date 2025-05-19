@@ -19,7 +19,7 @@ const ClientListContent = () => {
   const { data: rawClients, error, isLoading } = useClients();
   const { teams, teamsLoading, teamsError } = useTeams();
   const { session } = useSession();
-
+  const [activeButton, setActiveButton] = useState<string>("Allt");
   const patients = useMemo(() => {
     return rawClients ? rawClients.data : [];
   }, [rawClients]);
@@ -52,18 +52,18 @@ const ClientListContent = () => {
   const buttons = [
     {
       label: "Allt",
-      selected: false,
-      className: "bg-accent",
+      selected: activeButton === "Allt",
       onClick: () => {
+        setActiveButton("Allt");
         if (columnFilters.length === 0) return;
         setColumnFilters([]);
       },
     },
     {
       label: "Mín teymi",
-      selected: false,
-      className: "bg-accent",
+      selected: activeButton === "Mín teymi",
       onClick: () => {
+        setActiveButton("Mín teymi");
         const teamValues =
           session?.user?.groups.map(
             (groupID: number) =>

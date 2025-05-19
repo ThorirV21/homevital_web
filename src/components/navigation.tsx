@@ -31,7 +31,7 @@ const elem = [
   {
     name: "Útskrá",
     logo_path: "/nav_icons/Shutdown.svg",
-    dashboard_path: "/",
+    dashboard_path: "/login",
   },
 ];
 
