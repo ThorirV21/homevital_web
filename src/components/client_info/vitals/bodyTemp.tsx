@@ -25,8 +25,8 @@ const bodyTemperatureSchema = z
   .superRefine((data, ctx) => {
     // Parse values to numbers for comparison
     const underAverage = parseTemperatureValue(data.ranges[0]);
-    const good = parseTemperatureValue(data.ranges[1]);
-    const notOk = parseTemperatureValue(data.ranges[2]);
+    const good = parseTemperatureValue(data.ranges[2]);
+    const notOk = parseTemperatureValue(data.ranges[3]);
 
     // Check if values are in ascending order
     if (!(underAverage <= good)) {
@@ -105,7 +105,7 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
       name: "Eðlilegur hiti",
       value: [
         data.temperatureUnderAverage.toString(),
-        data.temperatureGood.toString(),
+        data.temperatureNotOk.toString(),
       ],
       color: "Normal",
       prefix: "",
@@ -113,15 +113,15 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
     {
       name: "Yfir meðallagi",
       value: [
-        data.temperatureGood.toString(),
         data.temperatureNotOk.toString(),
+        data.temperatureCritical.toString(),
       ],
       color: "Raised",
       prefix: " ",
     },
     {
       name: "Hiti",
-      value: [data.temperatureNotOk.toString()],
+      value: [data.temperatureCritical.toString()],
       color: "High",
       prefix: "> ",
     },
@@ -138,8 +138,8 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
   const saveData = (formData: FormShape) => {
     // Final validation check
     const underAverage = parseTemperatureValue(formData.ranges[0]);
-    const good = parseTemperatureValue(formData.ranges[1]);
-    const notOk = parseTemperatureValue(formData.ranges[2]);
+    const good = parseTemperatureValue(formData.ranges[2]);
+    const notOk = parseTemperatureValue(formData.ranges[3]);
 
     if (underAverage >= good) {
       setErrorMessage("Undir meðallagi verður að vera lægra en Eðlilegur hiti");
@@ -160,9 +160,9 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
       data: {
         patientID: Number(clientId),
         temperatureUnderAverage: parseTemperature(formData.ranges[0]),
-        temperatureGood: parseTemperature(formData.ranges[1]),
+        temperatureGood: parseTemperature(formData.ranges[0]),
         temperatureNotOk: parseTemperature(formData.ranges[2]),
-        temperatureCritical: parseTemperature(formData.ranges[2]) + 1,
+        temperatureCritical: parseTemperature(formData.ranges[3]),
       },
     };
 
@@ -188,8 +188,8 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
     // Check validation manually
     const values = form.getValues().ranges;
     const underAverage = parseTemperatureValue(values[0]);
-    const good = parseTemperatureValue(values[1]);
-    const notOk = parseTemperatureValue(values[2]);
+    const good = parseTemperatureValue(values[2]);
+    const notOk = parseTemperatureValue(values[3]);
 
     if (underAverage >= good) {
       setErrorMessage("Undir meðallagi verður að vera lægra en Eðlilegur hiti");
@@ -266,7 +266,7 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
                       ) : index === 2 ? (
                         <>
                           <Controller
-                            name={`ranges.${1}`}
+                            name={`ranges.${2}`}
                             control={form.control}
                             render={({ field }) => (
                               <Input
@@ -274,7 +274,7 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
                                 inputMode="decimal"
                                 value={field.value || ""}
                                 onChange={(e) =>
-                                  handleInputChange(1, e.target.value)
+                                  handleInputChange(2, e.target.value)
                                 }
                                 className="w-20"
                               />
@@ -285,7 +285,7 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
                         </>
                       ) : index === 3 ? (
                         <Controller
-                          name={`ranges.${2}`}
+                          name={`ranges.${3}`}
                           control={form.control}
                           render={({ field }) => (
                             <Input
@@ -293,7 +293,7 @@ const BodyTemperature = ({ data, clientId }: BodyTemperatureProps) => {
                               inputMode="decimal"
                               value={field.value || ""}
                               onChange={(e) =>
-                                handleInputChange(2, e.target.value)
+                                handleInputChange(3, e.target.value)
                               }
                               className="w-20"
                             />
